@@ -248,12 +248,12 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
             <span>Autonomous Revenue Protection</span>
           </div>
 
-          <h1 className="text-[36px] sm:text-[48px] md:text-[64px] lg:text-[72px] font-sans font-black text-black leading-[1.08] tracking-tight max-w-5xl">
-            The Sales, Tuition, and Revenue Guard Built for Absolute Integrity.
+          <h1 className="text-[32px] sm:text-[44px] md:text-[04px] lg:text-[65px] font-sans font-black text-black leading-[1.08] tracking-tight max-w-5xl">
+            The Intelligent AI Assistant That Tracks Your Sales, Tuition, & Revenue
           </h1>
 
           <p className="text-base md:text-xl text-neutral-500 max-w-3xl leading-relaxed font-sans font-medium">
-            Empathetic yet unyielding. Eenvoq stops physical register leaks, matches digital bank alert reference codes automatically, and secures subscription/tuition streams for business owners, schools, and organizations.
+            Eenvoq tracks sales/subscription/tuition streams & revenue for your business, school, and organization.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 w-full max-w-md">
