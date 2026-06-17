@@ -447,7 +447,7 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
                   : 'text-neutral-500 hover:bg-neutral-100 hover:text-black'
               }`}
             >
-              Business & Retail
+              Businesses
             </button>
             <button
               onClick={() => setSelectedSegment('school')}
@@ -457,7 +457,7 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
                   : 'text-neutral-500 hover:bg-neutral-100 hover:text-black'
               }`}
             >
-              School Owners
+              Schools
             </button>
             <button
               onClick={() => setSelectedSegment('institutions')}
@@ -467,7 +467,7 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
                   : 'text-neutral-500 hover:bg-neutral-100 hover:text-black'
               }`}
             >
-              Institutions & Parishes
+              Organizations
             </button>
           </div>
 
@@ -1013,13 +1013,13 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
           
           <div className="flex flex-col items-center text-center space-y-3 mb-16">
             <span className="bg-sky-100 border border-sky-200 text-sky-850 font-mono text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
-              Qualitative Success
+              Success Stories
             </span>
             <h2 className="text-[32px] sm:text-[44px] font-sans font-black text-black tracking-tight leading-tight">
-              Real Operators. Real Reclaimed Cash.
+              What others are saying about Eenvoq.
             </h2>
             <p className="text-sm md:text-base text-neutral-500 max-w-2xl leading-relaxed font-sans font-medium">
-              Read how store owners and private school directors locked their registers and wiped out cash discrepancies forever.
+              Read how business owners and school directors locked their registers and wiped out cash discrepancies forever.
             </p>
           </div>
 
