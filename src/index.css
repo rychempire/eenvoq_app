@@ -1,0 +1,79 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Manrope", sans-serif;
+  --font-mono: "Manrope", monospace;
+  
+  --radius-2xl: 24px;
+}
+
+/* Ensure all fonts use Manrope and nothing else */
+* {
+  font-family: 'Manrope', sans-serif !important;
+}
+
+/* Custom scrollbars resembling clean web engines */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Base custom animations */
+@keyframes pulseGlow {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.2;
+  }
+  50% {
+    transform: scale(1.03);
+    opacity: 0.35;
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 4s infinite ease-in-out;
+}
+
+/* Shimmer load states for AI output */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.shimmer-bg {
+  background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.6s infinite linear;
+}
+
+/* CSS transition resets for modern pages */
+html, body {
+  background-color: #FFFFFF;
+  color: #1F1F1F;
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+}
+
+/* Ambient glow accent behind the central workspace with very light undertones */
+.gemini-ambient-gradient {
+  background: radial-gradient(circle at 50% -20%, rgba(240, 244, 249, 0.45) 0%, rgba(255, 255, 255, 0) 70%);
+}
