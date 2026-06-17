@@ -169,7 +169,7 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
           ========================================== */}
       <nav className="fixed top-0 left-0 right-0 h-20 bg-white/95 backdrop-blur-md z-50 flex items-center justify-between px-6 md:px-12 lg:px-20 border-b border-sky-100 w-full" id="landing-navbar">
         <div className="flex items-center gap-3 cursor-pointer" onClick={onEnterApp}>
-          <span className="font-sans font-light text-black tracking-tight text-2.5xl md:text-3xl select-none leading-none">eenvoq</span>
+          <span className="font-sans font-normal text-black tracking-tight text-3xl md:text-3xl select-none leading-none">eenvoq</span>
         </div>
 
         {/* Desktop Navbar Links */}
@@ -268,7 +268,7 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
           </div>
 
           <p className="text-xs text-neutral-400 font-bold tracking-wide uppercase select-none pt-1">
-            ✓ No financial registration or credit card required
+            ✓ No credit card required
           </p>
         </div>
 
