@@ -1594,13 +1594,29 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
         <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20 grid grid-cols-1 md:grid-cols-5 gap-8 text-left">
           
           {/* Column 1: Logo & Mission */}
-          <div className="md:col-span-2 space-y-4">
-            <span className="font-sans font-light text-black tracking-tight text-3xl select-none">eenvoq</span>
-            <p className="text-xs text-neutral-400 max-w-xs leading-relaxed font-medium font-sans">
-              Autonomous Financial Guardian protecting small businesses, private colleges, and regional parishes from record manipulation and cash deficits.
-            </p>
-            <div className="text-[10px] font-mono text-neutral-300 font-bold select-none">v2.5.0-CROButter</div>
-          </div>
+<div className="md:col-span-2 space-y-4">
+  {/* Logo Row */}
+  <div className="flex items-center gap-1">
+    <img 
+      src="https://res.cloudinary.com/dee01jm0p/image/upload/e_bgremoval/f_auto,q_auto/1001133582_wa3zq3" 
+      alt="eenvoq logo" 
+      className="h-14 w-auto object-contain select-none translate-y-1 [filter:drop-shadow(1px_0_0_#000)_drop-shadow(-1px_0_0_#000)_drop-shadow(0_1px_0_0_#000)_drop-shadow(0_-1px_0_0_#000)]" 
+    />
+    <span className="font-sans font-light text-black tracking-tight text-3xl select-none">
+      eenvoq
+    </span>
+  </div>
+
+  {/* Description Paragraph */}
+  <p className="text-xs text-neutral-400 max-w-xs leading-relaxed font-medium font-sans">
+    Autonomous Financial Guardian protecting small businesses, colleges, and various organizations from record manipulation and cash deficits.
+  </p>
+
+  {/* Version Tag */}
+  <div className="text-[10px] font-mono text-neutral-300 font-bold select-none">
+    v2.5.0-CROButter
+  </div>
+</div>
 
           {/* Column 2: Features */}
           <div className="space-y-3 font-sans">
@@ -1650,7 +1666,7 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
         {/* Bottom Credits */}
         <div className="pt-8 pb-4 mt-12 border-t border-sky-50 max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between text-xs text-neutral-400 font-bold font-sans">
           <p className="text-center md:text-left">
-            &copy; 2026 Eenvoq. Safeguarding Retail & Educational Ecosystem Income. All rights reserved.
+            &copy; 2026 Eenvoq. Safeguarding Retail & Organizational Ecosystem Income. All rights reserved.
           </p>
           <div className="flex gap-6 mt-4 md:mt-0 font-sans">
             <span className="hover:text-sky-600 transition cursor-pointer">Security Compliance</span>
