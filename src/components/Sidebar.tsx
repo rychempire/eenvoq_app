@@ -23,19 +23,19 @@ export default function Sidebar({ activeSection, setActiveSection, user, alerts,
   const unreadAlertsCount = alerts.filter(a => !a.read).length;
 
   const mainNavItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { id: 'assistant', label: 'AI Chat', icon: EenvoqIcon, highlight: true },
-    { id: 'receipts', label: 'Receipts', icon: FileCheck },
-    { id: 'truthcheck', label: 'Truth Check', icon: Activity },
-    { id: 'forensic', label: 'Forensics', icon: FileSearch },
+    { id: 'dashboard', label: 'Home', icon: LayoutDashboard },
+    { id: 'receipts', label: 'Sales', icon: FileCheck },
     { id: 'inventory', label: 'Inventory', icon: ShoppingCart },
-    { id: 'retention', label: 'Retention', icon: Users },
+    { id: 'assistant', label: 'Eenvoq', icon: EenvoqIcon, highlight: true },
+    { id: 'retention', label: 'Customers', icon: Users },
     { id: 'debtor', label: 'Debtors', icon: BookOpen },
-    { id: 'reports', label: 'Reports', icon: TrendingUp },
+    { id: 'truthcheck', label: 'Truth Check', icon: Activity },
+    { id: 'forensic', label: 'Analysis', icon: FileSearch },
+    { id: 'reports', label: 'Full Report', icon: TrendingUp },
   ];
 
   const bottomNavItems = [
-    { id: 'landing', label: 'View Website', icon: Sparkles },
+    { id: 'landing', label: 'Visit Website', icon: Sparkles },
     { id: 'notifications', label: 'Alerts', icon: BellRing, badge: unreadAlertsCount },
     { id: 'settings', label: 'Settings', icon: Settings2 },
   ];
