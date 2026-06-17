@@ -154,13 +154,21 @@ export default function Auth({ onLogin }: AuthProps) {
       <div className="w-full max-w-md bg-white rounded-[28px] border border-[#E3E3E3] shadow-none overflow-hidden p-8 transition-all duration-300">
         
         {/* Universal brand logo block */}
-        <div className="flex flex-col items-center mb-8 text-center select-none" id="brand-header-auth">
-          <h1 className="text-[22px] font-sans font-semibold tracking-tight text-[#1F1F1F] flex items-center gap-1.5 leading-none" id="eenvoq-brand-headline">
-            eenvoq
-            <EenvoqIcon className="w-5 h-5 text-[#5F6368] stroke-[1.5]" />
-          </h1>
-          <p className="text-[11px] text-[#757575] mt-1.5 font-sans tracking-wide">Automated Truth Audit Agent</p>
-        </div>
+
+        <div className="flex items-center gap-1 cursor-pointer" onClick={onEnterApp}>
+  {/* Logo Image (Solid logo with background removed via Cloudinary AI) */}
+  <img 
+    src="https://res.cloudinary.com/dee01jm0p/image/upload/e_bgremoval/f_auto,q_auto/1001133582_wa3zq3" 
+    alt="eenvoq logo" 
+    className="h-14 w-auto object-contain select-none translate-y-1 [filter:drop-shadow(1px_0_0_#000)_drop-shadow(-1px_0_0_#000)_drop-shadow(0_1px_0_0_#000)_drop-shadow(0_-1px_0_0_#000)]" 
+  />
+  
+  {/* Logo Text */}
+  <span className="font-sans font-medium text-black tracking-tight text-3xl md:text-3xl select-none leading-none">
+    eenvoq
+  </span>
+</div>
+
 
         {error && (
           <div className="p-3.5 bg-red-50 text-red-700 text-xs rounded-full border border-red-100 font-sans mb-4 text-center" id="login-error-toast">

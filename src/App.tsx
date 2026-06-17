@@ -633,9 +633,19 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
 
          {/* Mobile Header Bar */}
         <header className="h-16 bg-[#FCFAF7]/90 backdrop-blur-md border-b border-[#E3E3E3] px-4 flex items-center justify-between md:hidden select-none shrink-0" id="mobile-navigation-header">
-          <div className="flex items-center">
-            <span className="font-sans font-semibold text-[#1F1F1F] tracking-tight text-[22px] select-none leading-none">eenvoq</span>
-          </div>
+<div className="flex items-center gap-1">
+  {/* Logo Image */}
+  <img 
+    src="https://res.cloudinary.com/dee01jm0p/image/upload/e_bgremoval/f_auto,q_auto/1001133582_wa3zq3" 
+    alt="eenvoq logo" 
+    className="h-10 w-auto object-contain select-none translate-y-0.5 [filter:drop-shadow(1px_0_0_#000)_drop-shadow(-1px_0_0_#000)_drop-shadow(0_1px_0_0_#000)_drop-shadow(0_-1px_0_0_#000)]" 
+  />
+
+  {/* Logo Text */}
+  <span className="font-sans font-semibold text-[#1F1F1F] tracking-tight text-[22px] select-none leading-none">
+    eenvoq
+  </span>
+</div>
 
           <div className="flex items-center gap-2">
             <button 

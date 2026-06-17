@@ -51,12 +51,22 @@ export default function Sidebar({ activeSection, setActiveSection, user, alerts,
       <div className="h-20 flex items-center px-5 border-b border-[#E3E3E3] justify-between select-none shrink-0">
         <div className="flex items-center overflow-hidden">
           {!collapsed ? (
-            <div className="flex flex-col">
-              <span className="font-sans font-semibold text-[#1F1F1F] tracking-tight text-[22px] leading-tight" id="sidebar-eenvoq-title">
-                eenvoq
-              </span>
-              <span className="text-[9px] text-[#757575] font-mono tracking-wider uppercase mt-0.5 leading-none">Auditor</span>
-            </div>
+            
+<div className="flex items-center gap-1">
+  {/* Logo Image (Solid logo with background removed via Cloudinary AI) */}
+  <img 
+    src="https://res.cloudinary.com/dee01jm0p/image/upload/e_bgremoval/f_auto,q_auto/1001133582_wa3zq3" 
+    alt="eenvoq logo" 
+    className="h-10 w-auto object-contain select-none translate-y-0.5 [filter:drop-shadow(1px_0_0_#000)_drop-shadow(-1px_0_0_#000)_drop-shadow(0_1px_0_0_#000)_drop-shadow(0_-1px_0_0_#000)]" 
+  />
+
+  {/* Text Column */}
+  <div className="flex flex-col">
+    <span className="font-sans font-semibold text-[#1F1F1F] tracking-tight text-[22px] leading-tight" id="sidebar-eenvoq-title">
+      eenvoq
+    </span>
+  </div>
+</div>
           ) : (
             <span className="font-sans font-semibold text-[#1F1F1F] tracking-tight text-[22px] select-none text-center block w-full">
               e
