@@ -62,11 +62,11 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
   // Testimonials database
   const testimonials = [
     {
-      name: "Musa Danladi",
-      title: "School Owner & Director, Kaduna",
+      name: "Antonio Juanito",
+      title: "School Owner & Director, Mexico",
       stars: 5,
       comment: "Before using Eenvoq, cashiers recorded wrong tuition fees, and we kept losing tracking slips. Now parents' school term payments are validated in 2 taps. Every single deposit matches 100% and displays on my mobile immediately.",
-      stats: "Saved ₦450K in monthly till leakages"
+      stats: "Saved $5K in monthly till leakages"
     },
     {
       name: "Chioma Anyanwu",
@@ -76,8 +76,8 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
       stats: "100% cash reconciliation accuracy"
     },
     {
-      name: "Pastor David Adebayo",
-      title: "Finance Director, Lagos Council",
+      name: "Pst. Peters Schneider",
+      title: "Finance Director, London Council",
       stars: 5,
       comment: "Pledges and project donations were extremely tedious to track across multi-department files. Eenvoq gave our audit desk robust tools to post records offline and verify bank alerts automatically.",
       stats: "Reduced ledger oversight by 25 hrs/mo"
@@ -173,14 +173,10 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
         </div>
 
         {/* Desktop Navbar Links */}
-        <div className="hidden lg:flex items-center gap-8 text-xs font-bold text-black-400 tracking-wide uppercase">
-          <a href="#why-eenvoq" className="hover:text-sky-600 transition-colors">Who It's For</a>
+        <div className="hidden lg:flex items-center gap-8 text-xs font-normal text-black-400 tracking-wide uppercase">
           <a href="#features-showcase" className="hover:text-sky-600 transition-colors">Features</a>
           <a href="#integrations" className="hover:text-sky-600 transition-colors">Integrations</a>
-          <a href="#before-after" className="hover:text-sky-600 transition-colors">ROI Comparison</a>
-          <a href="#security-compliance" className="hover:text-sky-600 transition-colors">Security</a>
           <a href="#pricing-tiers" className="hover:text-sky-600 transition-colors">Pricing</a>
-          <a href="#faq-accordion" className="hover:text-sky-600 transition-colors">FAQ</a>
         </div>
 
         <div className="hidden lg:flex items-center gap-6">
@@ -222,13 +218,11 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
             transition={{ duration: 0.3 }}
             className="fixed top-20 left-0 right-0 bg-white border-b border-sky-100 z-40 lg:hidden shadow-lg overflow-hidden flex flex-col p-6 space-y-4"
           >
-            <a href="#why-eenvoq" onClick={() => setMobileMenuOpen(false)} className="text-sm font-semibold text-neutral-700 hover:text-sky-600 py-2 border-b border-sky-50">Who It's For</a>
+            
             <a href="#features-showcase" onClick={() => setMobileMenuOpen(false)} className="text-sm font-semibold text-neutral-700 hover:text-sky-600 py-2 border-b border-sky-50">Features</a>
             <a href="#integrations" onClick={() => setMobileMenuOpen(false)} className="text-sm font-semibold text-neutral-700 hover:text-sky-600 py-2 border-b border-sky-50">Integrations</a>
-            <a href="#before-after" onClick={() => setMobileMenuOpen(false)} className="text-sm font-semibold text-neutral-700 hover:text-sky-600 py-2 border-b border-sky-50">ROI Comparison</a>
             <a href="#pricing-tiers" onClick={() => setMobileMenuOpen(false)} className="text-sm font-semibold text-neutral-700 hover:text-sky-600 py-2 border-b border-sky-50">Pricing</a>
-            <a href="#faq-accordion" onClick={() => setMobileMenuOpen(false)} className="text-sm font-semibold text-neutral-700 hover:text-sky-600 py-2 border-b border-sky-50">FAQ</a>
-            <div className="pt-4 flex flex-col gap-3">
+              <div className="pt-4 flex flex-col gap-3">
               <button onClick={() => { setMobileMenuOpen(false); onEnterApp(); }} className="w-full text-center py-3 font-bold text-neutral-600 rounded-full border border-sky-100 hover:bg-sky-50/20 text-xs uppercase tracking-wide">Log In</button>
               <button onClick={() => { setMobileMenuOpen(false); onEnterApp(); }} className="w-full text-center py-3 font-bold bg-sky-500 text-white rounded-full text-xs uppercase tracking-wide">Start Free Trial</button>
             </div>
