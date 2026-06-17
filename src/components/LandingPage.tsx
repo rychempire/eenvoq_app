@@ -243,7 +243,7 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
           </div>
 
           <h1 className="text-[40px] sm:text-[44px] md:text-[40px] lg:text-[65px] font-sans font-black text-black leading-[1.08] tracking-tight max-w-5xl">
-            The Intelligent AI Assistant That Tracks Your Sales & Revenue
+            The Powerful AI Assistant That Tracks Your Sales & Revenue
           </h1>
 
           <p className="text-base md:text-xl text-black-500 max-w-3xl leading-relaxed font-sans font-medium">
