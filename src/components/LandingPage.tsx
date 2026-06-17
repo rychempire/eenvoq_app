@@ -249,11 +249,11 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
           </div>
 
           <h1 className="text-[32px] sm:text-[44px] md:text-[04px] lg:text-[65px] font-sans font-black text-black leading-[1.08] tracking-tight max-w-5xl">
-            The Intelligent AI Assistant That Tracks Your Sales, Tuition, & Revenue
+            The Intelligent AI Assistant That Tracks Your Sales & Revenue
           </h1>
 
           <p className="text-base md:text-xl text-neutral-500 max-w-3xl leading-relaxed font-sans font-medium">
-            Eenvoq tracks sales/subscription/tuition streams & revenue for your business, school, and organization.
+            Eenvoq keeps you updated on your finances, reduces leaky income, and helps you analyse sales/subscription/tuition streams for your business, school, and organization.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 w-full max-w-md">
