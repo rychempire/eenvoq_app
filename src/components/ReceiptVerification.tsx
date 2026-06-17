@@ -401,7 +401,7 @@ export default function ReceiptVerification({
         <button
           type="button"
           onClick={() => setShowAddForm(!showAddForm)}
-          className="bg-[#000000] hover:bg-[#1C1C1C] text-white font-semibold py-3 px-6 rounded-full text-xs transition flex items-center justify-center gap-2 cursor-pointer border border-transparent shadow-none shrink-0"
+          className="bg-sky-500 hover:bg-sky-600 focus:ring-2 focus:ring-sky-200 focus:outline-none text-white font-semibold py-3 px-6 rounded-full text-xs transition flex items-center justify-center gap-2 cursor-pointer border border-transparent shadow-sm shrink-0"
         >
           <Plus className="w-4 h-4 text-white" />
           <span>Create Record</span>
@@ -409,27 +409,27 @@ export default function ReceiptVerification({
       </div>
 
       {/* OPERATOR CONTROL BAR - NEW COMPONENT AS REQUESTED */}
-      <div className="bg-[#FCF5E8] border border-[#ECDCCB] rounded-[24px] p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 select-none shadow-sm" id="operator-selection-control-bar">
+      <div className="bg-sky-55/40 border border-sky-100 rounded-[24px] p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 select-none" id="operator-selection-control-bar">
         <div className="flex flex-col md:flex-row items-start md:items-center gap-4 w-full md:w-auto">
-          <div className="bg-[#FAB9F5]/20 border border-[#ECDCCB] rounded-full p-2 px-4 flex items-center gap-2.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse" />
+          <div className="bg-white border border-sky-200 rounded-full p-2 px-4 flex items-center gap-2.5 shadow-sm">
+            <span className="w-2.5 h-2.5 rounded-full bg-sky-500 animate-pulse" />
             <div className="text-xs">
-              <span className="text-[#78350F] font-sans block leading-none font-medium mb-1">Active Register Operator:</span>
+              <span className="text-[#0284c7] font-sans block leading-none font-bold mb-1">Active Register Operator:</span>
               <span className="text-[#1F1F1F] font-semibold flex items-center gap-1.5 leading-none">
                 {teamMembers.find(m => m.id === activeOperatorId)?.name || teamMembers[0]?.name || "System Owner"}
-                <span className="text-[10px] text-blue-700 bg-blue-50 border border-blue-100 px-1.5 py-0.5 rounded-full font-mono uppercase font-semibold leading-none">
+                <span className="text-[10px] text-[#0284c7] bg-sky-50 border border-sky-100 px-1.5 py-0.5 rounded-full font-mono uppercase font-semibold leading-none">
                   {teamMembers.find(m => m.id === activeOperatorId)?.role || "Owner"}
                 </span>
               </span>
             </div>
           </div>
 
-          <div className="flex items-center gap-2 text-xs text-[#78350F]">
-            <span>Switch Terminal Operator:</span>
+          <div className="flex items-center gap-2 text-xs text-sky-800 font-sans">
+            <span className="font-medium">Switch Terminal Operator:</span>
             <select
               value={activeOperatorId}
               onChange={(e) => onChangeActiveOperator(e.target.value)}
-              className="bg-white border border-[#ECDCCB] rounded-full h-9 px-4 text-xs font-semibold text-[#1F1F1F] focus:outline-none focus:border-[#78350F] cursor-pointer"
+              className="bg-white border border-sky-200 rounded-full h-9 px-4 text-xs font-semibold text-[#1F1F1F] focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100 cursor-pointer"
             >
               {teamMembers.map(member => (
                 <option key={member.id} value={member.id}>
@@ -444,21 +444,21 @@ export default function ReceiptVerification({
           <button
             type="button"
             onClick={() => setShowTeamModal(true)}
-            className="flex items-center gap-2 border border-[#ECDCCB] bg-white hover:bg-[#FBEED7] text-[#78350F] font-bold rounded-full h-9 px-4 text-xs transition cursor-pointer"
+            className="flex items-center gap-2 border border-sky-200 bg-white hover:bg-sky-50/50 text-[#0284c7] font-bold rounded-full h-9 px-4 text-xs transition cursor-pointer focus:outline-none focus:ring-2 focus:ring-sky-100"
           >
-            <Users className="w-4 h-4 text-[#B45309] stroke-[1.5]" />
+            <Users className="w-4 h-4 text-[#0284c7] stroke-[1.5]" />
             <span>Manage Team & Operators</span>
           </button>
           
-          <label className="flex items-center gap-2 bg-[#FAF9F5] hover:bg-[#FBEED7] border border-[#ECDCCB] rounded-full h-9 px-4 text-xs font-semibold text-[#78350F] cursor-pointer transition select-none">
+          <label className="flex items-center gap-2 bg-[#FCFAF7] hover:bg-sky-50/30 border border-sky-200 rounded-full h-9 px-4 text-xs font-semibold text-[#0284c7] cursor-pointer transition select-none">
             <input 
               type="checkbox"
               checked={includeDeleted}
               onChange={(e) => setIncludeDeleted(e.target.checked)}
-              className="rounded border-[#ECDCCB] text-[#78350F] focus:ring-0 cursor-pointer"
+              className="rounded border-sky-200 text-[#0284c7] focus:ring-sky-100 cursor-pointer"
             />
             <span className="flex items-center gap-1">
-              Include Deleted <span className="text-[10px] text-red-600 bg-red-50 border border-[#ECDCCB] px-1 py-0.5 rounded-full font-mono uppercase font-semibold scale-90">Trails</span>
+              Include Deleted <span className="text-[10px] text-red-600 bg-red-50 border border-red-200 px-1 py-0.5 rounded-full font-mono uppercase font-semibold scale-90">Trails</span>
             </span>
           </label>
         </div>
@@ -466,7 +466,7 @@ export default function ReceiptVerification({
 
       {/* Real-time Contextual Filter Chips */}
       <div className="flex flex-col gap-3 select-none pb-4" id="sales-contextual-filters">
-        <div className="flex items-center justify-between gap-4 bg-[#FAF9F5] border border-[#E3E3E3] rounded-[24px] p-3 w-full shadow-none" id="premium-filter-bar-container">
+        <div className="flex items-center justify-between gap-4 bg-[#FCFAF7] border border-[#E3E3E3] rounded-[24px] p-3 w-full shadow-none" id="premium-filter-bar-container">
           <div className="flex items-center gap-2 overflow-x-auto no-scrollbar flex-1 flex-nowrap" id="scrollable-filter-chips-inner">
             
             {/* Time Horizon Category */}
@@ -620,12 +620,12 @@ export default function ReceiptVerification({
 
       {/* Dashboard Metrics Panel */}
       <div className={`grid grid-cols-1 sm:grid-cols-3 gap-5 transition-all duration-200 ${animateFade ? 'opacity-30 scale-[0.995]' : 'opacity-100 scale-100'}`} id="receipts-realtime-metrics">
-        <div className="bg-[#E6F4EA] border border-[#CCD7CE] rounded-[24px] p-5 shadow-sm flex flex-col justify-between select-none text-[#137333]">
+        <div className="bg-[#f0f9ff] border border-[#bae6fd] rounded-[24px] p-5 shadow-sm flex flex-col justify-between select-none text-[#0284c7]">
           <div>
-            <span className="text-[10px] uppercase font-mono tracking-wider font-semibold text-[#137333]/70">Filter-Matched Volume</span>
-            <p className="text-xl font-mono font-bold text-[#137333] mt-1.5">₦{totalVolume.toLocaleString()}</p>
+            <span className="text-[10px] uppercase font-mono tracking-wider font-semibold text-[#0284c7]/70 font-sans">Filter-Matched Volume</span>
+            <p className="text-xl font-mono font-bold text-[#0284c7] mt-1.5">₦{totalVolume.toLocaleString()}</p>
           </div>
-          <p className="text-[10px] text-[#137333]/85 font-sans mt-3">Sum of sales meeting active target bounds</p>
+          <p className="text-[10px] text-[#0284c7]/85 font-sans mt-3">Sum of sales meeting active target bounds</p>
         </div>
         
         <div className="bg-[#FCF5E8] border border-[#ECDCCB] rounded-[24px] p-5 shadow-sm flex flex-col justify-between select-none text-[#78350F]">

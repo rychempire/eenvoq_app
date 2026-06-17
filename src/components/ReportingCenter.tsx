@@ -46,8 +46,8 @@ export default function ReportingCenter({ showConfirm }: ReportingCenterProps) {
           <p className="text-xs text-[#757575] font-normal mt-1 font-sans ml-11">Streamlined summaries matching checkout registries with merchant cashflows.</p>
         </div>
 
-        <div className="flex items-center gap-2 bg-[#E6F4EA] border border-[#CCD7CE] text-[#137333] rounded-full px-5 py-2.5 text-xs font-bold self-start sm:self-auto select-none cursor-pointer">
-          <CalendarRange className="w-5 h-5 text-[#137333] stroke-[1.5]" />
+        <div className="flex items-center gap-2 bg-[#f0f9ff] border border-[#bae6fd] text-[#0284c7] rounded-full px-5 py-2.5 text-xs font-bold self-start sm:self-auto select-none cursor-pointer">
+          <CalendarRange className="w-5 h-5 text-[#0284c7] stroke-[1.5]" />
           <span>Audits Synced</span>
         </div>
       </div>
@@ -99,7 +99,7 @@ export default function ReportingCenter({ showConfirm }: ReportingCenterProps) {
             </p>
           </div>
           <div className="space-y-3">
-            <div className="border border-[#E3E3E3] rounded-xl p-3 bg-[#FAF9F5] flex justify-between font-mono text-[10px] font-semibold text-[#1F1F1F]">
+            <div className="border border-[#E3E3E3] rounded-xl p-3 bg-[#FCFAF7] flex justify-between font-mono text-[10px] font-semibold text-[#1F1F1F]">
               <span className="font-sans text-[#757575] font-normal">Status:</span>
               <span className="text-red-700 font-bold uppercase font-sans">Flagged Warning</span>
             </div>
@@ -112,49 +112,49 @@ export default function ReportingCenter({ showConfirm }: ReportingCenterProps) {
         </div>
 
         {/* Inventory Devaluation report */}
-        <div className="bg-[#E6F4EA] border border-[#CCD7CE] rounded-[24px] p-6 shadow-sm space-y-5 flex flex-col justify-between">
+        <div className="bg-sky-50 border border-sky-200 rounded-[24px] p-6 shadow-sm space-y-5 flex flex-col justify-between">
           <div className="space-y-3">
-            <div className="flex items-center justify-between border-b border-[#CCD7CE] pb-3">
-              <h4 className="font-sans font-bold text-[#137333] text-xs">Depletion Dynamics</h4>
-              <span className="text-[10px] text-[#137333] font-mono">INV-82</span>
+            <div className="flex items-center justify-between border-b border-sky-200 pb-3">
+              <h4 className="font-sans font-bold text-[#1e40af] text-xs">Depletion Dynamics</h4>
+              <span className="text-[10px] text-[#1e40af] font-mono">INV-82</span>
             </div>
-            <p className="text-xs text-[#137333] leading-relaxed font-sans font-semibold">
+            <p className="text-xs text-[#1e40af] leading-relaxed font-sans font-semibold">
               Outlines stock level predictions and automatically indexes out-of-stock intervals to prevent gaps.
             </p>
           </div>
           <div className="space-y-3">
-            <div className="border border-[#CCD7CE] rounded-xl p-3 bg-white flex justify-between font-mono text-[10px] font-semibold text-[#137333]">
-              <span className="font-sans text-[#137333]/80 font-normal">Accuracy Rate:</span>
-              <span className="text-green-700 font-bold uppercase font-sans">96% Verified</span>
+            <div className="border border-sky-200 rounded-xl p-3 bg-white flex justify-between font-mono text-[10px] font-semibold text-[#1e40af]">
+              <span className="font-sans text-[#1e40af]/80 font-normal">Accuracy Rate:</span>
+              <span className="text-sky-600 font-bold uppercase font-sans">96% Verified</span>
             </div>
             <div className="grid grid-cols-3 gap-2 text-center font-sans">
-              <button onClick={() => simulateDownload('PDF')} className="py-2 border border-[#CCD7CE] hover:border-[#137333] bg-white rounded-full text-[10px] font-bold text-[#137333] hover:bg-gray-50 cursor-pointer">PDF</button>
-              <button onClick={() => simulateDownload('Excel')} className="py-2 border border-[#CCD7CE] hover:border-[#137333] bg-white rounded-full text-[10px] font-bold text-[#137333] hover:bg-gray-50 cursor-pointer">XLS</button>
-              <button onClick={() => simulateDownload('CSV')} className="py-2 border border-[#CCD7CE] hover:border-[#137333] bg-white rounded-full text-[10px] font-bold text-[#137333] hover:bg-gray-50 cursor-pointer">CSV</button>
+              <button onClick={() => simulateDownload('PDF')} className="py-2 border border-sky-200 hover:border-[#1e40af] bg-white rounded-full text-[10px] font-bold text-[#1e40af] hover:bg-sky-50/50 cursor-pointer">PDF</button>
+              <button onClick={() => simulateDownload('Excel')} className="py-2 border border-sky-200 hover:border-[#1e40af] bg-white rounded-full text-[10px] font-bold text-[#1e40af] hover:bg-sky-50/50 cursor-pointer">XLS</button>
+              <button onClick={() => simulateDownload('CSV')} className="py-2 border border-sky-200 hover:border-[#1e40af] bg-white rounded-full text-[10px] font-bold text-[#1e40af] hover:bg-sky-50/50 cursor-pointer">CSV</button>
             </div>
           </div>
         </div>
 
         {/* Customer retention & churn indicators */}
-        <div className="bg-[#E6F4EA] border border-[#CCD7CE] rounded-[24px] p-6 shadow-sm space-y-5 flex flex-col justify-between">
+        <div className="bg-sky-50 border border-sky-200 rounded-[24px] p-6 shadow-sm space-y-5 flex flex-col justify-between">
           <div className="space-y-3">
-            <div className="flex items-center justify-between border-b border-[#CCD7CE] pb-3">
-              <h4 className="font-sans font-bold text-[#137333] text-xs">Customer Loyalty rates</h4>
-              <span className="text-[10px] text-[#137333] font-mono">LRT-11</span>
+            <div className="flex items-center justify-between border-b border-sky-200 pb-3">
+              <h4 className="font-sans font-bold text-[#1e40af] text-xs">Customer Loyalty rates</h4>
+              <span className="text-[10px] text-[#1e40af] font-mono">LRT-11</span>
             </div>
-            <p className="text-xs text-[#137333] leading-relaxed font-sans font-semibold">
+            <p className="text-xs text-[#1e40af] leading-relaxed font-sans font-semibold">
               Assess customer return cycles, points allocations, and response stats on promotional marketing.
             </p>
           </div>
           <div className="space-y-3">
-            <div className="border border-[#CCD7CE] rounded-xl p-3 bg-white flex justify-between font-mono text-[10px] font-semibold text-[#137333]">
-              <span className="font-sans text-[#137333] font-normal font-medium">Overdue accounts:</span>
-              <span className="text-green-700 font-bold uppercase font-sans">14 Active Partners</span>
+            <div className="border border-sky-200 rounded-xl p-3 bg-white flex justify-between font-mono text-[10px] font-semibold text-[#1e40af]">
+              <span className="font-sans text-[#1e40af] font-normal font-medium">Overdue accounts:</span>
+              <span className="text-sky-600 font-bold uppercase font-sans">14 Active Partners</span>
             </div>
             <div className="grid grid-cols-3 gap-2 text-center font-sans">
-              <button onClick={() => simulateDownload('PDF')} className="py-2 border border-[#CCD7CE] hover:border-[#137333] bg-white rounded-full text-[10px] font-bold text-[#137333] hover:bg-gray-50 cursor-pointer">PDF</button>
-              <button onClick={() => simulateDownload('Excel')} className="py-2 border border-[#CCD7CE] hover:border-[#137333] bg-white rounded-full text-[10px] font-bold text-[#137333] hover:bg-gray-50 cursor-pointer">XLS</button>
-              <button onClick={() => simulateDownload('CSV')} className="py-2 border border-[#CCD7CE] hover:border-[#137333] bg-white rounded-full text-[10px] font-bold text-[#137333] hover:bg-gray-50 cursor-pointer">CSV</button>
+              <button onClick={() => simulateDownload('PDF')} className="py-2 border border-sky-200 hover:border-[#1e40af] bg-white rounded-full text-[10px] font-bold text-[#1e40af] hover:bg-sky-50/50 cursor-pointer">PDF</button>
+              <button onClick={() => simulateDownload('Excel')} className="py-2 border border-sky-200 hover:border-[#1e40af] bg-white rounded-full text-[10px] font-bold text-[#1e40af] hover:bg-sky-50/50 cursor-pointer">XLS</button>
+              <button onClick={() => simulateDownload('CSV')} className="py-2 border border-sky-200 hover:border-[#1e40af] bg-white rounded-full text-[10px] font-bold text-[#1e40af] hover:bg-sky-50/50 cursor-pointer">CSV</button>
             </div>
           </div>
         </div>
@@ -162,18 +162,18 @@ export default function ReportingCenter({ showConfirm }: ReportingCenterProps) {
       </div>
 
       {/* Advanced AI Ground-Truth Report Preview Panel */}
-      <div className="bg-[#E6F4EA] border border-[#CCD7CE] p-6 rounded-[24px] space-y-4 shadow-sm" id="ai-groundtruth-reporter animate-fade-in">
-        <div className="flex items-center gap-2 text-[#137333]">
-          <EenvoqIcon className="w-5 h-5 text-[#137333] stroke-[1.5] animate-pulse" />
+      <div className="bg-sky-50 border border-sky-200 p-6 rounded-[24px] space-y-4 shadow-sm" id="ai-groundtruth-reporter animate-fade-in">
+        <div className="flex items-center gap-2 text-[#1e40af]">
+          <EenvoqIcon className="w-5 h-5 text-[#1e40af] stroke-[1.5] animate-pulse" />
           <h3 className="font-sans font-bold text-sm">Automated eenvoq Audit Report</h3>
         </div>
 
-        <div className="bg-[#FAF9F5]/80 p-5 rounded-2xl border border-[#CCD7CE] text-xs space-y-3 text-[#137333] leading-relaxed font-sans shadow-none">
+        <div className="bg-[#FCFAF7]/80 p-5 rounded-2xl border border-sky-200 text-xs space-y-3 text-[#1e40af] leading-relaxed font-sans shadow-none">
           <p className="font-extrabold text-sm">Summary Findings:</p>
-          <p className="font-semibold text-xs leading-relaxed text-[#137333]">
+          <p className="font-semibold text-xs leading-relaxed text-[#1e40af]">
             Operating indices map an unrecorded sales leakage rate representing 5.8% of daily transactions. Reconciliations show discrepancy is centralized on Cash Till Register #1, primarily between 3:00 PM and 5:00 PM, where void overrides were executed without matching receipt security signatures. Overall ledger health is stable, with credit limits locked on Baba Sadiq preventing further exposure.
           </p>
-          <p className="text-green-700 font-bold pt-1 text-xs">
+          <p className="text-sky-600 font-bold pt-1 text-xs">
             ✓ Corrective acts applied: Wholesale account override locks engaged (Baba Sadiq). Custom cashier audits logging overrides active.
           </p>
         </div>

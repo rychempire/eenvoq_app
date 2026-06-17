@@ -61,8 +61,8 @@ export default function InventoryIntelligence({ inventory, onTriggerRestock, sho
           <p className="text-xs text-[#757575] font-normal mt-1 font-sans ml-11">See which products are running out soon and notify suppliers to send more.</p>
         </div>
 
-        <div className="flex items-center gap-2 bg-[#E6F4EA] border border-[#CCD7CE] text-[#137333] rounded-full px-5 py-2.5 text-xs font-bold self-start sm:self-auto">
-          <CalendarRange className="w-5 h-5 text-[#137333] stroke-[1.5]" />
+        <div className="flex items-center gap-2 bg-[#f0f9ff] border border-[#bae6fd] text-[#0284c7] rounded-full px-5 py-2.5 text-xs font-bold self-start sm:self-auto">
+          <CalendarRange className="w-5 h-5 text-[#0284c7] stroke-[1.5]" />
           <span className="font-sans">Sync Active</span>
         </div>
       </div>
@@ -189,16 +189,16 @@ export default function InventoryIntelligence({ inventory, onTriggerRestock, sho
               </div>
 
               {/* eenvoq AI Predictive Analytics card */}
-              <div className="bg-[#E6F4EA] border border-[#CCD7CE] p-5 rounded-[24px] space-y-3 text-[#137333]" id="inventory-predictive-analytics-card">
+              <div className="bg-[#f0f9ff] border border-[#bae6fd] p-5 rounded-[24px] space-y-3 text-[#0284c7]" id="inventory-predictive-analytics-card">
                 <div className="flex items-center gap-2 text-xs font-bold select-none">
-                  <EenvoqIcon className="w-4 h-4 text-[#137333] stroke-[1.5] animate-pulse" />
+                  <EenvoqIcon className="w-4 h-4 text-[#0284c7] stroke-[1.5] animate-pulse" />
                   <span>When Will This Run Out?</span>
                 </div>
-                <div className="space-y-2 text-xs text-[#137333] font-sans leading-relaxed" id="depletion-explains">
+                <div className="space-y-2 text-xs text-[#0284c7] font-sans leading-relaxed" id="depletion-explains">
                   <p className="font-semibold">
-                    Selling at about <strong className="text-[#0C662C] font-bold">{selectedItem.velocity} {selectedItem.unit} per day</strong>, this will run out in <strong className="text-[#0C662C] font-bold">{selectedItem.forecastedDepletionDays} days</strong>.
+                    Selling at about <strong className="text-[#0369a1] font-bold">{selectedItem.velocity} {selectedItem.unit} per day</strong>, this will run out in <strong className="text-[#0369a1] font-bold">{selectedItem.forecastedDepletionDays} days</strong>.
                   </p>
-                  <p className="pt-2 border-t border-[#CCD7CE] text-[11px] text-[#137333] font-medium">
+                  <p className="pt-2 border-t border-[#bae6fd] text-[11px] text-[#0284c7] font-medium font-sans">
                     We suggest ordering {restockQty} {selectedItem.unit} before {selectedItem.restockDate} so you don't run out.
                   </p>
                 </div>

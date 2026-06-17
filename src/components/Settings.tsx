@@ -62,61 +62,61 @@ export default function Settings({ user, onUpdateUser, showConfirm }: SettingsPr
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8" id="settings-splitting-grid">
         
         {/* Left Side: forms */}
-        <div className="lg:col-span-2 bg-[#FCF5E8] rounded-[24px] p-6 border border-[#ECDCCB] shadow-sm space-y-6 flex flex-col" id="settings-form-panel">
+        <div className="lg:col-span-2 bg-[#FCFAF7] rounded-[24px] p-6 border border-sky-100 shadow-sm space-y-6 flex flex-col" id="settings-form-panel">
           
-          <div className="flex items-center gap-2 border-b border-[#ECDCCB] pb-4 select-none">
-            <Store className="w-5 h-5 text-[#B45309] stroke-[1.5]" />
-            <h4 className="font-sans font-bold text-[#78350F] text-sm">Merchant Information</h4>
+          <div className="flex items-center gap-2 border-b border-sky-100 pb-4 select-none">
+            <Store className="w-5 h-5 text-sky-600 stroke-[1.5]" />
+            <h4 className="font-sans font-bold text-sky-850 text-sm">Merchant Information</h4>
           </div>
 
           <form onSubmit={handleSaveSettingsSubmit} className="space-y-5 text-xs font-semibold text-[#1F1F1F]">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block mb-1.5 text-xs text-[#B45309] font-sans font-bold">Administrative Owner</label>
+                <label className="block mb-1.5 text-xs text-sky-850 font-sans font-bold">Administrative Owner</label>
                 <input
                   type="text" required value={name} onChange={e => setName(e.target.value)}
-                  className="w-full bg-white text-[#1F1F1F] border border-[#ECDCCB] rounded-full py-2.5 px-4 text-xs focus:outline-none focus:border-[#78350F] font-sans font-semibold shadow-sm"
+                  className="w-full bg-white text-[#1F1F1F] border border-sky-150 rounded-full py-2.5 px-4 text-xs focus:outline-none focus:border-sky-500 font-sans font-semibold shadow-sm focus:ring-2 focus:ring-sky-100"
                 />
               </div>
 
               <div>
-                <label className="block mb-1.5 text-xs text-[#B45309] font-sans font-bold">Business Email</label>
+                <label className="block mb-1.5 text-xs text-sky-850 font-sans font-bold">Business Email</label>
                 <input
                   type="email" required value={email} onChange={e => setEmail(e.target.value)}
-                  className="w-full bg-white text-[#1F1F1F] border border-[#ECDCCB] rounded-full py-2.5 px-4 text-xs focus:outline-none focus:border-[#78350F] font-sans font-semibold shadow-sm"
+                  className="w-full bg-white text-[#1F1F1F] border border-sky-150 rounded-full py-2.5 px-4 text-xs focus:outline-none focus:border-sky-500 font-sans font-semibold shadow-sm focus:ring-2 focus:ring-sky-100"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block mb-1.5 text-xs text-[#B45309] font-sans font-bold">Business Store Name</label>
+                <label className="block mb-1.5 text-xs text-sky-850 font-sans font-bold">Business Store Name</label>
                 <input
                   type="text" required value={storeName} onChange={e => setStoreName(e.target.value)}
-                  className="w-full bg-white text-[#1F1F1F] border border-[#ECDCCB] rounded-full py-2.5 px-4 text-xs focus:outline-none focus:border-[#78350F] font-sans font-semibold shadow-sm"
+                  className="w-full bg-white text-[#1F1F1F] border border-sky-150 rounded-full py-2.5 px-4 text-xs focus:outline-none focus:border-sky-500 font-sans font-semibold shadow-sm focus:ring-2 focus:ring-sky-100"
                 />
               </div>
 
               <div>
-                <label className="block mb-1.5 text-xs text-[#B45309] font-sans font-bold">Role Category</label>
+                <label className="block mb-1.5 text-xs text-sky-850 font-sans font-bold">Role Category</label>
                 <input
                   type="text" disabled value={user.role}
-                  className="w-full bg-[#FCF8F2] text-gray-400 border border-[#ECDCCB] rounded-full py-2.5 px-4 text-xs select-none cursor-not-allowed font-sans font-bold"
+                  className="w-full bg-sky-50/25 text-gray-400 border border-sky-100 rounded-full py-2.5 px-4 text-xs select-none cursor-not-allowed font-sans font-bold"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block mb-1.5 text-xs text-[#B45309] font-sans font-bold">Physical Location Address</label>
+              <label className="block mb-1.5 text-xs text-sky-850 font-sans font-bold">Physical Location Address</label>
               <input
                 type="text" required value={location} onChange={e => setLocation(e.target.value)}
-                className="w-full bg-white text-[#1F1F1F] border border-[#ECDCCB] rounded-full py-2.5 px-4 text-xs focus:outline-none focus:border-[#78350F] font-sans font-semibold shadow-sm"
+                className="w-full bg-white text-[#1F1F1F] border border-sky-150 rounded-full py-2.5 px-4 text-xs focus:outline-none focus:border-sky-500 font-sans font-semibold shadow-sm focus:ring-2 focus:ring-sky-100"
               />
             </div>
 
             <button
               type="submit"
-              className="bg-[#1F1F1F] hover:bg-black text-white font-bold py-3.5 px-6 rounded-full transition text-xs font-sans flex items-center justify-center gap-2 cursor-pointer shadow-md"
+              className="bg-sky-500 hover:bg-sky-600 focus:ring-2 focus:ring-sky-200 focus:outline-none text-white font-bold py-3.5 px-6 rounded-full transition text-xs font-sans flex items-center justify-center gap-2 cursor-pointer shadow-sm"
             >
               <Save className="w-4 h-4 stroke-[1.5]" />
               Save Configuration
@@ -129,18 +129,18 @@ export default function Settings({ user, onUpdateUser, showConfirm }: SettingsPr
         <div className="space-y-6 flex flex-col justify-start" id="settings-secondary-panel">
           
           {/* Secrets and credentials locked report */}
-          <div className="bg-[#E6F4EA] border border-[#CCD7CE] rounded-[24px] p-6 shadow-sm space-y-4 text-[#137333]">
-            <div className="flex items-center gap-2 border-b border-[#CCD7CE] pb-3 select-none">
-              <Key className="w-4.5 h-4.5 text-[#137333] stroke-[1.5]" />
-              <h4 className="font-sans font-bold text-[#137333] text-xs">Credentials Node</h4>
+          <div className="bg-[#f0f9ff] border border-[#bae6fd] rounded-[24px] p-6 shadow-sm space-y-4 text-[#0284c7]">
+            <div className="flex items-center gap-2 border-b border-[#bae6fd] pb-3 select-none">
+              <Key className="w-4.5 h-4.5 text-[#0284c7] stroke-[1.5]" />
+              <h4 className="font-sans font-bold text-[#0284c7] text-xs">Credentials Node</h4>
             </div>
 
-            <p className="text-xs text-[#137333] leading-relaxed font-sans font-semibold">
+            <p className="text-xs text-[#0284c7] leading-relaxed font-sans font-semibold">
               Environment keys are encapsulated inside cloud container instances to prevent browser-side leakage events.
             </p>
 
-            <div className="p-3 bg-white rounded-xl border border-[#CCD7CE] flex gap-2 items-center text-[10.5px] text-[#137333] font-sans font-bold">
-              <ShieldCheck className="w-4 h-4 text-[#137333] stroke-[1.5] shrink-0" />
+            <div className="p-3 bg-white rounded-xl border border-[#bae6fd] flex gap-2 items-center text-[10.5px] text-[#0284c7] font-sans font-bold">
+              <ShieldCheck className="w-4 h-4 text-[#0284c7] stroke-[1.5] shrink-0" />
               <span className="font-mono">GEMINI_API_KEY: Configured Server-Side</span>
             </div>
           </div>
@@ -187,18 +187,18 @@ export default function Settings({ user, onUpdateUser, showConfirm }: SettingsPr
           </div>
 
           {/* Billing subscription card */}
-          <div className="bg-[#E6F4EA] border border-[#CCD7CE] rounded-[24px] p-6 shadow-sm flex flex-col justify-between font-sans relative overflow-hidden text-[#137333]">
+          <div className="bg-[#f0f9ff] border border-[#bae6fd] rounded-[24px] p-6 shadow-sm flex flex-col justify-between font-sans relative overflow-hidden text-[#0284c7]">
             
             <div className="space-y-5">
-              <div className="flex justify-between items-center pb-3 border-b border-[#CCD7CE] select-none">
-                <span className="text-[9px] font-bold uppercase tracking-wider bg-white border border-[#CCD7CE] text-[#137333] px-2.5 py-0.5 rounded-full">Pro Tier</span>
-                <EenvoqIcon className="w-4 h-4 text-[#137333] stroke-[1.5] animate-pulse" />
+              <div className="flex justify-between items-center pb-3 border-b border-[#bae6fd] select-none">
+                <span className="text-[9px] font-bold uppercase tracking-wider bg-white border border-[#bae6fd] text-[#0284c7] px-2.5 py-0.5 rounded-full">Pro Tier</span>
+                <EenvoqIcon className="w-4 h-4 text-[#0284c7] stroke-[1.5] animate-pulse" />
               </div>
 
               <div>
-                <h4 className="font-bold text-[#137333] text-[11px] uppercase">Service Tier Status</h4>
-                <p className="text-xl font-bold font-mono mt-1 text-[#137333]">₦45,000 <span className="text-xs font-sans font-semibold text-[#137333]">/ mo</span></p>
-                <p className="text-[10px] text-[#137333] mt-1 font-semibold font-sans">Next automatic bill run: July 1st, 2026</p>
+                <h4 className="font-bold text-[#0284c7] text-[11px] uppercase">Service Tier Status</h4>
+                <p className="text-xl font-bold font-mono mt-1 text-[#0284c7]">₦45,000 <span className="text-xs font-sans font-semibold text-[#0284c7]">/ mo</span></p>
+                <p className="text-[10px] text-[#0284c7] mt-1 font-semibold font-sans">Next automatic bill run: July 1st, 2026</p>
               </div>
             </div>
 

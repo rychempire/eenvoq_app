@@ -59,8 +59,8 @@ export default function DebtorControl({ debtors, onToggleLock, showConfirm }: De
           <p className="text-xs text-[#757575] font-normal mt-1 font-sans ml-11">Keep track of customer store tabs and lock accounts if they owe money for too long.</p>
         </div>
 
-        <div className="flex items-center gap-2 bg-[#E6F4EA] border border-[#CCD7CE] text-[#137333] rounded-full px-5 py-2.5 text-xs font-bold self-start sm:sm:self-auto">
-          <BookOpen className="w-5 h-5 text-[#137333] stroke-[1.5]" />
+        <div className="flex items-center gap-2 bg-sky-100 border border-sky-200 text-[#0284c7] rounded-full px-5 py-2.5 text-xs font-bold self-start sm:self-auto shadow-sm">
+          <BookOpen className="w-5 h-5 text-sky-600 stroke-[1.5]" />
           <span>Credit Check Active</span>
         </div>
       </div>
@@ -85,9 +85,9 @@ export default function DebtorControl({ debtors, onToggleLock, showConfirm }: De
 
             <div className="flex items-center justify-end gap-2 text-xs text-[#5F6368] font-medium font-sans">
               <Sliders className="w-4 h-4 text-[#757575] stroke-[1.5]" />
-              <button type="button" onClick={() => setFilterRisk('all')} className={`px-4 py-2 rounded-full border transition cursor-pointer font-medium text-xs ${filterRisk === 'all' ? 'bg-[#1F1F1F] border-[#1F1F1F] text-white' : 'bg-white border-[#E3E3E3] text-[#757575] hover:bg-gray-50'}`}>All</button>
-              <button type="button" onClick={() => setFilterRisk('high')} className={`px-4 py-2 rounded-full border transition cursor-pointer font-medium text-xs ${filterRisk === 'high' ? 'bg-[#1F1F1F] border-[#1F1F1F] text-white' : 'bg-white border-[#E3E3E3] text-[#757575] hover:bg-gray-50'}`}>High Risk</button>
-              <button type="button" onClick={() => setFilterRisk('locked')} className={`px-4 py-2 rounded-full border transition cursor-pointer font-medium text-xs ${filterRisk === 'locked' ? 'bg-red-600 border-red-600 text-white' : 'bg-white border-[#E3E3E3] text-[#757575] hover:bg-gray-50'}`}>Locked</button>
+              <button type="button" onClick={() => setFilterRisk('all')} className={`px-4 py-2 rounded-full border transition cursor-pointer font-bold text-xs ${filterRisk === 'all' ? 'bg-[#111111] border-sky-400 text-white shadow-sm' : 'bg-white border-[#E3E3E3] text-[#757575] hover:bg-sky-50/50'}`}>All</button>
+              <button type="button" onClick={() => setFilterRisk('high')} className={`px-4 py-2 rounded-full border transition cursor-pointer font-bold text-xs ${filterRisk === 'high' ? 'bg-sky-500 border-sky-450 text-white shadow-sm' : 'bg-white border-[#E3E3E3] text-[#757575] hover:bg-sky-50/50'}`}>High Risk</button>
+              <button type="button" onClick={() => setFilterRisk('locked')} className={`px-4 py-2 rounded-full border transition cursor-pointer font-bold text-xs ${filterRisk === 'locked' ? 'bg-red-650 border-red-650 text-white shadow-sm' : 'bg-white border-[#E3E3E3] text-[#757575] hover:bg-sky-50/50'}`}>Locked</button>
             </div>
           </div>
 
@@ -97,8 +97,8 @@ export default function DebtorControl({ debtors, onToggleLock, showConfirm }: De
                 <div
                   key={debtor.id}
                   onClick={() => setSelectedDebtor(debtor)}
-                  className={`p-5 flex items-center justify-between hover:bg-gray-50/70 transition cursor-pointer ${
-                    selectedDebtor?.id === debtor.id ? 'bg-[#F0F4F9]' : ''
+                  className={`p-5 flex items-center justify-between hover:bg-sky-50/20 transition cursor-pointer ${
+                    selectedDebtor?.id === debtor.id ? 'bg-sky-50 border-l-4 border-sky-500' : ''
                   }`}
                 >
                   <div className="min-w-0 pr-4">
@@ -141,21 +141,21 @@ export default function DebtorControl({ debtors, onToggleLock, showConfirm }: De
               <div className={`p-4 rounded-[24px] space-y-4 shadow-sm border transition-colors duration-150 ${
                 selectedDebtor.locked 
                   ? 'bg-[#FCF5E8] border-[#ECDCCB] text-[#78350F]' 
-                  : 'bg-[#E6F4EA] border-[#CCD7CE] text-[#137333]'
+                  : 'bg-[#f0f9ff] border-[#bae6fd] text-[#0284c7]'
               }`} id="automated-credit-lock-box">
                 <span className={`text-[9px] font-bold uppercase block font-sans select-none ${
-                  selectedDebtor.locked ? 'text-[#78350F]' : 'text-[#137333]'
+                  selectedDebtor.locked ? 'text-[#78350F]' : 'text-[#0284c7]'
                 }`}>Customer Credit Block:</span>
                 <div className="flex items-center justify-between text-xs select-none gap-3">
                   <div>
                     <p className={`font-bold flex items-center gap-1.5 font-sans ${
-                      selectedDebtor.locked ? 'text-[#78350F]' : 'text-[#137333]'
+                      selectedDebtor.locked ? 'text-[#78350F]' : 'text-[#0284c7]'
                     }`}>
-                      {selectedDebtor.locked ? <Lock className="w-4 h-4 text-red-600 stroke-[1.5]" /> : <Unlock className="w-4 h-4 text-[#137333] stroke-[1.5]" />}
+                      {selectedDebtor.locked ? <Lock className="w-4 h-4 text-red-600 stroke-[1.5]" /> : <Unlock className="w-4 h-4 text-[#0284c7] stroke-[1.5]" />}
                       {selectedDebtor.locked ? 'ACCOUNT LOCKED' : 'ACCOUNT OK'}
                     </p>
                     <p className={`text-[10px] mt-1 font-sans font-semibold leading-normal ${
-                      selectedDebtor.locked ? 'text-[#B45309]' : 'text-[#137333]/90'
+                      selectedDebtor.locked ? 'text-[#B45309]' : 'text-[#0284c7]/90'
                     }`}>Locks customer from making new purchases until they pay</p>
                   </div>
 
@@ -175,19 +175,19 @@ export default function DebtorControl({ debtors, onToggleLock, showConfirm }: De
               </div>
 
               {/* Collections Assistant AI Template representation */}
-              <div className="bg-[#E6F4EA] border border-[#CCD7CE] rounded-[24px] p-5 space-y-4 flex flex-col shadow-sm text-[#137333]">
+              <div className="bg-[#f0f9ff] border border-[#bae6fd] rounded-[24px] p-5 space-y-4 flex flex-col shadow-sm text-[#0284c7]">
                 <div className="flex items-center gap-1.5 text-xs font-bold select-none">
-                  <EenvoqIcon className="w-4 h-4 text-[#137333] stroke-[1.5]" />
+                  <EenvoqIcon className="w-4 h-4 text-[#0284c7] stroke-[1.5]" />
                   <span>Ready-made Friendly Text Reminder</span>
                 </div>
-                <div className="bg-[#FAF9F5]/80 p-4 rounded-xl border border-[#CCD7CE] text-[11px] font-sans leading-relaxed text-[#137333] font-semibold">
+                <div className="bg-[#FCFAF7]/80 p-4 rounded-xl border border-[#bae6fd] text-[11px] font-sans leading-relaxed text-[#0284c7] font-semibold">
                   "Hello {selectedDebtor.name}, you have a pending payment of ₦{selectedDebtor.amountOwed.toLocaleString()} on your store tab. Please make a payment soon to keep your account open. Thank you!"
                 </div>
 
                 <button
                   type="button"
                   onClick={() => handleSimulateDispatchReminder(selectedDebtor)}
-                  className="w-full bg-[#1F1F1F] hover:bg-black text-white font-bold py-3 rounded-full text-xs transition flex items-center justify-center gap-2 cursor-pointer border border-[#E3E3E3]"
+                  className="w-full bg-sky-500 hover:bg-sky-600 focus:ring-2 focus:ring-sky-200 focus:outline-none text-white font-bold py-3 rounded-full text-xs transition flex items-center justify-center gap-2 cursor-pointer border border-transparent shadow-sm"
                 >
                   <MessageSquare className="w-4 h-4 stroke-[1.5]" />
                   Send Text Reminder

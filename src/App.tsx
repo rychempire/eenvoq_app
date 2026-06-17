@@ -601,7 +601,7 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
   };
 
   return (
-    <div className="flex h-screen bg-[#FAF9F5]" id="application-container-root animate-fade-in">
+    <div className="flex h-screen bg-[#FCFAF7]" id="application-container-root animate-fade-in">
       
       {/* Sidebar for Desktop */}
       <div className="hidden md:flex shrink-0">
@@ -618,7 +618,7 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         
         {/* Desktop Header for Minimalist Aesthetic */}
-        <header className="hidden md:flex h-16 items-center justify-between px-8 bg-[#FAF9F5]/90 backdrop-blur-md border-b border-[#E3E3E3] select-none shrink-0" id="desktop-navigation-header">
+        <header className="hidden md:flex h-16 items-center justify-between px-8 bg-[#FCFAF7]/90 backdrop-blur-md border-b border-[#E3E3E3] select-none shrink-0" id="desktop-navigation-header">
           <h1 className="text-sm font-semibold text-[#1F1F1F] font-display flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-[#1F1F1F]" />
             {userSession.storeName}
@@ -632,7 +632,7 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
         </header>
 
          {/* Mobile Header Bar */}
-        <header className="h-16 bg-[#FAF9F5]/90 backdrop-blur-md border-b border-[#E3E3E3] px-4 flex items-center justify-between md:hidden select-none shrink-0" id="mobile-navigation-header">
+        <header className="h-16 bg-[#FCFAF7]/90 backdrop-blur-md border-b border-[#E3E3E3] px-4 flex items-center justify-between md:hidden select-none shrink-0" id="mobile-navigation-header">
           <div className="flex items-center">
             <span className="font-sans font-semibold text-[#1F1F1F] tracking-tight text-[22px] select-none leading-none">eenvoq</span>
           </div>
@@ -698,13 +698,13 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
               <button 
                 onClick={() => setActiveSection('dashboard')}
                 className={`flex-1 flex flex-col items-center justify-center h-full rounded-full transition-all duration-300 cursor-pointer ${
-                  activeSection === 'dashboard' ? 'text-[#137333] scale-105 font-bold' : 'text-[#757575] hover:text-black font-semibold'
+                  activeSection === 'dashboard' ? 'text-[#1e40af] scale-105 font-bold' : 'text-[#757575] hover:text-black font-semibold'
                 }`}
               >
-                <LayoutDashboard className={`w-[22px] h-[22px] stroke-[1.5] transition-all duration-150 ${activeSection === 'dashboard' ? 'text-[#137333] stroke-[2]' : 'text-[#757575]'}`} />
+                <LayoutDashboard className={`w-[22px] h-[22px] stroke-[1.5] transition-all duration-150 ${activeSection === 'dashboard' ? 'text-[#1e40af] stroke-[2]' : 'text-[#757575]'}`} />
                 <span className="text-[9px] font-sans tracking-tight mt-1">Home</span>
                 {activeSection === 'dashboard' && (
-                  <span className="w-1 h-1 rounded-full bg-[#137333] mt-0.5 animate-pulse" />
+                  <span className="w-1 h-1 rounded-full bg-[#1e40af] mt-0.5 animate-pulse" />
                 )}
               </button>
 
@@ -712,13 +712,13 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
               <button 
                 onClick={() => setActiveSection('inventory')}
                 className={`flex-1 flex flex-col items-center justify-center h-full rounded-full transition-all duration-300 cursor-pointer ${
-                  activeSection === 'inventory' ? 'text-[#137333] scale-105 font-bold' : 'text-[#757575] hover:text-black font-semibold'
+                  activeSection === 'inventory' ? 'text-[#1e40af] scale-105 font-bold' : 'text-[#757575] hover:text-black font-semibold'
                 }`}
               >
-                <ShoppingCart className={`w-[22px] h-[22px] stroke-[1.5] transition-all duration-150 ${activeSection === 'inventory' ? 'text-[#137333] stroke-[2]' : 'text-[#757575]'}`} />
+                <ShoppingCart className={`w-[22px] h-[22px] stroke-[1.5] transition-all duration-150 ${activeSection === 'inventory' ? 'text-[#1e40af] stroke-[2]' : 'text-[#757575]'}`} />
                 <span className="text-[9px] font-sans tracking-tight mt-1">Inventory</span>
                 {activeSection === 'inventory' && (
-                  <span className="w-1 h-1 rounded-full bg-[#137333] mt-0.5 animate-pulse" />
+                  <span className="w-1 h-1 rounded-full bg-[#1e40af] mt-0.5 animate-pulse" />
                 )}
               </button>
 
@@ -726,13 +726,13 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
               <button 
                 onClick={() => setActiveSection('assistant')}
                 className={`flex-1 flex flex-col items-center justify-center h-full rounded-full transition-all duration-300 cursor-pointer ${
-                  activeSection === 'assistant' ? 'text-[#137333] scale-105 font-bold' : 'text-[#757575] hover:text-black font-semibold'
+                  activeSection === 'assistant' ? 'text-[#1e40af] scale-105 font-bold' : 'text-[#757575] hover:text-black font-semibold'
                 }`}
               >
-                <EenvoqIcon className={`w-[22px] h-[22px] stroke-[1.5] transition-all duration-150 ${activeSection === 'assistant' ? 'text-[#137333] stroke-[2]' : 'text-[#757575]'}`} />
+                <EenvoqIcon className={`w-[22px] h-[22px] stroke-[1.5] transition-all duration-150 ${activeSection === 'assistant' ? 'text-[#1e40af] stroke-[2]' : 'text-[#757575]'}`} />
                 <span className="text-[9px] font-sans tracking-tight mt-1">Eenvoq AI</span>
                 {activeSection === 'assistant' && (
-                  <span className="w-1 h-1 rounded-full bg-[#137333] mt-0.5 animate-pulse" />
+                  <span className="w-1 h-1 rounded-full bg-[#1e40af] mt-0.5 animate-pulse" />
                 )}
               </button>
 
@@ -740,13 +740,13 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
               <button 
                 onClick={() => setActiveSection('retention')}
                 className={`flex-1 flex flex-col items-center justify-center h-full rounded-full transition-all duration-300 cursor-pointer ${
-                  activeSection === 'retention' ? 'text-[#137333] scale-105 font-bold' : 'text-[#757575] hover:text-black font-semibold'
+                  activeSection === 'retention' ? 'text-[#1e40af] scale-105 font-bold' : 'text-[#757575] hover:text-black font-semibold'
                 }`}
               >
-                <Users className={`w-[22px] h-[22px] stroke-[1.5] transition-all duration-150 ${activeSection === 'retention' ? 'text-[#137333] stroke-[2]' : 'text-[#757575]'}`} />
+                <Users className={`w-[22px] h-[22px] stroke-[1.5] transition-all duration-150 ${activeSection === 'retention' ? 'text-[#1e40af] stroke-[2]' : 'text-[#757575]'}`} />
                 <span className="text-[9px] font-sans tracking-tight mt-1">Customers</span>
                 {activeSection === 'retention' && (
-                  <span className="w-1 h-1 rounded-full bg-[#137333] mt-0.5 animate-pulse" />
+                  <span className="w-1 h-1 rounded-full bg-[#1e40af] mt-0.5 animate-pulse" />
                 )}
               </button>
 

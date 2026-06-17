@@ -159,8 +159,8 @@ export default function TruthCheck({ audits, receipts, onAddAudit, showConfirm }
           </form>
 
           {/* Quick Informational Notice */}
-          <div className="p-4 bg-[#E6F4EA] rounded-[24px] border border-[#CCD7CE] flex gap-3 items-start text-[11px] text-[#137333] font-sans mt-2">
-            <Info className="w-5 h-5 text-[#137333] shrink-0 stroke-[1.5]" />
+          <div className="p-4 bg-[#f0f9ff] rounded-[24px] border border-[#bae6fd] flex gap-3 items-start text-[11px] text-[#0284c7] font-sans mt-2">
+            <Info className="w-5 h-5 text-[#0284c7] shrink-0 stroke-[1.5]" />
             <p className="leading-relaxed font-semibold">
               We match the bills given to customers against cash in the till to make sure money doesn't get lost.
             </p>
@@ -184,13 +184,13 @@ export default function TruthCheck({ audits, receipts, onAddAudit, showConfirm }
 
               {/* expected vs declared summary grid */}
               <div className="grid grid-cols-2 gap-4 font-sans select-none" id="audit-split-metrics">
-                <div className="bg-[#FAF9F5] p-4 rounded-[24px] border border-[#E3E3E3]">
+                <div className="bg-[#FCFAF7] p-4 rounded-[24px] border border-[#E3E3E3]">
                   <span className="text-[10px] font-semibold text-[#757575] uppercase">What Sales Book Says</span>
                   <p className="text-lg font-bold text-[#1F1F1F] font-mono mt-1">
                     ₦{results.expectedRevenue.toLocaleString()}
                   </p>
                 </div>
-                <div className="bg-[#FAF9F5] p-4 rounded-[24px] border border-[#E3E3E3]">
+                <div className="bg-[#FCFAF7] p-4 rounded-[24px] border border-[#E3E3E3]">
                   <span className="text-[10px] font-semibold text-[#757575] uppercase">What Is in Register</span>
                   <p className="text-lg font-bold text-[#1F1F1F] font-mono mt-1">
                     ₦{results.declaredRevenue.toLocaleString()}
@@ -225,13 +225,13 @@ export default function TruthCheck({ audits, receipts, onAddAudit, showConfirm }
               <div 
                 className={`p-5 rounded-[24px] space-y-3 border transition-colors duration-150 ${
                   results.riskLevel === 'low' 
-                    ? 'bg-[#E6F4EA] border-[#CCD7CE] text-[#137333]' 
+                    ? 'bg-[#f0f9ff] border-[#bae6fd] text-[#0284c7]' 
                     : 'bg-[#E8F0FE] border-[#CEDFFB] text-[#1E3A8A]'
                 }`} 
                 id="audit-ai-commentary"
               >
                 <div className="flex items-center gap-1.5 text-xs font-bold">
-                  <EenvoqIcon className={`w-4 h-4 stroke-[1.5] ${results.riskLevel === 'low' ? 'text-[#137333]' : 'text-[#2563EB]'}`} />
+                  <EenvoqIcon className={`w-4 h-4 stroke-[1.5] ${results.riskLevel === 'low' ? 'text-[#0284c7]' : 'text-[#2563EB]'}`} />
                   <span>Cash Check Comments</span>
                 </div>
                 <p className="text-[11px] leading-relaxed font-sans font-semibold">{results.details}</p>

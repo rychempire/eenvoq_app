@@ -197,11 +197,47 @@ export default function Dashboard({
             onClick={() => {
               window.location.hash = 'receipts/add';
             }}
-            className="bg-[#000000] hover:bg-[#1A1A1A] border border-transparent text-[#FFFFFF] font-semibold py-3 px-6 rounded-full text-xs transition flex items-center justify-center gap-2 cursor-pointer shadow-none shrink-0"
+            className="bg-sky-500 hover:bg-sky-600 focus:ring-2 focus:ring-sky-200 focus:outline-none border border-transparent text-[#FFFFFF] font-semibold py-3 px-6 rounded-full text-xs transition flex items-center justify-center gap-2 cursor-pointer shadow-sm shrink-0"
           >
             <Plus className="w-4 h-4 text-[#FFFFFF]" />
             Record a Sale
           </button>
+        </div>
+      </div>
+
+      {/* Dynamic Visual Dashboard Greeting */}
+      <div className="bg-white border border-[#E3E3E3] rounded-[28px] overflow-hidden shadow-sm p-6 items-center" id="dashboard-visual-banner">
+        <div className="space-y-4 text-left">
+          <div className="flex items-center gap-2">
+            <span className="bg-sky-100 border border-sky-200 text-[#0284c7] font-mono text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
+              Autonomous Verification Core
+            </span>
+            <span className="bg-[#FCFAF7] border border-sky-200 text-sky-950 font-mono text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-sky-500 animate-pulse" /> Live matches active
+            </span>
+          </div>
+          <h2 className="text-2xl font-sans font-bold text-neutral-900 leading-tight">
+            Protect your cash drawer automatically.
+          </h2>
+          <p className="text-xs text-neutral-600 leading-relaxed font-sans font-normal max-w-lg">
+            Welcome to your Eenvoq dashboard. The checkout signatures are sealed using tamperproof cryptographic tags, keeping register balances aligned cleanly.
+          </p>
+          <div className="flex gap-2">
+            <button 
+              type="button"
+              onClick={openInlineTruthCheck}
+              className="bg-[#111111] hover:bg-black text-white hover:text-sky-300 font-sans font-semibold py-2.5 px-5 rounded-full text-xs transition duration-150 active:scale-97 cursor-pointer border border-[#111111] focus:ring-2 focus:ring-sky-200 focus:outline-none"
+            >
+               Audit
+            </button>
+            <button 
+              type="button"
+              onClick={() => setActiveSection('assistant')}
+              className="text-[#0284c7] hover:text-sky-900 font-sans font-bold py-2.5 px-4 text-xs transition hover:underline focus:outline-none"
+            >
+              Consult Eenvoq →
+            </button>
+          </div>
         </div>
       </div>
 
@@ -211,19 +247,19 @@ export default function Dashboard({
         {/* Expected Revenue Card (Light Blue Accent Block) */}
         <div 
           onClick={openReceiptsOverlay}
-          className="bg-[#E6F4EA] border border-[#CCD7CE] text-[#137333] rounded-[24px] p-6 pb-9 shadow-sm flex items-center justify-between transition-all duration-150 ease-out hover:bg-[#D5EEDD] hover:scale-[0.99] active:scale-[0.98] cursor-pointer relative group"
+          className="bg-sky-50 border border-sky-200 text-[#1e40af] rounded-[24px] p-6 pb-9 shadow-sm flex items-center justify-between transition-all duration-150 ease-out hover:bg-sky-100/50 hover:scale-[0.99] active:scale-[0.98] cursor-pointer relative group"
         >
           <div className="space-y-1">
-            <span className="text-xs text-[#137333] font-bold tracking-tight font-sans block uppercase tracking-wider">Today's Recorded Sales</span>
+            <span className="text-xs text-[#1e40af] font-bold tracking-tight font-sans block uppercase tracking-wider">Today's Recorded Sales</span>
             <h3 className="text-[28px] font-extrabold text-[#1F1F1F] tracking-tight font-sans leading-none">
               ₦{expectedToday.toLocaleString()}
             </h3>
-            <p className="text-xs text-[#137333]/90 font-semibold mt-1 font-sans">{todayReceipts.length} bills</p>
+            <p className="text-xs text-sky-850 font-semibold mt-1 font-sans">{todayReceipts.length} bills</p>
           </div>
-          <div className="w-10 h-10 rounded-full border border-[#CCD7CE] bg-white flex items-center justify-center shrink-0 group-hover:border-[#137333] transition-colors duration-150 self-start">
-            <CircleDollarSign className="w-5 h-5 text-[#137333] stroke-[1.5]" />
+          <div className="w-10 h-10 rounded-full border border-sky-205 bg-white flex items-center justify-center shrink-0 group-hover:border-sky-500 transition-colors duration-150 self-start">
+            <CircleDollarSign className="w-5 h-5 text-sky-600 stroke-[1.5]" />
           </div>
-          <span className="absolute bottom-2.5 right-5 text-[10px] text-[#137333] font-semibold font-sans tracking-tight opacity-80 group-hover:opacity-100 transition-opacity">Tap to view bills</span>
+          <span className="absolute bottom-2.5 right-5 text-[10px] text-sky-600 font-semibold font-sans tracking-tight opacity-80 group-hover:opacity-100 transition-opacity">Tap to view bills</span>
         </div>
 
         {/* Declared Cash Card (Deep Warm Ivory Block) */}
@@ -250,7 +286,7 @@ export default function Dashboard({
           className={`${
             cashVariance < 0 
               ? 'bg-[#FDF2F2] border border-[#FAD2CF] text-[#9B1C1C] hover:bg-[#FCD8D8]' 
-              : 'bg-[#E6F4EA] border border-[#CCD7CE] text-[#137333] hover:bg-[#D5EEDC]'
+              : 'bg-sky-50 border border-sky-200 text-[#1e40af] hover:bg-sky-100/40'
           } rounded-[24px] p-6 pb-9 shadow-sm flex items-center justify-between transition-all duration-150 ease-out hover:scale-[0.99] active:scale-[0.98] cursor-pointer relative group`}
         >
           <div className="space-y-1">
@@ -265,9 +301,9 @@ export default function Dashboard({
             </p>
           </div>
           <div className={`w-10 h-10 rounded-full border bg-white flex items-center justify-center shrink-0 transition-colors duration-150 self-start ${
-            cashVariance < 0 ? 'border-[#FAD2CF] group-hover:border-[#9B1C1C]' : 'border-[#CCD7CE] group-hover:border-[#137333]'
+            cashVariance < 0 ? 'border-[#FAD2CF] group-hover:border-[#9B1C1C]' : 'border-sky-205 group-hover:border-sky-500'
           }`}>
-            <ShieldAlert className={`w-5 h-5 stroke-[1.5] ${cashVariance < 0 ? 'text-[#9B1C1C]' : 'text-[#137333]'}`} />
+            <ShieldAlert className={`w-5 h-5 stroke-[1.5] ${cashVariance < 0 ? 'text-[#9B1C1C]' : 'text-sky-600'}`} />
           </div>
           <span className="absolute bottom-2.5 right-5 text-[10px] font-semibold font-sans tracking-tight opacity-80 group-hover:opacity-100 transition-opacity">
             {cashVariance < 0 ? 'Find missing cash reasons font-semibold' : 'Run forensic checks'}
@@ -296,7 +332,7 @@ export default function Dashboard({
 
       {/* Inline Quick Reconciliation Form panel */}
       {showInlineTruthCheck && (
-        <div className="bg-[#F8F9FA] rounded-[24px] border border-[#E3E3E3] p-6 space-y-6 animate-fade-in relative" id="quick-truth-check-inline">
+        <div className="bg-[#FCFAF7] rounded-[24px] border border-[#E3E3E3] p-6 space-y-6 animate-fade-in relative" id="quick-truth-check-inline">
           {/* Back head-bar */}
           <div className="flex items-center justify-between border-b border-[#E3E3E3] pb-4 select-none">
             <div className="flex items-center gap-3">
@@ -351,7 +387,7 @@ export default function Dashboard({
                 <button
                   type="submit"
                   disabled={inlineLoading}
-                  className="flex-1 bg-[#1F1F1F] hover:bg-black text-white font-semibold py-3 rounded-full shadow-none transition text-xs font-sans flex items-center justify-center gap-2 cursor-pointer disabled:bg-gray-300 animate-pulse-once"
+                  className="flex-1 bg-sky-500 hover:bg-sky-600 text-white font-semibold py-3 rounded-full shadow-none transition text-xs font-sans flex items-center justify-center gap-2 cursor-pointer disabled:bg-sky-200 focus:ring-2 focus:ring-sky-200 focus:outline-none animate-pulse-once"
                 >
                   {inlineLoading ? (
                     <div className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -365,7 +401,7 @@ export default function Dashboard({
                 <button
                   type="button"
                   onClick={closeOverlays}
-                  className="px-4 py-3 border border-[#E3E3E3] text-[#757575] hover:bg-gray-200 rounded-full text-xs cursor-pointer font-medium"
+                  className="px-4 py-3 border border-sky-100 hover:border-sky-350 text-neutral-600 hover:bg-sky-50 rounded-full text-xs cursor-pointer font-medium focus:outline-none focus:ring-2 focus:ring-sky-100"
                 >
                   Cancel
                 </button>
@@ -606,7 +642,7 @@ export default function Dashboard({
                   className={`flex items-center justify-between p-4 pb-8 rounded-[24px] border transition-all duration-150 ease-out hover:scale-[0.99] active:scale-[0.98] cursor-pointer relative group ${
                     debtor.locked 
                       ? 'bg-[#FDF2F2] border-[#FAD2CF] hover:bg-[#FCD8D8]' 
-                      : 'bg-neutral-50 border-neutral-200 hover:bg-neutral-100'
+                      : 'bg-[#FCFAF7] border-[#E3E3E3] hover:bg-[#FCFAF2]'
                   }`}
                 >
                   <div className="min-w-0">
@@ -685,7 +721,7 @@ export default function Dashboard({
 
               {/* Verified receipts log items */}
               <div className="flex-1 overflow-y-auto p-6 space-y-4 max-h-[calc(100vh-12rem)]">
-                <div className="bg-[#F0F4F9] rounded-[24px] p-5 border border-[#E3E3E3] text-xs space-y-1 select-none">
+                <div className="bg-[#FCFAF7] rounded-[24px] p-5 border border-[#E3E3E3] text-xs space-y-1 select-none">
                   <p className="font-semibold text-[#1F1F1F] font-sans">Recorded Bills List</p>
                   <p className="text-[#5F6368] font-sans">Check today's bills log to see if they match today's total register amount of ₦{expectedToday.toLocaleString()}.</p>
                 </div>
@@ -703,7 +739,7 @@ export default function Dashboard({
                       <div className="min-w-0 pr-2">
                         <div className="flex items-center gap-1.5 mb-1 text-xs">
                           <span className="font-mono font-semibold text-[#1F1F1F]">{receipt.id}</span>
-                          <span className="text-[8px] uppercase tracking-wide font-semibold font-mono px-2 py-0.5 rounded-full bg-green-50 text-green-700 border border-green-250">Matched</span>
+                          <span className="text-[8px] uppercase tracking-wide font-semibold font-mono px-2 py-0.5 rounded-full bg-sky-50 text-sky-700 border border-sky-200">Matched</span>
                         </div>
                         <p className="text-xs font-semibold text-[#1F1F1F] truncate">{receipt.customerName}</p>
                         <p className="text-[10px] text-[#757575] font-mono mt-0.5 truncate">{receipt.securitySignature}</p>

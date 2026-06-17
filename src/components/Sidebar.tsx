@@ -88,12 +88,12 @@ export default function Sidebar({ activeSection, setActiveSection, user, alerts,
               onClick={() => setActiveSection(item.id)}
               className={`w-full flex items-center h-12 rounded-full px-4 text-xs font-semibold transition-all group relative cursor-pointer ${
                 isActive 
-                  ? 'bg-[#F0F4F9] text-[#1F1F1F]' 
+                  ? 'bg-sky-50 border border-sky-100 text-sky-950 font-bold' 
                   : 'text-[#444746] bg-transparent hover:bg-gray-100 hover:text-black'
               }`}
               title={collapsed ? item.label : undefined}
             >
-              <Icon className={`w-6 h-6 shrink-0 stroke-[1.5] ${collapsed ? 'mx-auto' : 'mr-3'} ${isActive ? 'text-[#1B1B1F]' : 'text-[#5F6368] group-hover:text-black'}`} />
+              <Icon className={`w-6 h-6 shrink-0 stroke-[1.5] ${collapsed ? 'mx-auto' : 'mr-3'} ${isActive ? 'text-sky-600 stroke-[2]' : 'text-[#5F6368] group-hover:text-black'}`} />
               {!collapsed && (
                 <span className="truncate flex-1 text-left font-display text-[13px] leading-none">
                   {item.label}
@@ -129,12 +129,12 @@ export default function Sidebar({ activeSection, setActiveSection, user, alerts,
               onClick={() => setActiveSection(item.id)}
               className={`w-full flex items-center h-12 rounded-full px-4 text-xs font-semibold transition-all group relative cursor-pointer ${
                 isActive 
-                  ? 'bg-[#F0F4F9] text-[#1F1F1F]' 
+                  ? 'bg-sky-50 border border-sky-100 text-sky-950 font-bold' 
                   : 'text-[#444746] bg-transparent hover:bg-gray-100 hover:text-black'
               }`}
               title={collapsed ? item.label : undefined}
             >
-              <Icon className={`w-6 h-6 shrink-0 stroke-[1.5] ${collapsed ? 'mx-auto' : 'mr-3'} ${isActive ? 'text-[#1B1B1F]' : 'text-[#5F6368] group-hover:text-[#1F1F1F]'}`} />
+              <Icon className={`w-6 h-6 shrink-0 stroke-[1.5] ${collapsed ? 'mx-auto' : 'mr-3'} ${isActive ? 'text-sky-600 stroke-[2]' : 'text-[#5F6368] group-hover:text-[#1F1F1F]'}`} />
               {!collapsed && (
                 <span className="truncate flex-1 text-left font-display text-[13px] leading-none">
                   {item.label}

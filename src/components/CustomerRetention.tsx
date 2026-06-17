@@ -55,8 +55,8 @@ export default function CustomerRetention({ showConfirm }: CustomerRetentionProp
           </p>
         </div>
 
-        <div className="flex items-center gap-2 bg-[#E6F4EA] border border-[#CCD7CE] text-[#137333] px-5 py-2.5 rounded-full text-xs font-bold self-start sm:self-auto select-none">
-          <Users className="w-5 h-5 text-[#137333] stroke-[1.5]" />
+        <div className="flex items-center gap-2 bg-sky-100 border border-sky-200 text-sky-850 px-5 py-2.5 rounded-full text-xs font-bold self-start sm:self-auto select-none shadow-sm">
+          <Users className="w-5 h-5 text-sky-600 stroke-[1.5]" />
           <span>Active Engagement Tracker</span>
         </div>
       </div>
@@ -79,15 +79,15 @@ export default function CustomerRetention({ showConfirm }: CustomerRetentionProp
                 <div
                   key={item.id}
                   onClick={() => setSelectedIdx(index)}
-                  className={`p-5 flex items-center justify-between hover:bg-[#FAF9F5]/70 cursor-pointer transition border-l-4 ${
+                  className={`p-5 flex items-center justify-between hover:bg-sky-50/20 cursor-pointer transition border-l-4 ${
                     isSelected 
-                      ? 'bg-[#E6F4EA]/70 border-[#137333]' 
+                      ? 'bg-sky-50 border-sky-500' 
                       : 'border-transparent'
                   }`}
                 >
                   <div className="min-w-0 pr-3">
                     <p className="font-bold text-[#1F1F1F] text-xs mb-1.5 font-sans justify-start flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-red-600" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-red-650 animate-pulse" />
                       {item.customerName}
                     </p>
                     <div className="flex items-center gap-2 text-[10px] text-[#757575] font-mono">
@@ -105,7 +105,7 @@ export default function CustomerRetention({ showConfirm }: CustomerRetentionProp
                     <div className="flex items-center gap-1.5 mt-1.5 justify-end">
                       <span className="text-[10px] text-[#757575] font-sans font-normal">Score:</span>
                       <span className={`text-[10px] font-bold font-mono ${
-                        item.healthScore > 70 ? 'text-green-700' :
+                        item.healthScore > 70 ? 'text-sky-650' :
                         item.healthScore > 50 ? 'text-amber-700' :
                         'text-red-700'
                       }`}>
@@ -120,7 +120,7 @@ export default function CustomerRetention({ showConfirm }: CustomerRetentionProp
         </div>
 
         {/* Right column: re-engagement copy drafts */}
-        <div className="bg-white border-2 border-black rounded-[24px] p-6 self-start space-y-6 flex flex-col shadow-sm" id="retention-campaigns-panel">
+        <div className="bg-white border-2 border-sky-400 rounded-[24px] p-6 self-start space-y-6 flex flex-col shadow-sm" id="retention-campaigns-panel">
           
           <div className="border-b border-[#E3E3E3] pb-4 select-none">
             <span className="text-[10px] text-[#757575] font-mono block uppercase">Client Retention Card</span>
@@ -130,9 +130,9 @@ export default function CustomerRetention({ showConfirm }: CustomerRetentionProp
           <div className="space-y-4" id="retention-copy-workspace">
             
             {/* Quick summary advisory */}
-            <div className="bg-[#E6F4EA] border border-[#CCD7CE] p-4.5 rounded-[24px] space-y-1.5 text-xs text-[#137333]" id="retention-churn-analytics">
-              <span className="font-bold uppercase tracking-wider text-[9px] text-[#137333] block select-none">Action Proposal</span>
-              <p className="font-semibold text-[11.5px] leading-relaxed text-[#137333]">{activeCampaign.suggestedAction}</p>
+            <div className="bg-sky-50 border border-sky-200 p-4.5 rounded-[24px] space-y-1.5 text-xs text-[#0284c7]" id="retention-churn-analytics">
+              <span className="font-bold uppercase tracking-wider text-[9px] text-sky-700 block select-none">Action Proposal</span>
+              <p className="font-semibold text-[11.5px] leading-relaxed text-sky-950">{activeCampaign.suggestedAction}</p>
             </div>
 
             {/* Simulated Marketing Copy Toggles */}
@@ -141,7 +141,7 @@ export default function CustomerRetention({ showConfirm }: CustomerRetentionProp
               {/* WhatsApp draft segment */}
               <div className="space-y-1.5 font-sans">
                 <div className="flex justify-between items-center text-[9px] font-bold text-[#757575] uppercase tracking-wider select-none">
-                  <span className="flex items-center gap-1.5 text-green-700"><MessageSquare className="w-4 h-4 text-green-700 stroke-[1.5]" /> WhatsApp Blueprint</span>
+                  <span className="flex items-center gap-1.5 text-sky-600"><MessageSquare className="w-4 h-4 text-sky-650 stroke-[1.5]" /> WhatsApp Blueprint</span>
                   <div className="flex gap-1">
                     <button 
                       type="button"
@@ -149,7 +149,7 @@ export default function CustomerRetention({ showConfirm }: CustomerRetentionProp
                       className="text-[#757575] hover:text-[#1F1F1F] p-1 transition cursor-pointer"
                       title="Copy copy text"
                     >
-                      {copiedType === 'wa' ? <Check className="w-3.5 h-3.5 text-green-600 stroke-[2]" /> : <Copy className="w-3.5 h-3.5" />}
+                      {copiedType === 'wa' ? <Check className="w-3.5 h-3.5 text-sky-500 stroke-[2]" /> : <Copy className="w-3.5 h-3.5" />}
                     </button>
                     <button 
                       type="button"
@@ -161,7 +161,7 @@ export default function CustomerRetention({ showConfirm }: CustomerRetentionProp
                     </button>
                   </div>
                 </div>
-                <div className="bg-[#FAF9F5] text-xs border border-[#E3E3E3] text-[#1F1F1F] p-4 rounded-2xl leading-relaxed font-sans shadow-none font-semibold">
+                <div className="bg-[#FCFAF7] text-xs border border-[#E3E3E3] text-[#1F1F1F] p-4 rounded-2xl leading-relaxed font-sans shadow-none font-semibold">
                   {activeCampaign.draftWhatsapp}
                 </div>
               </div>
@@ -177,7 +177,7 @@ export default function CustomerRetention({ showConfirm }: CustomerRetentionProp
                       className="text-[#757575] hover:text-[#1F1F1F] p-1 transition cursor-pointer"
                       title="Copy copy text"
                     >
-                      {copiedType === 'sms' ? <Check className="w-3.5 h-3.5 text-green-600 stroke-[2]" /> : <Copy className="w-3.5 h-3.5" />}
+                      {copiedType === 'sms' ? <Check className="w-3.5 h-3.5 text-sky-500 stroke-[2]" /> : <Copy className="w-3.5 h-3.5" />}
                     </button>
                     <button 
                       type="button"
@@ -188,7 +188,7 @@ export default function CustomerRetention({ showConfirm }: CustomerRetentionProp
                     </button>
                   </div>
                 </div>
-                <div className="bg-[#FAF9F5] text-xs border border-[#E3E3E3] text-[#1F1F1F] p-4 rounded-2xl leading-relaxed font-sans shadow-none font-semibold">
+                <div className="bg-[#FCFAF7] text-xs border border-[#E3E3E3] text-[#1F1F1F] p-4 rounded-2xl leading-relaxed font-sans shadow-none font-semibold">
                   {activeCampaign.draftSms}
                 </div>
               </div>
@@ -203,7 +203,7 @@ export default function CustomerRetention({ showConfirm }: CustomerRetentionProp
                       onClick={() => handleCopyText(activeCampaign.draftEmail, 'email')}
                       className="text-[#757575] hover:text-[#1F1F1F] p-1 transition cursor-pointer"
                     >
-                      {copiedType === 'email' ? <Check className="w-3.5 h-3.5 text-green-600 stroke-[2]" /> : <Copy className="w-3.5 h-3.5" />}
+                      {copiedType === 'email' ? <Check className="w-3.5 h-3.5 text-sky-500 stroke-[2]" /> : <Copy className="w-3.5 h-3.5" />}
                     </button>
                     <button 
                       type="button"
@@ -214,7 +214,7 @@ export default function CustomerRetention({ showConfirm }: CustomerRetentionProp
                     </button>
                   </div>
                 </div>
-                <div className="bg-[#FAF9F5] text-xs border border-[#E3E3E3] text-[#1F1F1F] p-4 rounded-2xl leading-relaxed font-sans whitespace-pre-wrap shadow-none font-semibold">
+                <div className="bg-[#FCFAF7] text-xs border border-[#E3E3E3] text-[#1F1F1F] p-4 rounded-2xl leading-relaxed font-sans whitespace-pre-wrap shadow-none font-semibold">
                   {activeCampaign.draftEmail}
                 </div>
               </div>

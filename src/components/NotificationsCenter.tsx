@@ -56,7 +56,7 @@ export default function NotificationsCenter({ alerts, onMarkAllRead, onClearAler
             return (
               <div 
                 key={alert.id}
-                className={`p-5 flex items-start justify-between gap-4 transition-all hover:bg-[#FAF9F5]/70 ${
+                className={`p-5 flex items-start justify-between gap-4 transition-all hover:bg-[#FCFAF7]/70 ${
                   !alert.read ? 'bg-[#E8F0FE]/50 border-l-4 border-black' : ''
                 }`}
               >
@@ -64,7 +64,7 @@ export default function NotificationsCenter({ alerts, onMarkAllRead, onClearAler
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 border ${
                   alert.priority === 'critical' ? 'bg-[#FCF5E8] border-[#ECDCCB] text-[#78350F]' :
                   alert.priority === 'high' ? 'bg-amber-50 border-amber-100 text-amber-600' :
-                  'bg-[#E6F4EA] border-[#CCD7CE] text-[#137333]'
+                  'bg-[#f0f9ff] border-[#bae6fd] text-[#0284c7]'
                 }`}>
                   {alert.priority === 'critical' ? <Flame className="w-5 h-5 animate-pulse stroke-[1.5]" /> : <AlertCircle className="w-5 h-5 stroke-[1.5]" />}
                 </div>
@@ -97,7 +97,7 @@ export default function NotificationsCenter({ alerts, onMarkAllRead, onClearAler
 
           {alerts.length === 0 && (
             <div className="flex flex-col items-center justify-center p-16 text-center select-none" id="notifications-empty">
-              <CheckCircle className="w-10 h-10 text-green-700 mb-3 stroke-[1.5]" />
+               <CheckCircle className="w-10 h-10 text-sky-500 mb-3 stroke-[1.5]" />
               <p className="text-xs font-normal text-[#757575] max-w-sm leading-relaxed">All alerts are cleared! Your retail guardian workspace is secure.</p>
             </div>
           )}

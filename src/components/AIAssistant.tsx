@@ -140,10 +140,10 @@ export default function AIAssistant({
   ];
 
   return (
-    <div className="flex flex-col h-[calc(100vh-7rem)] bg-[#FAF9F5] rounded-[24px] border border-[#E3E3E3] shadow-none overflow-hidden" id="ai-assistant-canvas">
+    <div className="flex flex-col h-[calc(100vh-7rem)] bg-[#FCFAF7] rounded-[24px] border border-[#E3E3E3] shadow-none overflow-hidden" id="ai-assistant-canvas">
       
       {/* Thread control panel */}
-      <div className="h-16 border-b border-[#E3E3E3] px-6 flex items-center justify-between bg-[#FAF9F5]/90 backdrop-blur select-none">
+      <div className="h-16 border-b border-[#E3E3E3] px-6 flex items-center justify-between bg-[#FCFAF7]/90 backdrop-blur select-none">
         <div className="flex items-center gap-2">
           <button 
             onClick={() => window.location.hash = 'dashboard'}
@@ -167,7 +167,7 @@ export default function AIAssistant({
       </div>
 
       {/* Message History Screen */}
-      <div className="flex-1 overflow-y-auto p-6 space-y-6 bg-[#FAF9F5]" id="messages-scroller-viewport">
+      <div className="flex-1 overflow-y-auto p-6 space-y-6 bg-[#FCFAF7]" id="messages-scroller-viewport">
         {chatLogs.length === 0 ? (
           
           /* Empty state resembling standard Gemini center stage */
@@ -210,14 +210,14 @@ export default function AIAssistant({
                   key={msg.id}
                 >
                   {isAI && (
-                    <div className="w-10 h-10 rounded-full border border-[#CCD7CE] bg-[#E6F4EA] flex items-center justify-center shrink-0">
-                      <EenvoqIcon className="w-5 h-5 text-[#137333] stroke-[1.2]" />
+                    <div className="w-10 h-10 rounded-full border border-[#bae6fd] bg-[#f0f9ff] flex items-center justify-center shrink-0">
+                      <EenvoqIcon className="w-5 h-5 text-[#0284c7] stroke-[1.2]" />
                     </div>
                   )}
 
                   <div className={`max-w-[85%] rounded-[24px] p-5 shadow-sm ${
                     isAI 
-                      ? 'bg-[#E6F4EA] border border-[#CCD7CE] text-[#137333]' 
+                      ? 'bg-[#f0f9ff] border border-[#bae6fd] text-[#0284c7]' 
                       : 'bg-white border-2 border-black text-[#1F1F1F]'
                   }`}>
                     
@@ -244,7 +244,7 @@ export default function AIAssistant({
                       )}
                     </div>
                     
-                    <div className={`text-[9px] font-sans mt-2 text-right ${isAI ? 'text-[#137333]/80' : 'text-[#757575]'}`}>
+                    <div className={`text-[9px] font-sans mt-2 text-right ${isAI ? 'text-[#0284c7]/80' : 'text-[#757575]'}`}>
                       {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </div>
                   </div>
@@ -261,14 +261,14 @@ export default function AIAssistant({
             {/* Inline typing spinner */}
             {sending && (
               <div className="flex gap-4 justify-start">
-                <div className="w-10 h-10 rounded-full border border-[#CCD7CE] bg-[#E6F4EA] flex items-center justify-center shrink-0">
-                  <EenvoqIcon className="w-5 h-5 text-[#137333] stroke-[1.2] animate-pulse" />
+                <div className="w-10 h-10 rounded-full border border-[#bae6fd] bg-[#f0f9ff] flex items-center justify-center shrink-0">
+                  <EenvoqIcon className="w-5 h-5 text-[#0284c7] stroke-[1.2] animate-pulse" />
                 </div>
-                <div className="bg-[#E6F4EA] border border-[#CCD7CE] rounded-[24px] px-5 py-4 flex items-center gap-2">
-                  <div className="h-1.5 w-1.5 bg-[#137333] rounded-full animate-bounce [animation-delay:-0.3s]" />
-                  <div className="h-1.5 w-1.5 bg-[#137333] rounded-full animate-bounce [animation-delay:-0.15s]" />
-                  <div className="h-1.5 w-1.5 bg-[#137333] rounded-full animate-bounce" />
-                  <span className="text-[10px] text-[#137333] font-semibold pl-1 font-sans">Analyzing...</span>
+                <div className="bg-[#f0f9ff] border border-[#bae6fd] rounded-[24px] px-5 py-4 flex items-center gap-2">
+                  <div className="h-1.5 w-1.5 bg-[#0284c7] rounded-full animate-bounce [animation-delay:-0.3s]" />
+                  <div className="h-1.5 w-1.5 bg-[#0284c7] rounded-full animate-bounce [animation-delay:-0.15s]" />
+                  <div className="h-1.5 w-1.5 bg-[#0284c7] rounded-full animate-bounce" />
+                  <span className="text-[10px] text-[#0284c7] font-semibold pl-1 font-sans">Analyzing...</span>
                 </div>
               </div>
             )}
@@ -279,7 +279,7 @@ export default function AIAssistant({
       </div>
 
       {/* Bottom Input box segment */}
-      <div className="p-4 border-t border-[#E3E3E3] bg-[#FAF9F5]" id="assistant-input-tray">
+      <div className="p-4 border-t border-[#E3E3E3] bg-[#FCFAF7]" id="assistant-input-tray">
         <div className="max-w-3xl mx-auto">
           
           {/* File attach indicators tray */}

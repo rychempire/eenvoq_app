@@ -92,7 +92,7 @@ export default function ForensicInvestigator() {
                   className={`p-3.5 rounded-2xl border text-center transition-all ${
                     sh.risk === 'critical' ? 'bg-red-50 border-red-200 text-red-700' :
                     sh.risk === 'medium' ? 'bg-amber-50/50 border-amber-200/50 text-amber-700' :
-                    'bg-[#E6F4EA] border-[#CCD7CE] text-[#137333]'
+                    'bg-[#f0f9ff] border-[#bae6fd] text-[#0284c7]'
                   }`}
                 >
                   <p className="text-[9px] font-mono font-semibold opacity-70 flex items-center justify-center gap-1">
@@ -103,7 +103,7 @@ export default function ForensicInvestigator() {
                   <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded-full ${
                     sh.risk === 'critical' ? 'bg-red-200 text-red-800' :
                     sh.risk === 'medium' ? 'bg-amber-100 text-amber-800' :
-                    'bg-white text-[#137333]'
+                    'bg-white text-[#0284c7]'
                   } uppercase font-sans`}>
                     {sh.status.split(' ')[0]}
                   </span>
@@ -127,9 +127,9 @@ export default function ForensicInvestigator() {
                 <div
                   key={anomaly.id}
                   onClick={() => setSelectedAnomaly(anomaly.id)}
-                  className={`p-5 flex items-center justify-between hover:bg-[#FAF9F5]/70 transition border-l-4 cursor-pointer ${
+                  className={`p-5 flex items-center justify-between hover:bg-[#FCFAF7]/70 transition border-l-4 cursor-pointer ${
                     selectedAnomaly === anomaly.id 
-                      ? 'bg-[#E6F4EA]/70 border-[#137333]' 
+                      ? 'bg-[#f0f9ff]/70 border-[#0284c7]' 
                       : 'border-transparent'
                   }`}
                 >
@@ -171,11 +171,11 @@ export default function ForensicInvestigator() {
 
           <div className="space-y-5" id="case-study-details-content">
             <div className="grid grid-cols-2 gap-4 font-sans select-none" id="case-study-metric-pair">
-              <div className="bg-[#FAF9F5] border border-[#E3E3E3] p-4 rounded-xl">
+              <div className="bg-[#FCFAF7] border border-[#E3E3E3] p-4 rounded-xl">
                 <span className="text-[10px] font-semibold text-[#5F6368] uppercase font-sans">Confidence Level</span>
                 <p className="text-base font-mono font-bold text-[#1F1F1F] mt-1">{activeAnomalyData.score}%</p>
               </div>
-              <div className="bg-[#FAF9F5] border border-[#E3E3E3] p-4 rounded-xl">
+              <div className="bg-[#FCFAF7] border border-[#E3E3E3] p-4 rounded-xl">
                 <span className="text-[10px] font-semibold text-[#5F6368] uppercase font-sans">Money Lost</span>
                 <p className="text-base font-mono font-bold text-red-600 mt-1">{activeAnomalyData.impact}</p>
               </div>
@@ -184,20 +184,20 @@ export default function ForensicInvestigator() {
             {/* Diagnostic Narrative Description */}
             <div className="space-y-1.5 font-sans">
               <span className="text-[9px] font-semibold text-[#757575] uppercase tracking-wider block">Security Flag details:</span>
-              <p className="text-xs text-[#1F1F1F] leading-relaxed bg-[#FAF9F5] border border-[#E3E3E3] p-4 rounded-xl font-semibold">
+              <p className="text-xs text-[#1F1F1F] leading-relaxed bg-[#FCFAF7] border border-[#E3E3E3] p-4 rounded-xl font-semibold">
                 {activeAnomalyData.description}
               </p>
             </div>
 
             {/* AI Automated Forensic Explanation */}
-            <div className="bg-[#E6F4EA] border border-[#CCD7CE] p-5 rounded-[24px] space-y-3">
+            <div className="bg-[#f0f9ff] border border-[#bae6fd] p-5 rounded-[24px] space-y-3">
               <div className="flex items-center gap-2">
-                <div className="w-6 h-6 rounded-full bg-[#137333] flex items-center justify-center shrink-0">
+                <div className="w-6 h-6 rounded-full bg-[#0284c7] flex items-center justify-center shrink-0">
                   <EenvoqIcon className="w-3.5 h-3.5 text-white stroke-[1.5]" />
                 </div>
-                <span className="text-xs font-bold text-[#137333] font-sans">AI Summary</span>
+                <span className="text-xs font-bold text-[#0284c7] font-sans">AI Summary</span>
               </div>
-              <p className="text-[11.5px] text-[#137333] leading-relaxed font-sans font-semibold">
+              <p className="text-[11.5px] text-[#0284c7] leading-relaxed font-sans font-semibold">
                 {activeAnomalyData.explanation}
               </p>
             </div>
