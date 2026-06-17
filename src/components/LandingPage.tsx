@@ -173,7 +173,7 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
         </div>
 
         {/* Desktop Navbar Links */}
-        <div className="hidden lg:flex items-center gap-8 text-xs font-bold text-neutral-600 tracking-wide uppercase">
+        <div className="hidden lg:flex items-center gap-8 text-xs font-bold text-black-400 tracking-wide uppercase">
           <a href="#why-eenvoq" className="hover:text-sky-600 transition-colors">Who It's For</a>
           <a href="#features-showcase" className="hover:text-sky-600 transition-colors">Features</a>
           <a href="#integrations" className="hover:text-sky-600 transition-colors">Integrations</a>
@@ -252,8 +252,8 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
             The Intelligent AI Assistant That Tracks Your Sales & Revenue
           </h1>
 
-          <p className="text-base md:text-xl text-neutral-500 max-w-3xl leading-relaxed font-sans font-medium">
-            Eenvoq keeps you updated on your finances, reduces leaky income, and helps you analyse sales/subscription/tuition streams for your business, school, and organization.
+          <p className="text-base md:text-xl text-black-500 max-w-3xl leading-relaxed font-sans font-medium">
+            Eenvoq keeps you updated on your finances, reduces leaky income, and analyses sales/subscription/tuition streams for your business, school, and organization.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 w-full max-w-md">
