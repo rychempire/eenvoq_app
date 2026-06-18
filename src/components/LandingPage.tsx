@@ -163,11 +163,13 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
 
   return (
     <div className="bg-white min-h-screen font-sans text-neutral-900 flex flex-col items-center overflow-x-hidden relative" id="eenvoq-landing-container">
+      {/* Visual Top Sky Blue Brand Accent */}
+      <div className="h-[6px] bg-[#0ea5e9] w-full fixed top-0 left-0 z-[10002]" id="global-sky-blue-top-accent"></div>
       
       {/* ==========================================
           SECTION 0: NAVIGATION HEADER (Aligned with Hero)
           ========================================== */}
-      <nav className="fixed top-0 left-0 right-0 h-20 bg-white/95 backdrop-blur-md z-50 flex items-center justify-between px-6 md:px-12 lg:px-20 border-b border-sky-100 w-full" id="landing-navbar">
+      <nav className="fixed top-[6px] left-0 right-0 h-20 bg-white/95 backdrop-blur-md z-50 flex items-center justify-between px-6 md:px-12 lg:px-20 border-b border-sky-100 w-full" id="landing-navbar">
 <div className="flex items-center gap-1 cursor-pointer" onClick={onEnterApp}>
   {/* Logo Image with blend mode to remove the gray background */}
   <img 

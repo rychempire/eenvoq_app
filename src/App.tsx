@@ -295,8 +295,9 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
     }
   }, [userSession]);
 
-  const handleLogin = (session: UserSession) => {
+  const handleLogin = (session: UserSession, operatorId: string) => {
     setUserSession(session);
+    setActiveOperatorId(operatorId);
     setActiveSection('dashboard');
   };
 
@@ -310,6 +311,7 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
     localStorage.removeItem('eenvoq_alerts');
     localStorage.removeItem('eenvoq_chat_logs');
     localStorage.removeItem('eenvoq_retention_campaigns');
+    localStorage.removeItem('eenvoq_concurrent_active_operator_session');
     setUserSession(null);
     setChatLogs([]);
     setActiveSection('landing');
@@ -628,7 +630,7 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
   };
 
   return (
-    <div className="flex h-screen bg-[#FCFAF7]" id="application-container-root animate-fade-in">
+    <div className="flex h-screen bg-[#FCFAF7] border-t-[6px] border-[#0ea5e9]" id="application-container-root animate-fade-in">
       
       {/* Sidebar for Desktop */}
       <div className="hidden md:flex shrink-0">

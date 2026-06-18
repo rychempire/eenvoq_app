@@ -24,7 +24,7 @@ export default function Sidebar({ activeSection, setActiveSection, user, alerts,
 
   const mainNavItems = [
     { id: 'dashboard', label: 'Home', icon: LayoutDashboard },
-    { id: 'receipts', label: 'Sales', icon: FileCheck },
+    { id: 'receipts', label: 'Sales & Receipts', icon: FileCheck },
     { id: 'inventory', label: 'Inventory', icon: ShoppingCart },
     { id: 'assistant', label: 'Eenvoq', icon: EenvoqIcon, highlight: true },
     { id: 'retention', label: 'Customers', icon: Users },
@@ -42,17 +42,17 @@ export default function Sidebar({ activeSection, setActiveSection, user, alerts,
 
   return (
     <aside 
-      className={`bg-white border-r border-[#E3E3E3] flex flex-col justify-between transition-all duration-300 relative z-30 h-full ${
+      className={`bg-white border-r border-[#E3E3E3] flex flex-col justify-between transition-none relative z-30 h-full ${
         collapsed ? 'w-24' : 'w-72'
       }`}
       id="application-sidebar-root"
     >
       {/* Brand logo bar */}
       <div className="h-20 flex items-center px-5 border-b border-[#E3E3E3] justify-between select-none shrink-0">
-        <div className="flex items-center overflow-hidden">
+        <div className="flex items-center overflow-hidden w-full">
           {!collapsed ? (
             
-<div className="flex items-center gap-1">
+<div className="flex items-center gap-1 cursor-pointer" onClick={() => setCollapsed(true)}>
   {/* Logo Image (Solid logo with background removed via Cloudinary AI) */}
   <img 
     src="https://res.cloudinary.com/dee01jm0p/image/upload/e_bgremoval/f_auto,q_auto/1001133582_wa3zq3" 
@@ -68,9 +68,13 @@ export default function Sidebar({ activeSection, setActiveSection, user, alerts,
   </div>
 </div>
           ) : (
-            <span className="font-sans font-semibold text-[#1F1F1F] tracking-tight text-[22px] select-none text-center block w-full">
-              e
-            </span>
+            <div className="flex items-center justify-center w-full cursor-pointer" onClick={() => setCollapsed(false)}>
+              <img 
+                src="https://res.cloudinary.com/dee01jm0p/image/upload/e_bgremoval/f_auto,q_auto/1001133582_wa3zq3" 
+                alt="eenvoq logo animate-fade-in" 
+                className="h-10 w-auto object-contain select-none [filter:drop-shadow(1px_0_0_#000)_drop-shadow(-1px_0_0_#000)_drop-shadow(0_1px_0_0_#000)_drop-shadow(0_-1px_0_0_#000)]" 
+              />
+            </div>
           )}
         </div>
 

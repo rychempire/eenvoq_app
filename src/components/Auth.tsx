@@ -1,20 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { Sparkles, User, Mail, Store, MapPin, Key, ArrowRight, CornerDownRight, ArrowLeft } from 'lucide-react';
-import { UserSession } from '../types';
+import { Sparkles, User, Mail, Store, MapPin, Key, ArrowRight, CornerDownRight, ArrowLeft, ShieldCheck, Users } from 'lucide-react';
+import { UserSession, TeamMember } from '../types';
 import EenvoqIcon from './EenvoqIcon';
 
 interface AuthProps {
-  onLogin: (session: UserSession) => void;
+  onLogin: (session: UserSession, operatorId: string) => void;
   onBackToLanding?: () => void;
 }
 
-type AuthMode = 'login' | 'register' | 'forgot' | 'otp';
+type AuthMode = 'login' | 'register' | 'forgot' | 'otp' | 'operator-select';
 
 export default function Auth({ onLogin, onBackToLanding }: AuthProps) {
   const [mode, setMode] = useState<AuthMode>('login');
   
   // Registration and onboarding state machine
   const [registerStep, setRegisterStep] = useState<1 | 2>(1);
+
+  // Operator PIN authentication states
+  const [operatorsList, setOperatorsList] = useState<TeamMember[]>([]);
+  const [selectedOperatorId, setSelectedOperatorId] = useState<string>('');
+  const [operatorPin, setOperatorPin] = useState<string>('');
+  const [newOperatorPinConfirm, setNewOperatorPinConfirm] = useState<string>('');
+  const [pinError, setPinError] = useState<string>('');
 
   // Ensure we are scrolled to the top when the auth form switches modes or steps
   useEffect(() => {
@@ -83,7 +90,7 @@ export default function Auth({ onLogin, onBackToLanding }: AuthProps) {
         storeName: pStore,
         role: sessionRole,
         storeLocation: pLoc,
-      });
+      }, 'creator-primary');
     }, 450);
   };
 
@@ -114,6 +121,25 @@ export default function Auth({ onLogin, onBackToLanding }: AuthProps) {
     setRegisterStep(2);
   };
 
+  const getOperators = () => {
+    const saved = localStorage.getItem('eenvoq_team_members');
+    if (saved) {
+      try {
+        const loaded = JSON.parse(saved);
+        if (Array.isArray(loaded) && loaded.length > 0) {
+          return loaded;
+        }
+      } catch (err) {}
+    }
+    // Fallback default operators matched to business
+    return [
+      { id: 'creator-primary', name: name || "System Owner", role: 'Owner', email: email || 'chinedu@grocerygate.ng', isCreator: true },
+      { id: 'member-1', name: 'Amadi Kalu', role: 'Supervisor', email: 'amadi@grocerygate.ng' },
+      { id: 'member-2', name: 'Funmi Alao', role: 'Cashier', email: 'funmi@grocerygate.ng' },
+      { id: 'member-3', name: 'Ibrahim Musa', role: 'Auditor', email: 'ibrahim@grocerygate.ng' }
+    ];
+  };
+
   const handleAuthSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -129,13 +155,17 @@ export default function Auth({ onLogin, onBackToLanding }: AuthProps) {
           setError('Invalid email or password credentials.');
           return;
         }
-        onLogin({
-          name: name || "Chinedu Okafor",
-          email,
-          storeName: storeName || "Merchant Enterprise",
-          role: finalRole,
-          storeLocation: storeLocation || "Lagos, Nigeria",
-        });
+        
+        // Load target operators list of the business
+        const ops = getOperators();
+        setOperatorsList(ops);
+        setSelectedOperatorId(ops[0]?.id || 'creator-primary');
+        setOperatorPin('');
+        setNewOperatorPinConfirm('');
+        setPinError('');
+        
+        // Slide to Intermediate Operator & Secret PIN confirmation step
+        setMode('operator-select');
       } else if (mode === 'register') {
         if (!storeName.trim()) {
           setError("Please define your Business or Organization Name.");
@@ -147,21 +177,106 @@ export default function Auth({ onLogin, onBackToLanding }: AuthProps) {
           setError('Incorrect verification code. Please write 1234 or leave empty.');
           return;
         }
-        onLogin({
-          name,
-          email,
-          storeName,
-          role: finalRole,
-          storeLocation,
-        });
+        
+        // Initialize default operator lock setup
+        const ops = [
+          { id: 'creator-primary', name: name || "System Owner", role: 'Owner', email: email || 'chinedu@grocerygate.ng', isCreator: true },
+          { id: 'member-1', name: 'Amadi Kalu', role: 'Supervisor', email: 'amadi@grocerygate.ng' },
+          { id: 'member-2', name: 'Funmi Alao', role: 'Cashier', email: 'funmi@grocerygate.ng' },
+          { id: 'member-3', name: 'Ibrahim Musa', role: 'Auditor', email: 'ibrahim@grocerygate.ng' }
+        ];
+        localStorage.setItem('eenvoq_team_members', JSON.stringify(ops));
+        setOperatorsList(ops);
+        setSelectedOperatorId('creator-primary');
+        setOperatorPin('');
+        setNewOperatorPinConfirm('');
+        setPinError('');
+        
+        setMode('operator-select');
       } else if (mode === 'forgot') {
         setMode('login');
       }
     }, 850);
   };
 
+  const handleOperatorLoginSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setPinError('');
+    setLoading(true);
+
+    setTimeout(() => {
+      setLoading(false);
+      const selectedOperator = operatorsList.find(m => m.id === selectedOperatorId) || operatorsList[0];
+      if (!selectedOperator) {
+        setPinError("Could not resolve operator profile.");
+        return;
+      }
+
+      // Check Concurrent Login sessions lock!
+      // ONLY one operator can be logged in at a time.
+      const lockStr = localStorage.getItem('eenvoq_concurrent_active_operator_session');
+      if (lockStr) {
+        try {
+          const activeLock = JSON.parse(lockStr);
+          if (activeLock && activeLock.id !== selectedOperator.id) {
+            setPinError(`⚠️ Concurrent Access Blocked: Operator "${activeLock.name}" (${activeLock.role}) is currently active on this terminal. Only one operator session is permitted. You must wait for them to log out first.`);
+            return;
+          }
+        } catch (err) {}
+      }
+
+      // If they have a pin set
+      if (selectedOperator.pin) {
+        if (operatorPin !== selectedOperator.pin) {
+          setPinError("Incorrect 6-digit access PIN. Please try again.");
+          return;
+        }
+      } else {
+        // First-time setup, require them to setup the pin
+        if (operatorPin.length !== 6) {
+          setPinError("Your new secret PIN must be exactly 6 digits.");
+          return;
+        }
+        if (operatorPin !== newOperatorPinConfirm) {
+          setPinError("PIN inputs do not match. Please verify.");
+          return;
+        }
+
+        // Save PIN for this operator
+        const updatedOps = operatorsList.map(m => {
+          if (m.id === selectedOperator.id) {
+            return { ...m, pin: operatorPin };
+          }
+          return m;
+        });
+        localStorage.setItem('eenvoq_team_members', JSON.stringify(updatedOps));
+        setOperatorsList(updatedOps);
+      }
+
+      // Lock concurrent session
+      const concurrentLock = {
+        id: selectedOperator.id,
+        name: selectedOperator.name,
+        role: selectedOperator.role,
+        timestamp: Date.now()
+      };
+      localStorage.setItem('eenvoq_concurrent_active_operator_session', JSON.stringify(concurrentLock));
+      localStorage.setItem('eenvoq_active_operator_id', selectedOperator.id);
+
+      // Perform actual business entry
+      const finalRole = businessCategory === 'Other' ? (customCategory.trim() || 'Custom Business') : businessCategory;
+      onLogin({
+        name: selectedOperator.name,
+        email: selectedOperator.email,
+        storeName: storeName || "GroceryGate Mega Stores",
+        role: selectedOperator.role,
+        storeLocation: storeLocation || "14 Broad Street, Lagos Island, Lagos",
+      }, selectedOperator.id);
+    }, 600);
+  };
+
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center p-4 relative overflow-hidden" id="login-screen-root">
+    <div className="min-h-screen bg-white flex items-center justify-center p-4 relative overflow-hidden border-t-[6px] border-[#0ea5e9]" id="login-screen-root">
       
       <div className="w-full max-w-md bg-white rounded-[28px] border border-[#E3E3E3] shadow-none overflow-hidden p-8 transition-all duration-300">
         
@@ -253,6 +368,148 @@ export default function Auth({ onLogin, onBackToLanding }: AuthProps) {
                 <>Sign In <ArrowRight className="w-4 h-4 stroke-[1.5]" /></>
               )}
             </button>
+          </form>
+        )}
+
+        {/* MODE: OPERATOR SELECT & PIN VERIFY */}
+        {mode === 'operator-select' && (
+          <form onSubmit={handleOperatorLoginSubmit} className="space-y-4" id="auth-operator-select-form">
+            <div className="border-b border-[#E3E3E3] pb-3 mb-2 flex items-center gap-2">
+              <span className="text-[10px] font-bold text-sky-700 uppercase tracking-wider bg-sky-50 px-2 py-0.5 rounded-full border border-sky-100">Step 2: Terminal Entry Lock</span>
+            </div>
+
+            <div className="text-center pb-2">
+              <h2 className="font-sans font-bold text-lg text-gray-900">Select Operator Profile</h2>
+              <p className="text-[11px] text-[#757575] mt-1 max-w-xs mx-auto">
+                Only one operator session can be active at any given time. Choose your name and input your secret 6-digit PIN.
+              </p>
+            </div>
+
+            {pinError && (
+              <div className="p-3 bg-red-50 text-red-700 text-xs rounded-2xl border border-red-100 font-sans text-center leading-relaxed font-medium">
+                ⚠️ {pinError}
+              </div>
+            )}
+
+            <div>
+              <label className="block text-xs font-semibold text-[#757575] mb-2 pl-1 flex items-center gap-1.5">
+                <Users className="w-3.5 h-3.5 text-slate-500" />
+                <span>Choose Operator / Owner Profile</span>
+              </label>
+              <div className="relative">
+                <select
+                  value={selectedOperatorId}
+                  onChange={(e) => {
+                    setSelectedOperatorId(e.target.value);
+                    setPinError('');
+                    setOperatorPin('');
+                    setNewOperatorPinConfirm('');
+                  }}
+                  className="w-full bg-[#FCFBF9] text-[#1F1F1F] border border-[#E3E3E3] rounded-full py-3.5 px-5 text-xs focus:outline-none focus:border-[#5F6368] focus:bg-white cursor-pointer transition-all font-sans font-bold appearance-none"
+                >
+                  {operatorsList.map(op => (
+                    <option key={op.id} value={op.id}>
+                      {op.name} ({op.role}){op.isCreator ? " [Owner]" : ""}
+                    </option>
+                  ))}
+                </select>
+                <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none text-[#757575]">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            {/* If the selected operator does NOT have a PIN, ask them to set up one securely! */}
+            {!operatorsList.find(op => op.id === selectedOperatorId)?.pin ? (
+              <div className="space-y-4">
+                <div className="bg-amber-50/50 border border-amber-100 p-3.5 rounded-2xl text-[10.5px] leading-relaxed text-amber-800">
+                  ⚠️ <strong>Initialize Secret Access PIN:</strong> You have no credentials PIN set yet. You must create one now. Hand the device to this operator to set and lock their secret 6-digit PIN. Only they should know this.
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-[#757575] mb-2 pl-1">Create 6-Digit PIN</label>
+                  <input
+                    type="password"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    maxLength={6}
+                    required
+                    value={operatorPin}
+                    onChange={(e) => {
+                      const val = e.target.value.replace(/\D/g, '');
+                      if (val.length <= 6) setOperatorPin(val);
+                    }}
+                    placeholder="••••••"
+                    className="w-full bg-[#FCFBF9] text-[#1F1F1F] border border-[#E3E3E3] rounded-full py-3.5 px-5 text-center tracking-[0.5rem] text-lg font-mono font-bold focus:outline-none focus:border-[#5F6368] focus:bg-white transition-all"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-[#757575] mb-2 pl-1">Confirm 6-Digit PIN</label>
+                  <input
+                    type="password"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    maxLength={6}
+                    required
+                    value={newOperatorPinConfirm}
+                    onChange={(e) => {
+                      const val = e.target.value.replace(/\D/g, '');
+                      if (val.length <= 6) setNewOperatorPinConfirm(val);
+                    }}
+                    placeholder="••••••"
+                    className="w-full bg-[#FCFBF9] text-[#1F1F1F] border border-[#E3E3E3] rounded-full py-3.5 px-5 text-center tracking-[0.5rem] text-lg font-mono font-bold focus:outline-none focus:border-[#5F6368] focus:bg-white transition-all"
+                  />
+                </div>
+              </div>
+            ) : (
+              <div>
+                <label className="block text-xs font-semibold text-[#757575] mb-2 pl-1">Enter Secret 6-Digit PIN</label>
+                <input
+                  type="password"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  maxLength={6}
+                  required
+                  value={operatorPin}
+                  onChange={(e) => {
+                    const val = e.target.value.replace(/\D/g, '');
+                    if (val.length <= 6) setOperatorPin(val);
+                  }}
+                  placeholder="••••••"
+                  className="w-full bg-[#FCFBF9] text-[#1F1F1F] border border-[#E3E3E3] rounded-full py-3.5 px-5 text-center tracking-[0.5rem] text-lg font-mono font-bold focus:outline-none focus:border-[#5F6368] focus:bg-white transition-all"
+                />
+              </div>
+            )}
+
+            <div className="flex gap-2.5 pt-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setMode('login');
+                  setOperatorPin('');
+                  setNewOperatorPinConfirm('');
+                  setPinError('');
+                }}
+                className="flex-1 border border-gray-300 hover:bg-gray-50 text-gray-500 rounded-full py-3 text-xs font-bold transition flex items-center justify-center gap-1 cursor-pointer h-12"
+              >
+                <ArrowLeft className="w-3.5 h-3.5" /> Back
+              </button>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="flex-1 bg-black hover:bg-neutral-800 text-white rounded-full py-3 text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer disabled:bg-neutral-300 h-12"
+              >
+                {loading ? (
+                  <div className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                ) : (
+                  <>Access Terminal <ShieldCheck className="w-4 h-4 text-emerald-400" /></>
+                )}
+              </button>
+            </div>
           </form>
         )}
 

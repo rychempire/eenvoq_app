@@ -17,6 +17,8 @@ interface ReceiptVerificationProps {
   activeOperatorId: string;
   onChangeActiveOperator: (id: string) => void;
   showConfirm?: (title: string, message: string, onConfirm: () => void, confirmLabel?: string, cancelLabel?: string) => void;
+  onLogout?: () => void;
+  onUpdateTeamMembers?: (members: TeamMember[]) => void;
 }
 
 export default function ReceiptVerification({ 
@@ -29,8 +31,13 @@ export default function ReceiptVerification({
   onDeleteTeamMember,
   activeOperatorId,
   onChangeActiveOperator,
-  showConfirm 
+  showConfirm,
+  onLogout,
+  onUpdateTeamMembers
 }: ReceiptVerificationProps) {
+  const currentActiveOperator = teamMembers.find(m => m.id === activeOperatorId) || teamMembers[0];
+  const isOwner = currentActiveOperator?.isCreator === true || currentActiveOperator?.role === 'Owner';
+
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedReceipt, setSelectedReceipt] = useState<Receipt | null>(receipts[0] || null);
   
@@ -63,6 +70,12 @@ export default function ReceiptVerification({
   const [newMemberRole, setNewMemberRole] = useState<'Owner' | 'Admin' | 'Manager' | 'Supervisor' | 'Cashier' | 'Auditor'>('Cashier');
   const [newMemberEmail, setNewMemberEmail] = useState('');
   const [teamError, setTeamError] = useState('');
+
+  // Private PIN Setup parameters for secure handover
+  const [pinSetupMemberId, setPinSetupMemberId] = useState<string | null>(null);
+  const [pinSetupValue, setPinSetupValue] = useState('');
+  const [pinSetupConfirm, setPinSetupConfirm] = useState('');
+  const [pinSetupError, setPinSetupError] = useState('');
 
   // Soft deleted bills visibility toggle
   const [includeDeleted, setIncludeDeleted] = useState(false);
@@ -396,7 +409,7 @@ export default function ReceiptVerification({
           >
             <ArrowLeft className="w-6 h-6 stroke-[1.5]" />
           </button>
-          <h1 className="text-[22px] font-sans font-semibold text-[#1F1F1F] tracking-tight truncate">Sales & Bills</h1>
+          <h1 className="text-[22px] font-sans font-semibold text-[#1F1F1F] tracking-tight truncate">Sales & Receipts</h1>
         </div>
         <button
           type="button"
@@ -404,7 +417,7 @@ export default function ReceiptVerification({
           className="bg-sky-500 hover:bg-sky-600 focus:ring-2 focus:ring-sky-200 focus:outline-none text-white font-semibold py-3 px-6 rounded-full text-xs transition flex items-center justify-center gap-2 cursor-pointer border border-transparent shadow-sm shrink-0"
         >
           <Plus className="w-4 h-4 text-white" />
-          <span>Create Record</span>
+          <span>Record</span>
         </button>
       </div>
 
@@ -419,9 +432,9 @@ export default function ReceiptVerification({
                 <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-sky-500"></span>
               </span>
               <div className="text-left leading-none">
-                <span className="text-[#0284c7] font-sans font-bold block mb-1 uppercase tracking-wider text-[9px] leading-none">Active Operator</span>
+                <span className="text-[#0284c7] font-sans font-bold block mb-1 uppercase tracking-wider text-[9px] leading-none font-sans">Active Operator</span>
                 <span className="text-[#1F1F1F] font-semibold flex items-center gap-1.5 leading-none text-xs">
-                  <span className="truncate max-w-[130px] sm:max-w-none">
+                  <span className="truncate max-w-[130px] sm:max-w-none font-sans font-bold">
                     {teamMembers.find(m => m.id === activeOperatorId)?.name || teamMembers[0]?.name || "System Owner"}
                   </span>
                 </span>
@@ -432,27 +445,31 @@ export default function ReceiptVerification({
             </span>
           </div>
 
-          {/* Switch Operator Dropdown */}
+          {/* Secure Operator exit button replaces Switch Operator Dropdown */}
           <div className="flex items-center justify-between sm:justify-start gap-2.5 text-xs text-sky-800 font-sans w-full sm:w-auto">
-            <span className="font-medium shrink-0 text-slate-500 text-xs">Switch Operator:</span>
-            <div className="relative flex-1 sm:flex-initial">
-              <select
-                value={activeOperatorId}
-                onChange={(e) => onChangeActiveOperator(e.target.value)}
-                className="w-full sm:w-auto bg-white border border-sky-200 hover:border-sky-300 rounded-full h-9 pl-4 pr-9 text-xs font-semibold text-[#1F1F1F] focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100 cursor-pointer appearance-none transition-all duration-150"
-              >
-                {teamMembers.map(member => (
-                  <option key={member.id} value={member.id}>
-                    {member.name} ({member.role}){member.isCreator ? " [Principal]" : ""}
-                  </option>
-                ))}
-              </select>
-              <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-[#0284c7]">
-                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                </svg>
-              </div>
-            </div>
+            <button
+              type="button"
+              onClick={() => {
+                if (showConfirm) {
+                  showConfirm(
+                    "Logout of operator session?",
+                    "Do you want to log out of your active operator session? This will log you out from accessing the business' account entirely so another operator can access.",
+                    () => {
+                      if (onLogout) onLogout();
+                    },
+                    "Yes, logout session",
+                    "Cancel"
+                  );
+                } else {
+                  if (confirm("Logout of your active operator session? You will need to wait for other operators to log out before gaining access again.")) {
+                    if (onLogout) onLogout();
+                  }
+                }
+              }}
+              className="bg-white hover:bg-red-50 border border-red-200 hover:border-red-300 text-red-650 rounded-full h-9 px-4.5 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-3xs"
+            >
+              <span>✕ Log Out Operator</span>
+            </button>
           </div>
         </div>
 
@@ -460,11 +477,23 @@ export default function ReceiptVerification({
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full lg:w-auto shrink-0">
           <button
             type="button"
-            onClick={() => setShowTeamModal(true)}
-            className="flex items-center justify-center gap-2 border border-sky-200 hover:border-sky-300 bg-white hover:bg-sky-50/50 active:scale-98 text-[#0284c7] font-bold rounded-full h-9 px-4 text-xs transition cursor-pointer focus:outline-none focus:ring-2 focus:ring-sky-100 w-full sm:w-auto"
+            onClick={() => {
+              if (isOwner) {
+                setShowTeamModal(true);
+              } else {
+                alert("Access Denied: Only the business Owner is authorized to configure personnel registries and operator settings.");
+              }
+            }}
+            disabled={!isOwner}
+            className={`flex items-center justify-center gap-2 border rounded-full h-9 px-4 text-xs transition cursor-pointer focus:outline-none focus:ring-2 focus:ring-sky-100 w-full sm:w-auto ${
+              isOwner 
+                ? "border-sky-200 hover:border-sky-300 bg-white hover:bg-sky-50/50 text-[#0284c7] font-bold active:scale-98" 
+                : "border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed font-medium opacity-60"
+            }`}
           >
-            <Users className="w-4 h-4 text-[#0284c7] stroke-[1.5]" />
+            <Users className="w-4 h-4 text-slate-400 stroke-[1.5]" />
             <span>Operators</span>
+            {!isOwner && <span className="text-[9px] bg-gray-200 px-1.5 py-0.5 rounded-full font-bold ml-1 text-gray-600 uppercase">Owner Only</span>}
           </button>
           
           <label className="flex items-center justify-center gap-2 bg-white hover:bg-sky-50/30 border border-sky-200 hover:border-sky-300 rounded-full h-9 px-4 text-xs font-semibold text-[#0284c7] cursor-pointer transition select-none w-full sm:w-auto shadow-2xs">
@@ -1085,7 +1114,7 @@ export default function ReceiptVerification({
                     <p className="flex items-start gap-1.5">
                       <span className="text-[#757575] font-semibold shrink-0">Origin:</span>
                       <span className="leading-snug">
-                        Registered by <strong>{displayedReceipt.createdBy?.name || "Primary Creator"}</strong> ({displayedReceipt.createdBy?.role || "Owner"}) at {new Date(displayedReceipt.timestamp).toLocaleDateString()} {new Date(displayedReceipt.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                        Registered by <strong>{displayedReceipt.createdBy?.name || "Owner & Principal Creator"}</strong> ({displayedReceipt.createdBy?.role || "Owner"}) at {new Date(displayedReceipt.timestamp).toLocaleDateString()} {new Date(displayedReceipt.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
                       </span>
                     </p>
 
@@ -1252,38 +1281,60 @@ export default function ReceiptVerification({
                           <span className={`text-[9px] font-semibold px-2 py-0.5 rounded-full uppercase leading-none ${
                             member.isCreator ? "bg-purple-100 text-purple-700 font-bold border-transparent" : "bg-blue-50 text-blue-700 border-blue-100"
                           }`}>
-                            {member.role === 'Owner' && member.isCreator ? 'Principal Creator' : member.role}
+                            {member.isCreator ? 'Owner & Principal Creator' : member.role}
                           </span>
                         </div>
                         <p className="text-[10px] text-[#757575] font-mono mt-0.5">{member.email}</p>
+                        <div className="flex items-center gap-1.5 flex-wrap mt-1">
+                          <span className={`text-[9px] font-mono px-1.5 py-0.5 rounded-full border ${
+                            member.pin ? "bg-emerald-50 text-emerald-705 border-emerald-110 font-bold" : "bg-amber-50 text-amber-705 border-amber-110 font-bold"
+                          }`}>
+                            {member.pin ? "✓ Secret PIN Configured" : "⚠️ PIN Not Configured"}
+                          </span>
+                        </div>
                       </div>
 
-                      {/* Delete option - principal cannot be deleted! */}
-                      {!member.isCreator ? (
+                      {/* PIN Configuration and Delete */}
+                      <div className="flex items-center gap-2 shrink-0">
                         <button
                           type="button"
                           onClick={() => {
-                            if (showConfirm) {
-                              showConfirm(
-                                "Revoke Operator Credentials?",
-                                `Remove ${member.name} from receipt registry management? This will not erase past auditing trails for actions performed by this user.`,
-                                () => onDeleteTeamMember(member.id),
-                                "Yes, revoke access",
-                                "Cancel"
-                              );
-                            } else {
-                              if (confirm(`Remove ${member.name}?`)) {
-                                onDeleteTeamMember(member.id);
-                              }
-                            }
+                            setPinSetupMemberId(member.id);
+                            setPinSetupValue('');
+                            setPinSetupConfirm('');
+                            setPinSetupError('');
                           }}
-                          className="text-red-600 hover:text-red-800 font-bold px-2 py-1 hover:bg-red-50 rounded transition text-[11px] cursor-pointer"
+                          className="text-sky-650 hover:text-sky-850 font-bold px-2 py-1 bg-sky-50 hover:bg-sky-100 rounded-full transition text-[11px] cursor-pointer border border-sky-100"
                         >
-                          Revoke
+                          {member.pin ? "Reset PIN" : "Setup PIN"}
                         </button>
-                      ) : (
-                        <span className="text-[10px] text-[#757575] font-semibold font-mono uppercase bg-gray-50 p-1 rounded">Locked</span>
-                      )}
+
+                        {!member.isCreator ? (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if (showConfirm) {
+                                showConfirm(
+                                  "Revoke Operator Credentials?",
+                                  `Remove ${member.name} from receipt registry management? This will not erase past auditing trails for actions performed by this user.`,
+                                  () => onDeleteTeamMember(member.id),
+                                  "Yes, revoke access",
+                                  "Cancel"
+                                );
+                              } else {
+                                if (confirm(`Remove ${member.name}?`)) {
+                                  onDeleteTeamMember(member.id);
+                                }
+                              }
+                            }}
+                            className="text-red-600 hover:text-red-800 font-bold px-2 py-1 hover:bg-red-50 rounded transition text-[11px] cursor-pointer"
+                          >
+                            Revoke
+                          </button>
+                        ) : (
+                          <span className="text-[10px] text-[#757575] font-semibold font-mono uppercase bg-gray-50 p-1 px-2 rounded border border-gray-100">Locked</span>
+                        )}
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -1349,6 +1400,114 @@ export default function ReceiptVerification({
 
             </div>
 
+          </div>
+        </div>
+      )}
+
+      {/* Private Secure PIN Handover Modal */}
+      {pinSetupMemberId && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-gray-950/70 backdrop-blur-md">
+          <div className="w-full max-w-sm bg-white rounded-[28px] border-2 border-black p-6 text-center shadow-xl animate-fade-in relative">
+            <div className="mx-auto w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center mb-4 border border-blue-100">
+              <ShieldCheck className="w-6 h-6 text-blue-600 animate-pulse" />
+            </div>
+            
+            <h3 className="text-base font-bold text-gray-900 mb-1">
+              🔒 Secure PIN Handover
+            </h3>
+            
+            <p className="text-[11px] text-gray-500 mb-5 leading-relaxed px-2">
+              Please hand this device to <strong className="text-gray-900">{(teamMembers.find(m => m.id === pinSetupMemberId))?.name}</strong> to enter and verify their unique 6-digit access PIN.
+              <span className="block mt-1 font-semibold text-sky-700">Owner, please look away! Only this operator should know this credentials.</span>
+            </p>
+
+            {pinSetupError && (
+              <div className="mb-4 text-xs font-semibold bg-red-50 text-red-650 p-2.5 rounded-xl border border-red-100">
+                ⚠️ {pinSetupError}
+              </div>
+            )}
+
+            <div className="space-y-4 text-left">
+              <div>
+                <label className="block mb-1.5 text-xs font-semibold text-gray-700">Create 6-Digit PIN</label>
+                <input
+                  type="password"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  maxLength={6}
+                  value={pinSetupValue}
+                  onChange={e => {
+                    const val = e.target.value.replace(/\D/g, '');
+                    if (val.length <= 6) setPinSetupValue(val);
+                  }}
+                  className="w-full text-center tracking-[0.5rem] font-mono font-bold text-xl py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                  placeholder="••••••"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block mb-1.5 text-xs font-semibold text-gray-700">Confirm 6-Digit PIN</label>
+                <input
+                  type="password"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  maxLength={6}
+                  value={pinSetupConfirm}
+                  onChange={e => {
+                    const val = e.target.value.replace(/\D/g, '');
+                    if (val.length <= 6) setPinSetupConfirm(val);
+                  }}
+                  className="w-full text-center tracking-[0.5rem] font-mono font-bold text-xl py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                  placeholder="••••••"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="flex gap-3 mt-6">
+              <button
+                type="button"
+                onClick={() => setPinSetupMemberId(null)}
+                className="flex-1 py-1 px-4 border border-gray-200 hover:bg-slate-50 text-gray-500 rounded-full text-xs font-bold transition select-none cursor-pointer h-10"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  if (pinSetupValue.length !== 6) {
+                    setPinSetupError("PIN must be exactly 6 digits.");
+                    return;
+                  }
+                  if (pinSetupValue !== pinSetupConfirm) {
+                    setPinSetupError("PIN inputs do not match.");
+                    return;
+                  }
+                  
+                  // Save PIN
+                  const updatedMembers = teamMembers.map(m => {
+                    if (m.id === pinSetupMemberId) {
+                      return { ...m, pin: pinSetupValue };
+                    }
+                    return m;
+                  });
+                  
+                  // Save back to master state and storage
+                  if (onUpdateTeamMembers) {
+                    onUpdateTeamMembers(updatedMembers);
+                  } else {
+                    localStorage.setItem('eenvoq_team_members', JSON.stringify(updatedMembers));
+                  }
+                  
+                  setPinSetupMemberId(null);
+                  alert("Secure 6-Digit PIN successfully configured and locked! You can hand the device back to the Owner safely.");
+                }}
+                className="flex-1 py-1 px-4 bg-[#1F1F1F] hover:bg-black text-white rounded-full text-xs font-bold transition select-none cursor-pointer h-10"
+              >
+                Save PIN
+              </button>
+            </div>
           </div>
         </div>
       )}

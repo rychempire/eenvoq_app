@@ -28,6 +28,7 @@ export interface TeamMember {
   role: 'Owner' | 'Admin' | 'Manager' | 'Supervisor' | 'Cashier' | 'Auditor';
   email: string;
   isCreator?: boolean;
+  pin?: string;
 }
 
 export interface InventoryItem {
