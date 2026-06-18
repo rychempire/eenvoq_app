@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Sparkles, User, Mail, Store, MapPin, Key, ArrowRight, CornerDownRight, ArrowLeft } from 'lucide-react';
 import { UserSession } from '../types';
 import EenvoqIcon from './EenvoqIcon';
@@ -15,6 +15,17 @@ export default function Auth({ onLogin, onBackToLanding }: AuthProps) {
   
   // Registration and onboarding state machine
   const [registerStep, setRegisterStep] = useState<1 | 2>(1);
+
+  // Ensure we are scrolled to the top when the auth form switches modes or steps
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    if (document.documentElement) {
+      document.documentElement.scrollTop = 0;
+    }
+    if (document.body) {
+      document.body.scrollTop = 0;
+    }
+  }, [mode, registerStep]);
   
   // Captures
   const [name, setName] = useState('Chinedu Okafor');

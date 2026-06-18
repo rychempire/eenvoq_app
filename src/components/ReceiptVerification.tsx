@@ -396,7 +396,7 @@ export default function ReceiptVerification({
           >
             <ArrowLeft className="w-6 h-6 stroke-[1.5]" />
           </button>
-          <h1 className="text-[22px] font-sans font-semibold text-[#1F1F1F] tracking-tight truncate">Sales & Bills List</h1>
+          <h1 className="text-[22px] font-sans font-semibold text-[#1F1F1F] tracking-tight truncate">Sales & Bills</h1>
         </div>
         <button
           type="button"
@@ -414,7 +414,7 @@ export default function ReceiptVerification({
           <div className="bg-white border border-sky-200 rounded-full p-2 px-4 flex items-center gap-2.5 shadow-sm">
             <span className="w-2.5 h-2.5 rounded-full bg-sky-500 animate-pulse" />
             <div className="text-xs">
-              <span className="text-[#0284c7] font-sans block leading-none font-bold mb-1">Active Register Operator:</span>
+              <span className="text-[#0284c7] font-sans block leading-none font-bold mb-1">Active Operator:</span>
               <span className="text-[#1F1F1F] font-semibold flex items-center gap-1.5 leading-none">
                 {teamMembers.find(m => m.id === activeOperatorId)?.name || teamMembers[0]?.name || "System Owner"}
                 <span className="text-[10px] text-[#0284c7] bg-sky-50 border border-sky-100 px-1.5 py-0.5 rounded-full font-mono uppercase font-semibold leading-none">
@@ -425,7 +425,7 @@ export default function ReceiptVerification({
           </div>
 
           <div className="flex items-center gap-2 text-xs text-sky-800 font-sans">
-            <span className="font-medium">Switch Terminal Operator:</span>
+            <span className="font-medium">Switch Operator:</span>
             <select
               value={activeOperatorId}
               onChange={(e) => onChangeActiveOperator(e.target.value)}
@@ -447,7 +447,7 @@ export default function ReceiptVerification({
             className="flex items-center gap-2 border border-sky-200 bg-white hover:bg-sky-50/50 text-[#0284c7] font-bold rounded-full h-9 px-4 text-xs transition cursor-pointer focus:outline-none focus:ring-2 focus:ring-sky-100"
           >
             <Users className="w-4 h-4 text-[#0284c7] stroke-[1.5]" />
-            <span>Manage Team & Operators</span>
+            <span>Operators</span>
           </button>
           
           <label className="flex items-center gap-2 bg-[#FCFAF7] hover:bg-sky-50/30 border border-sky-200 rounded-full h-9 px-4 text-xs font-semibold text-[#0284c7] cursor-pointer transition select-none">
@@ -545,7 +545,7 @@ export default function ReceiptVerification({
                   : 'bg-white text-[#1F1F1F] border border-[#E3E3E3] font-normal hover:bg-gray-50'
               }`}
             >
-              Discrepancy/Risk
+              Risk
             </button>
 
             {/* Separator */}
@@ -654,7 +654,7 @@ export default function ReceiptVerification({
           </h3>
           <form onSubmit={handleAddNewReceipt} className="grid grid-cols-1 md:grid-cols-3 gap-5 text-xs font-medium text-[#1F1F1F]">
             <div>
-              <label className="block mb-1.5 text-xs text-[#757575]">Customer Name</label>
+              <label className="block mb-1.5 text-xs text-[#757575]">Customer Naame</label>
               <input
                 type="text" required value={custName} onChange={e => setCustName(e.target.value)}
                 placeholder="Amara Cole"
@@ -696,7 +696,7 @@ export default function ReceiptVerification({
                 type="submit"
                 className="flex-1 bg-[#1F1F1F] hover:bg-black text-white py-3 rounded-full font-sans text-xs font-semibold cursor-pointer"
               >
-                Assemble & Publish
+                Publish
               </button>
               <button
                 type="button" onClick={() => setShowAddForm(false)}

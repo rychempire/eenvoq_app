@@ -214,6 +214,33 @@ export default function App() {
     localStorage.setItem('eenvoq_active_section', activeSection);
   }, [activeSection]);
 
+  // Ensure that whenever a page loads (activeSection or userSession transitions), it always displays from the top of the page
+  useEffect(() => {
+    const scrollToTop = () => {
+      // 1. Reset standard viewport scrolling
+      window.scrollTo(0, 0);
+      if (document.documentElement) {
+        document.documentElement.scrollTop = 0;
+      }
+      if (document.body) {
+        document.body.scrollTop = 0;
+      }
+
+      // 2. Reset workspace scroll panel if rendered
+      const workspacePanel = document.getElementById('workspace-main-panel');
+      if (workspacePanel) {
+        workspacePanel.scrollTop = 0;
+      }
+    };
+
+    // Perform immediately
+    scrollToTop();
+
+    // Perform also on a microtask/short timeout to counter any content-dynamic sizing or dynamic layout adjustments
+    const timeoutId = setTimeout(scrollToTop, 10);
+    return () => clearTimeout(timeoutId);
+  }, [activeSection, userSession]);
+
   useEffect(() => {
     localStorage.setItem('eenvoq_receipts', JSON.stringify(receipts));
   }, [receipts]);

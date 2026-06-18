@@ -187,7 +187,7 @@ export default function Dashboard({
             Dashboard
           </h1>
           <p className="text-xs text-[#757575] font-normal mt-1 font-sans">
-            Store report
+            For oganizations & businesses
           </p>
         </div>
         
@@ -210,17 +210,17 @@ export default function Dashboard({
         <div className="space-y-4 text-left">
           <div className="flex items-center gap-2">
             <span className="bg-sky-100 border border-sky-200 text-[#0284c7] font-mono text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
-              Autonomous Verification Core
+              Fully Secure
             </span>
             <span className="bg-[#FCFAF7] border border-sky-200 text-sky-950 font-mono text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-sky-500 animate-pulse" /> Live matches active
+              <span className="w-1.5 h-1.5 rounded-full bg-sky-500 animate-pulse" /> Instant Updates
             </span>
           </div>
           <h2 className="text-2xl font-sans font-bold text-neutral-900 leading-tight">
-            Protect your cash drawer automatically.
+            Track your money
           </h2>
           <p className="text-xs text-neutral-600 leading-relaxed font-sans font-normal max-w-lg">
-            Welcome to your Eenvoq dashboard. The checkout signatures are sealed using tamperproof cryptographic tags, keeping register balances aligned cleanly.
+            Eenvoq secures and auto-balances your sales & payments, keeping you up to date with your money. Now you can record sales on the go, manage your customers and outstanding payments, run audits of the current state of your business, get fresh ideas to boost your revenue, and so much more.
           </p>
           <div className="flex gap-2">
             <button 
@@ -228,14 +228,14 @@ export default function Dashboard({
               onClick={openInlineTruthCheck}
               className="bg-[#111111] hover:bg-black text-white hover:text-sky-300 font-sans font-semibold py-2.5 px-5 rounded-full text-xs transition duration-150 active:scale-97 cursor-pointer border border-[#111111] focus:ring-2 focus:ring-sky-200 focus:outline-none"
             >
-               Audit
+               Audit my Records
             </button>
             <button 
               type="button"
               onClick={() => setActiveSection('assistant')}
               className="text-[#0284c7] hover:text-sky-900 font-sans font-bold py-2.5 px-4 text-xs transition hover:underline focus:outline-none"
             >
-              Consult Eenvoq →
+              Get Advice →
             </button>
           </div>
         </div>
@@ -525,7 +525,7 @@ export default function Dashboard({
           <div>
             <div className="flex items-center justify-between mb-6 border-b border-[#E3E3E3] pb-3">
               <h3 className="font-sans font-semibold text-[#1F1F1F] flex items-center gap-2 text-[22px] tracking-tight">
-                Alerts
+                Urgent!
               </h3>
               <button 
                 onClick={() => setActiveSection('notifications')}
@@ -571,7 +571,7 @@ export default function Dashboard({
           <div>
             <div className="flex items-center justify-between mb-6 border-b border-[#E3E3E3] pb-3">
               <h3 className="font-sans font-semibold text-[#1F1F1F] flex items-center gap-2 text-[22px] tracking-tight">
-                Low Stock Lists
+                Low Stock
               </h3>
               <button 
                 onClick={() => setActiveSection('inventory')}
@@ -615,7 +615,7 @@ export default function Dashboard({
           <div>
             <div className="flex items-center justify-between mb-6 border-b border-black pb-3">
               <h3 className="font-sans font-bold text-[#1F1F1F] flex items-center gap-2 text-[22px] tracking-tight">
-                {getDebtsLabel()}
+                Debtors
               </h3>
               <button 
                 onClick={() => setActiveSection('debtor')}
