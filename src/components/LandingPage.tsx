@@ -168,12 +168,12 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
           SECTION 0: NAVIGATION HEADER (Aligned with Hero)
           ========================================== */}
       <nav className="fixed top-0 left-0 right-0 h-20 bg-white/95 backdrop-blur-md z-50 flex items-center justify-between px-6 md:px-12 lg:px-20 border-b border-sky-100 w-full" id="landing-navbar">
-<div className="flex items-center gap-1 cursor-pointer" onClick={onEnterApp}>
+<div className="flex items-center gap-1 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
   {/* Logo Image with background removed via Cloudinary and increased size */}
   <img 
     src="https://res.cloudinary.com/dee01jm0p/image/upload/e_bgremoval/f_auto,q_auto/1001135527_ij6c4q" 
     alt="Eenvoq logo" 
-    className="h-22 w-auto object-contain select-none translate-y-1" 
+    className="h-8 w-auto object-contain select-none translate-y-1" 
   />
 </div>
 
@@ -1591,11 +1591,11 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
           {/* Column 1: Logo & Mission */}
 <div className="md:col-span-2 space-y-4">
   {/* Logo Row */}
-  <div className="flex items-center gap-1">
+  <div className="flex items-center gap-1 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
     <img 
       src="https://res.cloudinary.com/dee01jm0p/image/upload/e_bgremoval/f_auto,q_auto/1001135527_ij6c4q" 
       alt="Eenvoq logo" 
-      className="h-22 w-auto object-contain select-none translate-y-1 [filter:drop-shadow(1px_0_0_#000)_drop-shadow(-1px_0_0_#000)_drop-shadow(0_1px_0_0_#000)_drop-shadow(0_-1px_0_0_#000)]" 
+      className="h-8 w-auto object-contain select-none translate-y-1 [filter:drop-shadow(1px_0_0_#000)_drop-shadow(-1px_0_0_#000)_drop-shadow(0_1px_0_0_#000)_drop-shadow(0_-1px_0_0_#000)]" 
     />
   </div>
 

@@ -51,21 +51,34 @@ export default function Sidebar({ activeSection, setActiveSection, user, alerts,
       <div className="h-20 flex items-center px-5 border-b border-[#E3E3E3] justify-between select-none shrink-0">
         <div className="flex items-center overflow-hidden w-full">
           {!collapsed ? (
-            
-<div className="flex items-center gap-1 cursor-pointer" onClick={() => setCollapsed(true)}>
-  {/* Logo Image (Solid logo with background removed via Cloudinary AI) */}
-  <img 
-    src="https://res.cloudinary.com/dee01jm0p/image/upload/e_bgremoval/f_auto,q_auto/1001135527_ij6c4q" 
-    alt="Eenvoq logo" 
-    className="h-16 w-auto object-contain select-none translate-y-0.5 [filter:drop-shadow(1px_0_0_#000)_drop-shadow(-1px_0_0_#000)_drop-shadow(0_1px_0_0_#000)_drop-shadow(0_-1px_0_0_#000)]" 
-  />
-</div>
+            <div className="flex items-center gap-1 cursor-pointer" onClick={() => {
+              setActiveSection('dashboard');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+              const panel = document.getElementById('workspace-main-panel');
+              if (panel) {
+                panel.scrollTo({ top: 0, behavior: 'smooth' });
+              }
+            }}>
+              {/* Logo Image (Solid logo with background removed via Cloudinary AI) */}
+              <img 
+                src="https://res.cloudinary.com/dee01jm0p/image/upload/e_bgremoval/f_auto,q_auto/1001135527_ij6c4q" 
+                alt="Eenvoq logo" 
+                className="h-8 w-auto object-contain select-none translate-y-0.5 [filter:drop-shadow(1px_0_0_#000)_drop-shadow(-1px_0_0_#000)_drop-shadow(0_1px_0_0_#000)_drop-shadow(0_-1px_0_0_#000)]" 
+              />
+            </div>
           ) : (
-            <div className="flex items-center justify-center w-full cursor-pointer" onClick={() => setCollapsed(false)}>
+            <div className="flex items-center justify-center w-full cursor-pointer" onClick={() => {
+              setActiveSection('dashboard');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+              const panel = document.getElementById('workspace-main-panel');
+              if (panel) {
+                panel.scrollTo({ top: 0, behavior: 'smooth' });
+              }
+            }}>
               <img 
                 src="https://res.cloudinary.com/dee01jm0p/image/upload/e_bgremoval/f_auto,q_auto/1001135527_ij6c4q" 
                 alt="Eenvoq logo animate-fade-in" 
-                className="h-16 w-auto object-contain select-none [filter:drop-shadow(1px_0_0_#000)_drop-shadow(-1px_0_0_#000)_drop-shadow(0_1px_0_0_#000)_drop-shadow(0_-1px_0_0_#000)]" 
+                className="h-8 w-auto object-contain select-none [filter:drop-shadow(1px_0_0_#000)_drop-shadow(-1px_0_0_#000)_drop-shadow(0_1px_0_0_#000)_drop-shadow(0_-1px_0_0_#000)]" 
               />
             </div>
           )}

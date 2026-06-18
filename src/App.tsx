@@ -662,12 +662,19 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
 
          {/* Mobile Header Bar */}
         <header className="h-16 bg-[#FCFAF7]/90 backdrop-blur-md border-b border-[#E3E3E3] px-4 flex items-center justify-between md:hidden select-none shrink-0" id="mobile-navigation-header">
-<div className="flex items-center gap-1">
+<div className="flex items-center gap-1 cursor-pointer" onClick={() => {
+  setActiveSection('dashboard');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  const panel = document.getElementById('workspace-main-panel');
+  if (panel) {
+    panel.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}}>
   {/* Logo Image */}
   <img 
     src="https://res.cloudinary.com/dee01jm0p/image/upload/e_bgremoval/f_auto,q_auto/1001135527_ij6c4q" 
     alt="Eenvoq logo" 
-    className="h-16 w-auto object-contain select-none translate-y-0.5 [filter:drop-shadow(1px_0_0_#000)_drop-shadow(-1px_0_0_#000)_drop-shadow(0_1px_0_0_#000)_drop-shadow(0_-1px_0_0_#000)]" 
+    className="h-7 w-auto object-contain select-none translate-y-0.5 [filter:drop-shadow(1px_0_0_#000)_drop-shadow(-1px_0_0_#000)_drop-shadow(0_1px_0_0_#000)_drop-shadow(0_-1px_0_0_#000)]" 
   />
 </div>
 
