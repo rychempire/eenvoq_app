@@ -5,11 +5,12 @@ import EenvoqIcon from './EenvoqIcon';
 
 interface AuthProps {
   onLogin: (session: UserSession) => void;
+  onBackToLanding?: () => void;
 }
 
 type AuthMode = 'login' | 'register' | 'forgot' | 'otp';
 
-export default function Auth({ onLogin }: AuthProps) {
+export default function Auth({ onLogin, onBackToLanding }: AuthProps) {
   const [mode, setMode] = useState<AuthMode>('login');
   
   // Registration and onboarding state machine
@@ -155,7 +156,7 @@ export default function Auth({ onLogin }: AuthProps) {
         
         {/* Universal brand logo block */}
 
-        <div className="flex items-center gap-1 cursor-pointer" onClick={onEnterApp}>
+        <div className="flex items-center gap-1 cursor-pointer" onClick={onBackToLanding}>
   {/* Logo Image (Solid logo with background removed via Cloudinary AI) */}
   <img 
     src="https://res.cloudinary.com/dee01jm0p/image/upload/e_bgremoval/f_auto,q_auto/1001133582_wa3zq3" 

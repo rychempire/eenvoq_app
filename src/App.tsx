@@ -521,7 +521,7 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
 
   // If user is not yet logged in, present the registration check gateway
   if (!userSession) {
-    return <Auth onLogin={handleLogin} />;
+    return <Auth onLogin={handleLogin} onBackToLanding={() => setActiveSection('landing')} />;
   }
 
   // Helper variables to direct workspace views
