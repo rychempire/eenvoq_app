@@ -220,7 +220,7 @@ export default function Dashboard({
             Track your money
           </h2>
           <p className="text-xs text-neutral-600 leading-relaxed font-sans font-normal max-w-lg">
-            Eenvoq secures and auto-balances your sales & payments, keeping you up to date with your money. Now you can record sales on the go, manage your customers and outstanding payments, run audits of the current state of your business, get fresh ideas to boost your revenue, and so much more.
+            Eenvoq secures and auto-balances your sales & payments, keeping you up to date with your money. Now you can record sales on the go, manage your customers and outstanding payments, run audits of the current state of your business, get practical advice to boost your revenue, and so much more.
           </p>
           <div className="flex gap-2">
             <button 
