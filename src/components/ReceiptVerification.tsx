@@ -409,56 +409,76 @@ export default function ReceiptVerification({
       </div>
 
       {/* OPERATOR CONTROL BAR - NEW COMPONENT AS REQUESTED */}
-      <div className="bg-sky-55/40 border border-sky-100 rounded-[24px] p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 select-none" id="operator-selection-control-bar">
-        <div className="flex flex-col md:flex-row items-start md:items-center gap-4 w-full md:w-auto">
-          <div className="bg-white border border-sky-200 rounded-full p-2 px-4 flex items-center gap-2.5 shadow-sm">
-            <span className="w-2.5 h-2.5 rounded-full bg-sky-500 animate-pulse" />
-            <div className="text-xs">
-              <span className="text-[#0284c7] font-sans block leading-none font-bold mb-1">Active Operator:</span>
-              <span className="text-[#1F1F1F] font-semibold flex items-center gap-1.5 leading-none">
-                {teamMembers.find(m => m.id === activeOperatorId)?.name || teamMembers[0]?.name || "System Owner"}
-                <span className="text-[10px] text-[#0284c7] bg-sky-50 border border-sky-100 px-1.5 py-0.5 rounded-full font-mono uppercase font-semibold leading-none">
-                  {teamMembers.find(m => m.id === activeOperatorId)?.role || "Owner"}
-                </span>
+      <div className="bg-sky-50/45 border border-sky-100 rounded-[24px] p-4 sm:p-5 flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4 select-none shadow-xs" id="operator-selection-control-bar">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full lg:w-auto">
+          {/* Active Operator status pill */}
+          <div className="bg-white border border-sky-200/70 rounded-full py-2.5 px-4 flex items-center gap-3 shadow-xs shrink-0 self-stretch sm:self-auto justify-between sm:justify-start">
+            <div className="flex items-center gap-2.5">
+              <span className="relative flex h-2.5 w-2.5 shrink-0 mt-0.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-sky-500"></span>
               </span>
+              <div className="text-left leading-none">
+                <span className="text-[#0284c7] font-sans font-bold block mb-1 uppercase tracking-wider text-[9px] leading-none">Active Operator</span>
+                <span className="text-[#1F1F1F] font-semibold flex items-center gap-1.5 leading-none text-xs">
+                  <span className="truncate max-w-[130px] sm:max-w-none">
+                    {teamMembers.find(m => m.id === activeOperatorId)?.name || teamMembers[0]?.name || "System Owner"}
+                  </span>
+                </span>
+              </div>
             </div>
+            <span className="text-[9px] text-[#0284c7] bg-sky-50 border border-sky-100 px-2 py-0.5 rounded-full font-mono uppercase font-bold shrink-0 ml-2">
+              {teamMembers.find(m => m.id === activeOperatorId)?.role || "Owner"}
+            </span>
           </div>
 
-          <div className="flex items-center gap-2 text-xs text-sky-800 font-sans">
-            <span className="font-medium">Switch Operator:</span>
-            <select
-              value={activeOperatorId}
-              onChange={(e) => onChangeActiveOperator(e.target.value)}
-              className="bg-white border border-sky-200 rounded-full h-9 px-4 text-xs font-semibold text-[#1F1F1F] focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100 cursor-pointer"
-            >
-              {teamMembers.map(member => (
-                <option key={member.id} value={member.id}>
-                  {member.name} ({member.role}){member.isCreator ? " [Principal]" : ""}
-                </option>
-              ))}
-            </select>
+          {/* Switch Operator Dropdown */}
+          <div className="flex items-center justify-between sm:justify-start gap-2.5 text-xs text-sky-800 font-sans w-full sm:w-auto">
+            <span className="font-medium shrink-0 text-slate-500 text-xs">Switch Operator:</span>
+            <div className="relative flex-1 sm:flex-initial">
+              <select
+                value={activeOperatorId}
+                onChange={(e) => onChangeActiveOperator(e.target.value)}
+                className="w-full sm:w-auto bg-white border border-sky-200 hover:border-sky-300 rounded-full h-9 pl-4 pr-9 text-xs font-semibold text-[#1F1F1F] focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100 cursor-pointer appearance-none transition-all duration-150"
+              >
+                {teamMembers.map(member => (
+                  <option key={member.id} value={member.id}>
+                    {member.name} ({member.role}){member.isCreator ? " [Principal]" : ""}
+                  </option>
+                ))}
+              </select>
+              <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-[#0284c7]">
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className="flex items-center gap-3 w-full md:w-auto justify-end">
+        {/* Action Button Controls */}
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full lg:w-auto shrink-0">
           <button
             type="button"
             onClick={() => setShowTeamModal(true)}
-            className="flex items-center gap-2 border border-sky-200 bg-white hover:bg-sky-50/50 text-[#0284c7] font-bold rounded-full h-9 px-4 text-xs transition cursor-pointer focus:outline-none focus:ring-2 focus:ring-sky-100"
+            className="flex items-center justify-center gap-2 border border-sky-200 hover:border-sky-300 bg-white hover:bg-sky-50/50 active:scale-98 text-[#0284c7] font-bold rounded-full h-9 px-4 text-xs transition cursor-pointer focus:outline-none focus:ring-2 focus:ring-sky-100 w-full sm:w-auto"
           >
             <Users className="w-4 h-4 text-[#0284c7] stroke-[1.5]" />
             <span>Operators</span>
           </button>
           
-          <label className="flex items-center gap-2 bg-[#FCFAF7] hover:bg-sky-50/30 border border-sky-200 rounded-full h-9 px-4 text-xs font-semibold text-[#0284c7] cursor-pointer transition select-none">
+          <label className="flex items-center justify-center gap-2 bg-white hover:bg-sky-50/30 border border-sky-200 hover:border-sky-300 rounded-full h-9 px-4 text-xs font-semibold text-[#0284c7] cursor-pointer transition select-none w-full sm:w-auto shadow-2xs">
             <input 
               type="checkbox"
               checked={includeDeleted}
               onChange={(e) => setIncludeDeleted(e.target.checked)}
-              className="rounded border-sky-200 text-[#0284c7] focus:ring-sky-100 cursor-pointer"
+              className="rounded border-sky-200 text-[#0284c7] focus:ring-sky-100 cursor-pointer h-3.5 w-3.5"
             />
-            <span className="flex items-center gap-1">
-              Include Deleted <span className="text-[10px] text-red-600 bg-red-50 border border-red-200 px-1 py-0.5 rounded-full font-mono uppercase font-semibold scale-90">Trails</span>
+            <span className="flex items-center gap-1.5">
+              Include Deleted 
+              <span className="text-[9px] text-red-600 bg-red-50 border border-red-100 px-1.5 py-0.5 rounded-full font-mono uppercase font-bold tracking-wide shrink-0">
+                Trails
+              </span>
             </span>
           </label>
         </div>

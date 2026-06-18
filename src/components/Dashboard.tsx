@@ -577,7 +577,7 @@ export default function Dashboard({
                 onClick={() => setActiveSection('inventory')}
                 className="text-xs text-[#757575] font-semibold hover:underline font-sans cursor-pointer"
               >
-                Track
+                Track Here →
               </button>
             </div>
 
@@ -621,7 +621,7 @@ export default function Dashboard({
                 onClick={() => setActiveSection('debtor')}
                 className="text-xs text-neutral-600 font-bold hover:underline cursor-pointer"
               >
-                Open Book
+                Open Book →
               </button>
             </div>
  
@@ -682,7 +682,7 @@ export default function Dashboard({
           onClick={() => onNavigateToAssistant("Check Shift B (3PM-5PM) recorded sales vs drawer cash to find missing money source")}
           className="text-xs text-[#5F6368] hover:text-black font-medium underline cursor-pointer shrink-0 animate-pulse-once"
         >
-          Check Where Money Went
+          Check Where Money Went →
         </button>
       </div>
 
@@ -764,7 +764,7 @@ export default function Dashboard({
                 }}
                 className="w-full bg-[#1F1F1F] hover:bg-black text-white text-xs font-semibold py-3.5 rounded-full transition text-center flex items-center justify-center gap-2 cursor-pointer shadow-none"
               >
-                <span>Go to Customer Bills List</span>
+                <span>Go to Sales & Bills</span> 
               </button>
             </div>
           </div>
