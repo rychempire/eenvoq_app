@@ -630,7 +630,7 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
   };
 
   return (
-    <div className="flex h-screen bg-[#FCFAF7] border-t-[6px] border-[#0ea5e9]" id="application-container-root animate-fade-in">
+    <div className="flex h-screen bg-[#FCFAF7]" id="application-container-root animate-fade-in">
       
       {/* Sidebar for Desktop */}
       <div className="hidden md:flex shrink-0">

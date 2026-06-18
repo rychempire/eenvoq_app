@@ -206,34 +206,72 @@ export default function Dashboard({
       </div>
 
       {/* Dynamic Visual Dashboard Greeting */}
-      <div className="bg-white border border-[#E3E3E3] rounded-[28px] overflow-hidden shadow-sm p-6 items-center" id="dashboard-visual-banner">
-        <div className="space-y-4 text-left">
-          <div className="flex items-center gap-2">
-            <span className="bg-sky-100 border border-sky-200 text-[#0284c7] font-mono text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
+      <div 
+        className="relative border border-slate-800/80 rounded-[28px] overflow-hidden shadow-xl p-8 flex items-center md:min-h-[220px]" 
+        id="dashboard-visual-banner"
+        style={{ 
+          background: 'radial-gradient(circle at top left, #0A1128 0%, #004E64 50%, #B07D2B 100%)' 
+        }}
+      >
+        {/* Subtle, soft radial light glow behind copy */}
+        <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-[350px] h-[150px] bg-cyan-400/10 rounded-full blur-[80px] pointer-events-none" />
+        <div className="absolute -top-10 -right-10 w-[200px] h-[200px] bg-amber-400/10 rounded-full blur-[80px] pointer-events-none" />
+
+        {/* Abstract Geometry & Shapes: Flowing waves, Curved parallel metallic gold & dark blue stripes */}
+        <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-40 select-none animate-fade-in" xmlns="http://www.w3.org/2000/svg">
+          {/* Top-Right Quadrant: Curved Parallel Stripes (Metallic Gold and Dark Blue) */}
+          <g className="translate-x-1/2 -translate-y-10 scale-125 md:scale-100 md:translate-x-0 md:-translate-y-0" style={{ transformOrigin: 'top right' }}>
+            {/* Dark Blue Stripe */}
+            <path d="M 450,0 Q 550,150 700,50" fill="none" stroke="#0A1128" strokeWidth="8" opacity="0.8" />
+            <path d="M 470,0 Q 570,150 720,50" fill="none" stroke="#0A1128" strokeWidth="8" opacity="0.6" />
+            {/* Metallic Gold Stripes */}
+            <path d="M 490,0 Q 590,150 740,50" fill="none" stroke="#E5A93C" strokeWidth="8" opacity="0.8" />
+            <path d="M 510,0 Q 610,150 760,50" fill="none" stroke="#E5A93C" strokeWidth="8" opacity="0.5" />
+            <path d="M 530,0 Q 630,150 780,50" fill="none" stroke="#E5A93C" strokeWidth="8" opacity="0.3" />
+          </g>
+
+          {/* Bottom-Left Quadrant: Curved Parallel Stripes (Gold & Dark Blue) */}
+          <g className="-translate-y-20 -translate-x-10 md:translate-y-0 md:translate-x-0" style={{ transformOrigin: 'bottom left' }}>
+            <path d="M -50,180 Q 80,100 150,250" fill="none" stroke="#E5A93C" strokeWidth="6" opacity="0.4" />
+            <path d="M -70,195 Q 60,115 130,265" fill="none" stroke="#E5A93C" strokeWidth="6" opacity="0.6" />
+            <path d="M -90,210 Q 40,130 110,280" fill="none" stroke="#0A1128" strokeWidth="6" opacity="0.7" />
+            <path d="M -110,225 Q 20,145 90,295" fill="none" stroke="#0A1128" strokeWidth="6" opacity="0.5" />
+          </g>
+
+          {/* Elegant Flowing Abstract Intersecting Curved Bands across the center card */}
+          <path d="M -100,100 C 150,300 450,-50 850,150" fill="none" stroke="rgba(0, 78, 100, 0.4)" strokeWidth="40" strokeLinecap="round" />
+          <path d="M -50,80 C 200,260 400,-20 800,180" fill="none" stroke="rgba(229, 169, 60, 0.15)" strokeWidth="20" strokeLinecap="round" />
+          <path d="M -20,110 C 250,150 350,120 700,40" fill="none" stroke="rgba(255, 255, 255, 0.08)" strokeWidth="15" />
+        </svg>
+
+        {/* Content overlaid on top */}
+        <div className="relative z-10 space-y-4 text-left w-full">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="bg-amber-500/10 border border-amber-500/30 text-[#E5A93C] font-mono text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider backdrop-blur-sm">
               Fully Secure
             </span>
-            <span className="bg-[#FCFAF7] border border-sky-200 text-sky-950 font-mono text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-sky-500 animate-pulse" /> Instant Updates
+            <span className="bg-teal-950/40 border border-teal-500/30 text-teal-300 font-mono text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1 backdrop-blur-sm">
+              <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse" /> Instant Updates
             </span>
           </div>
-          <h2 className="text-2xl font-sans font-bold text-neutral-900 leading-tight">
+          <h2 className="text-2xl sm:text-3xl font-sans font-black text-white leading-tight tracking-tight">
             Track your money
           </h2>
-          <p className="text-xs text-neutral-600 leading-relaxed font-sans font-normal max-w-lg">
+          <p className="text-xs text-white/90 leading-relaxed font-sans font-medium max-w-lg">
             Eenvoq secures and auto-balances your sales & payments, keeping you up to date with your money. Now you can record sales on the go, manage your customers and outstanding payments, run audits of the current state of your business, get practical advice to boost your revenue, and so much more.
           </p>
-          <div className="flex gap-2">
+          <div className="flex gap-3 pt-1 flex-wrap">
             <button 
               type="button"
               onClick={openInlineTruthCheck}
-              className="bg-[#111111] hover:bg-black text-white hover:text-sky-300 font-sans font-semibold py-2.5 px-5 rounded-full text-xs transition duration-150 active:scale-97 cursor-pointer border border-[#111111] focus:ring-2 focus:ring-sky-200 focus:outline-none"
+              className="bg-[#0F162A] hover:bg-[#151F3C] text-white hover:text-amber-300 font-sans font-semibold py-2.5 px-6 rounded-full text-xs transition-all duration-150 active:scale-97 cursor-pointer border border-amber-500/40 shadow-[0_0_15px_rgba(229,169,60,0.2)] focus:ring-2 focus:ring-amber-300/40 focus:outline-none"
             >
                Audit my Records
             </button>
             <button 
               type="button"
               onClick={() => setActiveSection('assistant')}
-              className="text-[#0284c7] hover:text-sky-900 font-sans font-bold py-2.5 px-4 text-xs transition hover:underline focus:outline-none"
+              className="text-[#3ef0f0] hover:text-[#5fffff] font-sans font-black py-2.5 px-4 text-xs transition hover:underline focus:outline-none flex items-center gap-1 active:scale-97 cursor-pointer"
             >
               Get Advice →
             </button>
