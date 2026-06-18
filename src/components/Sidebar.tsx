@@ -56,14 +56,14 @@ export default function Sidebar({ activeSection, setActiveSection, user, alerts,
   {/* Logo Image (Solid logo with background removed via Cloudinary AI) */}
   <img 
     src="https://res.cloudinary.com/dee01jm0p/image/upload/e_bgremoval/f_auto,q_auto/1001133582_wa3zq3" 
-    alt="eenvoq logo" 
-    className="h-10 w-auto object-contain select-none translate-y-0.5 [filter:drop-shadow(1px_0_0_#000)_drop-shadow(-1px_0_0_#000)_drop-shadow(0_1px_0_0_#000)_drop-shadow(0_-1px_0_0_#000)]" 
+    alt="Eenvoq logo" 
+    className="h-16 w-auto object-contain select-none translate-y-0.5 [filter:drop-shadow(1px_0_0_#000)_drop-shadow(-1px_0_0_#000)_drop-shadow(0_1px_0_0_#000)_drop-shadow(0_-1px_0_0_#000)]" 
   />
 
   {/* Text Column */}
   <div className="flex flex-col">
     <span className="font-sans font-semibold text-[#1F1F1F] tracking-tight text-[22px] leading-tight" id="sidebar-eenvoq-title">
-      eenvoq
+      Eenvoq
     </span>
   </div>
 </div>
@@ -71,8 +71,8 @@ export default function Sidebar({ activeSection, setActiveSection, user, alerts,
             <div className="flex items-center justify-center w-full cursor-pointer" onClick={() => setCollapsed(false)}>
               <img 
                 src="https://res.cloudinary.com/dee01jm0p/image/upload/e_bgremoval/f_auto,q_auto/1001133582_wa3zq3" 
-                alt="eenvoq logo animate-fade-in" 
-                className="h-10 w-auto object-contain select-none [filter:drop-shadow(1px_0_0_#000)_drop-shadow(-1px_0_0_#000)_drop-shadow(0_1px_0_0_#000)_drop-shadow(0_-1px_0_0_#000)]" 
+                alt="Eenvoq logo animate-fade-in" 
+                className="h-16 w-auto object-contain select-none [filter:drop-shadow(1px_0_0_#000)_drop-shadow(-1px_0_0_#000)_drop-shadow(0_1px_0_0_#000)_drop-shadow(0_-1px_0_0_#000)]" 
               />
             </div>
           )}

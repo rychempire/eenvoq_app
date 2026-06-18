@@ -286,13 +286,13 @@ export default function Auth({ onLogin, onBackToLanding }: AuthProps) {
   {/* Logo Image (Solid logo with background removed via Cloudinary AI) */}
   <img 
     src="https://res.cloudinary.com/dee01jm0p/image/upload/e_bgremoval/f_auto,q_auto/1001133582_wa3zq3" 
-    alt="eenvoq logo" 
-    className="h-14 w-auto object-contain select-none translate-y-1 [filter:drop-shadow(1px_0_0_#000)_drop-shadow(-1px_0_0_#000)_drop-shadow(0_1px_0_0_#000)_drop-shadow(0_-1px_0_0_#000)]" 
+    alt="Eenvoq logo" 
+    className="h-22 w-auto object-contain select-none translate-y-1 [filter:drop-shadow(1px_0_0_#000)_drop-shadow(-1px_0_0_#000)_drop-shadow(0_1px_0_0_#000)_drop-shadow(0_-1px_0_0_#000)]" 
   />
   
   {/* Logo Text */}
   <span className="font-sans font-medium text-black tracking-tight text-3xl md:text-3xl select-none leading-none">
-    eenvoq
+    Eenvoq
   </span>
 </div>
 

@@ -163,24 +163,22 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
 
   return (
     <div className="bg-white min-h-screen font-sans text-neutral-900 flex flex-col items-center overflow-x-hidden relative" id="eenvoq-landing-container">
-      {/* Visual Top Sky Blue Brand Accent */}
-      <div className="h-[6px] bg-[#0ea5e9] w-full fixed top-0 left-0 z-[10002]" id="global-sky-blue-top-accent"></div>
       
       {/* ==========================================
           SECTION 0: NAVIGATION HEADER (Aligned with Hero)
           ========================================== */}
-      <nav className="fixed top-[6px] left-0 right-0 h-20 bg-white/95 backdrop-blur-md z-50 flex items-center justify-between px-6 md:px-12 lg:px-20 border-b border-sky-100 w-full" id="landing-navbar">
+      <nav className="fixed top-0 left-0 right-0 h-20 bg-white/95 backdrop-blur-md z-50 flex items-center justify-between px-6 md:px-12 lg:px-20 border-b border-sky-100 w-full" id="landing-navbar">
 <div className="flex items-center gap-1 cursor-pointer" onClick={onEnterApp}>
-  {/* Logo Image with blend mode to remove the gray background */}
+  {/* Logo Image with background removed via Cloudinary and increased size */}
   <img 
-    src="https://res.cloudinary.com/dee01jm0p/image/upload/f_auto,q_auto/1001133582_wa3zq3" 
-    alt="eenvoq logo" 
-    className="h-14 w-auto object-contain select-none mix-blend-multiply translate-y-1" 
+    src="https://res.cloudinary.com/dee01jm0p/image/upload/e_bgremoval/f_auto,q_auto/1001133582_wa3zq3" 
+    alt="Eenvoq logo" 
+    className="h-22 w-auto object-contain select-none translate-y-1" 
   />
   
   {/* Logo Text */}
   <span className="font-sans font-medium text-black tracking-tight text-3xl md:text-3xl select-none leading-none">
-    eenvoq
+    Eenvoq
   </span>
 </div>
 
@@ -1601,11 +1599,11 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
   <div className="flex items-center gap-1">
     <img 
       src="https://res.cloudinary.com/dee01jm0p/image/upload/e_bgremoval/f_auto,q_auto/1001133582_wa3zq3" 
-      alt="eenvoq logo" 
-      className="h-14 w-auto object-contain select-none translate-y-1 [filter:drop-shadow(1px_0_0_#000)_drop-shadow(-1px_0_0_#000)_drop-shadow(0_1px_0_0_#000)_drop-shadow(0_-1px_0_0_#000)]" 
+      alt="Eenvoq logo" 
+      className="h-22 w-auto object-contain select-none translate-y-1 [filter:drop-shadow(1px_0_0_#000)_drop-shadow(-1px_0_0_#000)_drop-shadow(0_1px_0_0_#000)_drop-shadow(0_-1px_0_0_#000)]" 
     />
     <span className="font-sans font-light text-black tracking-tight text-3xl select-none">
-      eenvoq
+      Eenvoq
     </span>
   </div>
 
