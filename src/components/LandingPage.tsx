@@ -167,13 +167,13 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
       {/* ==========================================
           SECTION 0: NAVIGATION HEADER (Aligned with Hero)
           ========================================== */}
-      <nav className="fixed top-0 left-0 right-0 h-20 bg-[#1e40af] z-50 flex items-center justify-between px-6 md:px-12 lg:px-20 border-b border-sky-400/20 w-full" id="landing-navbar">
+      <nav className="fixed top-0 left-0 right-0 h-16 bg-[#1e40af] z-50 flex items-center justify-between px-6 md:px-12 lg:px-20 border-b border-sky-400/20 w-full" id="landing-navbar">
 <div className="flex items-center gap-1 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-  {/* Logo Image with background removed via Cloudinary and increased size */}
+  {/* Logo Image with background removed via Cloudinary and matching dashboard size */}
   <img 
     src="https://res.cloudinary.com/dee01jm0p/image/upload/e_bgremoval/f_auto,q_auto/1001135527_ij6c4q" 
     alt="Eenvoq logo" 
-    className="h-8 w-auto object-contain select-none translate-y-1 brightness-0 invert" 
+    className="h-7 w-auto object-contain select-none translate-y-0.5 brightness-0 invert" 
   />
 </div>
 
@@ -221,7 +221,7 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed top-20 left-0 right-0 bg-[#1e40af] border-b border-sky-400/25 z-40 lg:hidden shadow-lg overflow-hidden flex flex-col p-6 space-y-4"
+            className="fixed top-16 left-0 right-0 bg-[#1e40af] border-b border-sky-400/25 z-40 lg:hidden shadow-lg overflow-hidden flex flex-col p-6 space-y-4"
           >
             
             <a href="#features-showcase" onClick={() => setMobileMenuOpen(false)} className="text-sm font-semibold text-white hover:text-sky-300 py-2 border-b border-sky-400/10">Features</a>
@@ -236,7 +236,7 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
       </AnimatePresence>
 
       {/* Main content body containing exactly 14 sequential sections */}
-      <div className="w-full pt-20 pb-0 flex flex-col items-center">
+      <div className="w-full pt-16 pb-0 flex flex-col items-center">
 
         {/* ==========================================
             SECTION 1: THE HERO SECION (Above the fold)
