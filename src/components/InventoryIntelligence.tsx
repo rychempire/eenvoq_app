@@ -122,7 +122,7 @@ export default function InventoryIntelligence({
           <button
             type="button"
             onClick={() => setShowAddModal(true)}
-            className="bg-sky-500 hover:bg-sky-600 border border-transparent text-white font-semibold py-2 px-5 rounded-full text-xs transition flex items-center gap-2 cursor-pointer h-[40px] shadow-sm select-none shrink-0"
+            className="bg-sky-900 hover:bg-sky-950 border border-transparent text-white font-semibold py-2 px-5 rounded-full text-xs transition flex items-center gap-2 cursor-pointer h-[40px] shadow-sm select-none shrink-0"
           >
             <Plus className="w-4 h-4 text-white" />
             <span>Add Product</span>

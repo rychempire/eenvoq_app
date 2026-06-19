@@ -197,7 +197,7 @@ export default function Dashboard({
             onClick={() => {
               window.location.hash = 'receipts/add';
             }}
-            className="bg-sky-500 hover:bg-sky-600 focus:ring-2 focus:ring-sky-200 focus:outline-none border border-transparent text-[#FFFFFF] font-semibold py-3 px-6 rounded-full text-xs transition flex items-center justify-center gap-2 cursor-pointer shadow-sm shrink-0"
+            className="bg-sky-900 hover:bg-sky-950 focus:ring-2 focus:ring-sky-900/20 focus:outline-none border border-transparent text-[#FFFFFF] font-semibold py-3 px-6 rounded-full text-xs transition flex items-center justify-center gap-2 cursor-pointer shadow-sm shrink-0"
           >
             <Plus className="w-4 h-4 text-[#FFFFFF]" />
             Record a Sale
@@ -425,7 +425,7 @@ export default function Dashboard({
                 <button
                   type="submit"
                   disabled={inlineLoading}
-                  className="flex-1 bg-sky-500 hover:bg-sky-600 text-white font-semibold py-3 rounded-full shadow-none transition text-xs font-sans flex items-center justify-center gap-2 cursor-pointer disabled:bg-sky-200 focus:ring-2 focus:ring-sky-200 focus:outline-none animate-pulse-once"
+                  className="flex-1 bg-sky-900 hover:bg-sky-950 text-white font-semibold py-3 rounded-full shadow-none transition text-xs font-sans flex items-center justify-center gap-2 cursor-pointer disabled:bg-sky-200 focus:ring-2 focus:ring-sky-900/20 focus:outline-none animate-pulse-once"
                 >
                   {inlineLoading ? (
                     <div className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />

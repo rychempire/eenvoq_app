@@ -193,7 +193,7 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
           </button>
           <button
             onClick={onEnterApp}
-            className="bg-sky-500 hover:bg-sky-600 text-white font-bold py-3 px-6 rounded-full text-xs uppercase tracking-wider transition-all active:scale-95 shadow-sm cursor-pointer border border-transparent focus:ring-2 focus:ring-sky-200"
+            className="bg-sky-900 hover:bg-sky-950 text-white font-bold py-3 px-6 rounded-full text-xs uppercase tracking-wider transition-all active:scale-95 shadow-sm cursor-pointer border border-transparent focus:ring-2 focus:ring-sky-900/20"
             id="nav-cta-btn"
           >
             Start Free Trial
@@ -229,7 +229,7 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
             <a href="#pricing-tiers" onClick={() => setMobileMenuOpen(false)} className="text-sm font-semibold text-neutral-700 hover:text-sky-600 py-2 border-b border-sky-50">Pricing</a>
               <div className="pt-4 flex flex-col gap-3">
               <button onClick={() => { setMobileMenuOpen(false); onEnterApp(); }} className="w-full text-center py-3 font-bold text-neutral-600 rounded-full border border-sky-100 hover:bg-sky-50/20 text-xs uppercase tracking-wide">Log In</button>
-              <button onClick={() => { setMobileMenuOpen(false); onEnterApp(); }} className="w-full text-center py-3 font-bold bg-sky-500 text-white rounded-full text-xs uppercase tracking-wide">Start Free Trial</button>
+              <button onClick={() => { setMobileMenuOpen(false); onEnterApp(); }} className="w-full text-center py-3 font-bold bg-sky-900 hover:bg-sky-950 text-white rounded-full text-xs uppercase tracking-wide">Start Free Trial</button>
             </div>
           </motion.div>
         )}
@@ -258,7 +258,7 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 w-full max-w-md">
             <button
               onClick={onEnterApp}
-              className="bg-sky-500 hover:bg-sky-600 text-white font-sans font-bold py-4.5 px-8 rounded-full text-sm uppercase tracking-wider transition-all duration-150 active:scale-95 shadow-md hover:shadow-lg hover:shadow-sky-100 w-full sm:w-auto cursor-pointer border border-transparent whitespace-nowrap flex items-center justify-center gap-2 focus:ring-2 focus:ring-sky-200"
+              className="bg-sky-900 hover:bg-sky-950 text-white font-sans font-bold py-4.5 px-8 rounded-full text-sm uppercase tracking-wider transition-all duration-150 active:scale-95 shadow-md hover:shadow-lg hover:shadow-sky-900/20 w-full sm:w-auto cursor-pointer border border-transparent whitespace-nowrap flex items-center justify-center gap-2 focus:ring-2 focus:ring-sky-900/20"
             >
               <span>Start Free Trial</span>
               <ArrowRight className="w-4 h-4 text-white" />
@@ -333,7 +333,7 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
                   </div>
                   <button 
                     onClick={triggerAuditScan}
-                    className="w-full bg-sky-500 hover:bg-sky-600 text-white font-bold py-2.5 px-4 rounded-xl text-xs uppercase tracking-wider transition-colors duration-150 mb-3 shadow-sm flex items-center justify-center gap-1.5 focus:outline-none"
+                    className="w-full bg-sky-900 hover:bg-sky-950 text-white font-bold py-2.5 px-4 rounded-xl text-xs uppercase tracking-wider transition-colors duration-150 mb-3 shadow-sm flex items-center justify-center gap-1.5 focus:outline-none"
                   >
                     <span>{scannerActive ? "Scanning..." : "Launch Audit"}</span>
                     <RefreshCw className={`w-3.5 h-3.5 ${scannerActive ? 'animate-spin' : ''}`} />
@@ -1272,7 +1272,7 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
 
               <button 
                 onClick={onEnterApp}
-                className="w-full bg-neutral-100 hover:bg-sky-500 hover:text-white text-neutral-800 font-bold py-3.5 rounded-full text-xs uppercase tracking-wider transition-all duration-150 focus:outline-none"
+                className="w-full bg-neutral-100 hover:bg-sky-900 hover:text-white text-neutral-800 font-bold py-3.5 rounded-full text-xs uppercase tracking-wider transition-all duration-150 focus:outline-none"
               >
                 Activate Free Trial
               </button>
@@ -1319,7 +1319,7 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
 
               <button 
                 onClick={onEnterApp}
-                className="w-full bg-sky-500 hover:bg-sky-600 text-white font-bold py-3.5 rounded-full text-xs uppercase tracking-wider transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-sky-200"
+                className="w-full bg-sky-900 hover:bg-sky-950 text-white font-bold py-3.5 rounded-full text-xs uppercase tracking-wider transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-sky-900/20"
               >
                 Activate Free Trial
               </button>
@@ -1366,7 +1366,7 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
 
               <button 
                 onClick={onEnterApp}
-                className="w-full bg-neutral-100 hover:bg-sky-500 hover:text-white text-neutral-800 font-bold py-3.5 rounded-full text-xs uppercase tracking-wider transition-all duration-150 focus:outline-none"
+                className="w-full bg-neutral-100 hover:bg-sky-900 hover:text-white text-neutral-800 font-bold py-3.5 rounded-full text-xs uppercase tracking-wider transition-all duration-150 focus:outline-none"
               >
                 Activate Free Trial
               </button>
@@ -1561,7 +1561,7 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2 max-w-md mx-auto">
               <button
                 onClick={onEnterApp}
-                className="bg-sky-500 hover:bg-sky-600 text-white font-sans font-bold py-4.5 px-8 rounded-full text-sm uppercase tracking-wider transition shadow-lg w-full text-center flex items-center justify-center gap-2 hover:shadow-sky-500/20"
+                className="bg-sky-900 hover:bg-sky-950 text-white font-sans font-bold py-4.5 px-8 rounded-full text-sm uppercase tracking-wider transition shadow-lg w-full text-center flex items-center justify-center gap-2 hover:shadow-sky-900/10"
               >
                 <span>Start Free Trial</span>
                 <ArrowRight className="w-4 h-4 text-white" />
@@ -1642,11 +1642,11 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
               <input 
                 type="email" 
                 placeholder="name@email.com" 
-                className="bg-neutral-50 text-xs border border-sky-100 px-3 py-2.5 rounded-full flex-1 focus:outline-none focus:border-sky-500 text-neutral-800"
+                className="bg-neutral-50 text-xs border border-sky-100 px-3 py-2.5 rounded-full flex-1 focus:outline-none focus:border-sky-900 text-neutral-800"
               />
               <button 
                 onClick={() => console.log("Subscribed")}
-                className="bg-sky-500 text-white font-bold text-xs py-2 px-4 rounded-full hover:bg-sky-600 transition shadow-xs"
+                className="bg-sky-900 text-white font-bold text-xs py-2 px-4 rounded-full hover:bg-sky-950 transition shadow-xs"
               >
                 Join
               </button>
