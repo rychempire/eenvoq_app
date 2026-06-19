@@ -241,40 +241,42 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
         {/* ==========================================
             SECTION 1: THE HERO SECION (Above the fold)
             ========================================== */}
-        <div className="w-full bg-gradient-to-b from-sky-50/30 to-white pb-12 pt-16 md:pt-24 px-6 md:px-12 lg:px-20 max-w-7xl mx-auto flex flex-col items-center text-center space-y-6" id="landing-hero-section">
-          <div className="flex items-center gap-2 bg-sky-50 border border-sky-100 px-3 py-1 rounded-full text-[10px] font-bold text-sky-700 uppercase tracking-wider animate-pulse-once">
-            <Sparkles className="w-3.5 h-3.5 stroke-[2] text-sky-500" />
-            <span>Autonomous Revenue Protection</span>
+        <div className="w-full bg-[#1e40af]" id="landing-hero-section">
+          <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20 pb-12 pt-16 md:pt-24 flex flex-col items-center text-center space-y-6">
+            <div className="flex items-center gap-2 bg-white/10 border border-sky-400/30 px-3 py-1 rounded-full text-[10px] font-bold text-sky-300 uppercase tracking-wider animate-pulse-once">
+              <Sparkles className="w-3.5 h-3.5 stroke-[2] text-sky-400" />
+              <span>Autonomous Revenue Protection</span>
+            </div>
+
+            <h1 className="text-[40px] sm:text-[44px] md:text-[45px] lg:text-[65px] font-sans font-black text-white leading-[1.08] tracking-tight max-w-5xl">
+              The Powerful AI Assistant That Tracks Your <span className="text-sky-300">Sales & Revenue</span>
+            </h1>
+
+            <p className="text-base md:text-xl text-white/90 max-w-3xl leading-relaxed font-sans font-medium">
+              Eenvoq keeps you updated on your finances, <span className="text-sky-300">reduces leaky income</span>, and analyses <span className="text-sky-300">sales, subscription, and tuition streams</span> for your business, school, and organization.
+            </p>
+
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 w-full max-w-md animate-fade-in">
+              <button
+                onClick={onEnterApp}
+                className="bg-sky-400 hover:bg-sky-300 text-[#1e40af] font-sans font-bold py-4.5 px-8 rounded-full text-sm uppercase tracking-wider transition-all duration-150 active:scale-95 shadow-md hover:shadow-lg hover:shadow-sky-400/20 w-full sm:w-auto cursor-pointer border border-transparent whitespace-nowrap flex items-center justify-center gap-2 focus:ring-2 focus:ring-sky-300"
+              >
+                <span>Start Free Trial</span>
+                <ArrowRight className="w-4 h-4 text-[#1e40af]" />
+              </button>
+              <button
+                onClick={onEnterApp}
+                className="bg-[#1e40af] hover:bg-[#1a368f] text-white font-sans font-bold py-4.5 px-8 rounded-full text-sm uppercase tracking-wider transition-all duration-150 active:scale-95 border border-white hover:border-sky-300 w-full sm:w-auto cursor-pointer flex items-center justify-center gap-2 shadow-sm focus:ring-2 focus:ring-white/20 whitespace-nowrap"
+              >
+                <PlayCircle className="w-5 h-5 text-white" />
+                <span>Book Demo</span>
+              </button>
+            </div>
+
+            <p className="text-xs text-sky-200/90 font-bold tracking-wide uppercase select-none pt-1">
+              ✓ No credit card required
+            </p>
           </div>
-
-          <h1 className="text-[40px] sm:text-[44px] md:text-[40px] lg:text-[65px] font-sans font-black text-black leading-[1.08] tracking-tight max-w-5xl">
-            The Powerful AI Assistant That Tracks Your Sales & Revenue
-          </h1>
-
-          <p className="text-base md:text-xl text-black-500 max-w-3xl leading-relaxed font-sans font-medium">
-            Eenvoq keeps you updated on your finances, reduces leaky income, and analyses sales/subscription/tuition streams for your business, school, and organization.
-          </p>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 w-full max-w-md">
-            <button
-              onClick={onEnterApp}
-              className="bg-[#1e40af] hover:bg-[#1a368f] text-white font-sans font-bold py-4.5 px-8 rounded-full text-sm uppercase tracking-wider transition-all duration-150 active:scale-95 shadow-md hover:shadow-lg hover:shadow-[#1e40af]/20 w-full sm:w-auto cursor-pointer border border-transparent whitespace-nowrap flex items-center justify-center gap-2 focus:ring-2 focus:ring-[#1e40af]/20"
-            >
-              <span>Start Free Trial</span>
-              <ArrowRight className="w-4 h-4 text-white" />
-            </button>
-            <button
-              onClick={onEnterApp}
-              className="bg-sky-500 hover:bg-sky-600 text-white font-sans font-bold py-4.5 px-8 rounded-full text-sm uppercase tracking-wider transition-all duration-150 active:scale-95 shadow-md hover:shadow-lg hover:shadow-sky-500/20 w-full sm:w-auto cursor-pointer border border-transparent whitespace-nowrap flex items-center justify-center gap-2 focus:ring-2 focus:ring-sky-500/20"
-            >
-              <PlayCircle className="w-5 h-5 text-white" />
-              <span>Book Demo</span>
-            </button>
-          </div>
-
-          <p className="text-xs text-neutral-400 font-bold tracking-wide uppercase select-none pt-1">
-            ✓ No credit card required
-          </p>
         </div>
 
 
