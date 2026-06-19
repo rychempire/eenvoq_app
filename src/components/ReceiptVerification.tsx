@@ -1007,7 +1007,7 @@ export default function ReceiptVerification({
             </h3>
             
             <div className="relative w-full sm:w-64">
-              <Search className="absolute left-4 top-2.5 text-[#757575] w-3.5 h-3.5 stroke-[1.5]" />
+              <Search className="absolute left-4 top-2.5 text-sky-500 w-3.5 h-3.5 stroke-[2]" />
               <input
                 type="text"
                 placeholder="Search bills..."
@@ -1017,7 +1017,7 @@ export default function ReceiptVerification({
                   setCurrentPage(1);
                   triggerFade();
                 }}
-                className="w-full bg-white border border-[#E3E3E3] rounded-full py-2 pl-10 pr-4 text-xs text-[#1F1F1F] font-normal focus:outline-none focus:border-[#5F6368]"
+                className="w-full bg-sky-50 border border-sky-100 rounded-full py-2 pl-10 pr-4 text-xs text-sky-950 font-semibold placeholder:text-sky-400 focus:outline-none focus:border-sky-400 focus:bg-white transition-all"
               />
             </div>
           </div>

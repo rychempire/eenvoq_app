@@ -73,13 +73,13 @@ export default function DebtorControl({ debtors, onToggleLock, showConfirm }: De
           {/* Filters controls bar */}
           <div className="p-4 border-b border-[#E3E3E3] bg-transparent grid grid-cols-1 sm:grid-cols-2 gap-3 select-none">
             <div className="relative">
-              <Search className="absolute left-4 top-3 text-[#757575] w-4 h-4 stroke-[1.5]" />
+              <Search className="absolute left-4 top-3 text-sky-500 w-4 h-4 stroke-[2]" />
               <input
                 type="text"
                 placeholder="Search customers who owe..."
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
-                className="w-full bg-white border border-[#E3E3E3] rounded-full py-2 pl-11 pr-4 text-xs text-[#1F1F1F] focus:outline-none focus:border-[#5F6368] font-normal"
+                className="w-full bg-sky-50 border border-sky-100 rounded-full py-2 pl-11 pr-4 text-xs text-sky-950 font-semibold placeholder:text-sky-400 focus:outline-none focus:border-sky-400 focus:bg-white transition-all font-normal"
               />
             </div>
 
