@@ -54,6 +54,10 @@ export default function ReceiptVerification({
 
   // New receipt form fields
   const [showAddForm, setShowAddForm] = useState(false);
+  const [addFormTab, setAddFormTab] = useState<'manual' | 'whatsapp'>('manual');
+  const [dragActive, setDragActive] = useState(false);
+  const [ocrProgress, setOcrProgress] = useState<number | null>(null);
+  const [ocrStatusText, setOcrStatusText] = useState('');
 
   // In-place edit receipt states
   const [isEditing, setIsEditing] = useState(false);
@@ -148,6 +152,103 @@ export default function ReceiptVerification({
     setCustomDate('');
     setCurrentPage(1);
     triggerFade();
+  };
+
+  const handleSimulateOCR_WhatsApp = (preset: { 
+    customerName: string; 
+    customerPhone: string; 
+    itemName: string; 
+    itemPrice: number; 
+    qty: number; 
+    fileName: string; 
+  }) => {
+    setOcrProgress(0);
+    setOcrStatusText("Initializing Local OCR & Cryptographic Core...");
+    
+    let progress = 0;
+    const interval = setInterval(() => {
+      progress += 25;
+      setOcrProgress(progress);
+      
+      if (progress === 25) {
+        setOcrStatusText(`Reading ${preset.fileName} file elements via AI OCR...`);
+      } else if (progress === 50) {
+        setOcrStatusText(`Extracting customer: ${preset.customerName}, item: ${preset.itemName}`);
+      } else if (progress === 75) {
+        setOcrStatusText("Verifying cryptographic signature on purchase receipts...");
+      } else if (progress === 100) {
+        clearInterval(interval);
+        setOcrProgress(null);
+        setOcrStatusText("");
+
+        const randomizedHash = Math.random().toString(36).substring(2, 5).toUpperCase() + Math.floor(Math.random() * 90 + 10);
+        const autoReceipt: Receipt = {
+          id: `TXN-2026-${Math.floor(Math.random() * 89999 + 10000)}`,
+          customerName: preset.customerName,
+          customerPhone: preset.customerPhone,
+          items: [{ name: preset.itemName, quantity: preset.qty, price: preset.itemPrice }],
+          totalAmount: preset.qty * preset.itemPrice,
+          timestamp: new Date().toISOString(),
+          status: 'verified',
+          rewardStatus: 'earned',
+          rewardPoints: Math.round((preset.qty * preset.itemPrice) * 0.01),
+          warrantyStatus: (preset.qty * preset.itemPrice) > 100000 ? 'active' : 'none',
+          securitySignature: `TSP-NGR-${randomizedHash}-WA-OCR`
+        };
+
+        onAddReceipt(autoReceipt);
+        setSelectedReceipt(autoReceipt);
+        setShowAddForm(false);
+        
+        if (showConfirm) {
+          showConfirm(
+            "AI WhatsApp Receipt Secured! 🎉",
+            `[Eenvoq Autonomous AI]: Verified and parsed purchase from ${preset.customerName}.\n\n✅ Transaction GG-${autoReceipt.id.slice(-5)} recorded.\n✅ Stock auto-decremented in inventory for: ${preset.itemName}.\n✅ High-security digital receipt dispatched to client WhatsApp at ${preset.customerPhone}.`,
+            () => {},
+            "Acknowledge",
+            "View receipt"
+          );
+        }
+      }
+    }, 600);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragActive(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragActive(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragActive(false);
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      const fileName = e.dataTransfer.files[0].name;
+      const presets = [
+        { customerName: "Amara Cole", customerPhone: "+234 815 111 2222", itemName: "Indomie Noodles 40pcs", itemPrice: 15000, qty: 5, fileName },
+        { customerName: "Chief Sylvester", customerPhone: "+234 803 765 4321", itemName: "Milo Refill Packets", itemPrice: 8500, qty: 10, fileName },
+        { customerName: "Baba Sadiq", customerPhone: "+234 812 345 6789", itemName: "Supreme White Sugar", itemPrice: 11000, qty: 3, fileName }
+      ];
+      const selectedPreset = presets[Math.floor(Math.random() * presets.length)];
+      handleSimulateOCR_WhatsApp(selectedPreset);
+    }
+  };
+
+  const handleManualFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const fileName = e.target.files[0].name;
+      const presets = [
+        { customerName: "Amara Cole", customerPhone: "+234 815 111 2222", itemName: "Indomie Noodles 40pcs", itemPrice: 15000, qty: 5, fileName },
+        { customerName: "Chief Sylvester", customerPhone: "+234 803 765 4321", itemName: "Milo Refill Packets", itemPrice: 8500, qty: 10, fileName },
+        { customerName: "Baba Sadiq", customerPhone: "+234 812 345 6789", itemName: "Supreme White Sugar", itemPrice: 11000, qty: 3, fileName }
+      ];
+      const selectedPreset = presets[Math.floor(Math.random() * presets.length)];
+      handleSimulateOCR_WhatsApp(selectedPreset);
+    }
   };
 
   const handleAddNewReceipt = (e: React.FormEvent) => {
@@ -697,64 +798,195 @@ export default function ReceiptVerification({
       {/* New Invoice Entry Overlay Form */}
       {showAddForm && (
         <div className="bg-white rounded-[24px] p-6 border border-[#E3E3E3] shadow-none animate-fade-in">
-          <h3 className="text-sm font-sans font-semibold text-[#1F1F1F] mb-5 flex items-center gap-2">
-            <Plus className="w-4 h-4 text-[#5F6368] stroke-[1.5]" />
-            Create New Customer Bill
-          </h3>
-          <form onSubmit={handleAddNewReceipt} className="grid grid-cols-1 md:grid-cols-3 gap-5 text-xs font-medium text-[#1F1F1F]">
-            <div>
-              <label className="block mb-1.5 text-xs text-[#757575]">Customer Naame</label>
-              <input
-                type="text" required value={custName} onChange={e => setCustName(e.target.value)}
-                placeholder="Amara Cole"
-                className="w-full bg-white border border-[#E3E3E3] rounded-full py-2.5 px-4 text-xs text-[#1F1F1F] focus:outline-none focus:border-[#5F6368]"
-              />
-            </div>
-            <div>
-              <label className="block mb-1.5 text-xs text-[#757575]">WhatsApp Number</label>
-              <input
-                type="text" value={custPhone} onChange={e => setCustPhone(e.target.value)}
-                placeholder="e.g. +234 815 111 2222"
-                className="w-full bg-white border border-[#E3E3E3] rounded-full py-2.5 px-4 text-xs text-[#1F1F1F] focus:outline-none focus:border-[#5F6368]"
-              />
-            </div>
-            <div>
-              <label className="block mb-1.5 text-xs text-[#757575]">Item Purchased</label>
-              <input
-                type="text" required value={prodName} onChange={e => setProdName(e.target.value)}
-                placeholder="Indomie Noodles 40pcs"
-                className="w-full bg-white border border-[#E3E3E3] rounded-full py-2.5 px-4 text-xs text-[#1F1F1F] focus:outline-none focus:border-[#5F6368]"
-              />
-            </div>
-            <div>
-              <label className="block mb-1.5 text-xs text-[#757575]">Quantity</label>
-              <input
-                type="number" value={prodQty} onChange={e => setProdQty(parseInt(e.target.value) || 1)}
-                className="w-full bg-white border border-[#E3E3E3] rounded-full py-2.5 px-4 text-xs text-[#1F1F1F] focus:outline-none focus:border-[#5F6368]"
-              />
-            </div>
-            <div>
-              <label className="block mb-1.5 text-xs text-[#757575]">Unit Price (₦)</label>
-              <input
-                type="number" value={prodPrice} onChange={e => setProdPrice(parseInt(e.target.value) || 0)}
-                className="w-full bg-white border border-[#E3E3E3] rounded-full py-2.5 px-4 text-xs text-[#1F1F1F] focus:outline-none focus:border-[#5F6368]"
-              />
-            </div>
-            <div className="flex items-end gap-2">
+          <div className="flex items-center justify-between mb-5 border-b border-[#E3E3E3] pb-3">
+            <h3 className="text-sm font-sans font-semibold text-[#1F1F1F] flex items-center gap-2">
+              <Plus className="w-4 h-4 text-[#5F6368] stroke-[1.5]" />
+              Record Store Sale & Invoice
+            </h3>
+            <div className="flex gap-1.5 bg-gray-100 p-0.5 rounded-full select-none text-[10px]">
               <button
-                type="submit"
-                className="flex-1 bg-[#1F1F1F] hover:bg-black text-white py-3 rounded-full font-sans text-xs font-semibold cursor-pointer"
+                type="button"
+                onClick={() => setAddFormTab('manual')}
+                className={`py-1 px-3 rounded-full transition-all font-semibold ${
+                  addFormTab === 'manual' 
+                    ? 'bg-white text-sky-600 shadow-3xs' 
+                    : 'text-neutral-500 hover:text-neutral-800'
+                }`}
               >
-                Publish
+                Manual Key-in
               </button>
               <button
-                type="button" onClick={() => setShowAddForm(false)}
-                className="px-4 py-3 border border-[#E3E3E3] text-[#757575] hover:bg-gray-50 rounded-full text-xs cursor-pointer font-medium"
+                type="button"
+                onClick={() => setAddFormTab('whatsapp')}
+                className={`py-1 px-3 rounded-full transition-all font-semibold flex items-center gap-1 ${
+                  addFormTab === 'whatsapp' 
+                    ? 'bg-white text-sky-600 shadow-3xs' 
+                    : 'text-neutral-500 hover:text-neutral-800'
+                }`}
               >
-                Cancel
+                <MessageCircle className="w-3 h-3 text-[#25D366]" />
+                WhatsApp Upload
               </button>
             </div>
-          </form>
+          </div>
+
+          {addFormTab === 'manual' ? (
+            <form onSubmit={handleAddNewReceipt} className="grid grid-cols-1 md:grid-cols-3 gap-5 text-xs font-medium text-[#1F1F1F]">
+              <div>
+                <label className="block mb-1.5 text-xs text-[#757575]">Customer Name</label>
+                <input
+                  type="text" required value={custName} onChange={e => setCustName(e.target.value)}
+                  placeholder="Amara Cole"
+                  className="w-full bg-white border border-[#E3E3E3] rounded-full py-2.5 px-4 text-xs text-[#1F1F1F] focus:outline-none focus:border-[#5F6368]"
+                />
+              </div>
+              <div>
+                <label className="block mb-1.5 text-xs text-[#757575]">WhatsApp Number</label>
+                <input
+                  type="text" value={custPhone} onChange={e => setCustPhone(e.target.value)}
+                  placeholder="e.g. +234 815 111 2222"
+                  className="w-full bg-white border border-[#E3E3E3] rounded-full py-2.5 px-4 text-xs text-[#1F1F1F] focus:outline-none focus:border-[#5F6368]"
+                />
+              </div>
+              <div>
+                <label className="block mb-1.5 text-xs text-[#757575]">Item Purchased</label>
+                <input
+                  type="text" required value={prodName} onChange={e => setProdName(e.target.value)}
+                  placeholder="Indomie Noodles 40pcs"
+                  className="w-full bg-white border border-[#E3E3E3] rounded-full py-2.5 px-4 text-xs text-[#1F1F1F] focus:outline-none focus:border-[#5F6368]"
+                />
+              </div>
+              <div>
+                <label className="block mb-1.5 text-xs text-[#757575]">Quantity</label>
+                <input
+                  type="number" value={prodQty} onChange={e => setProdQty(parseInt(e.target.value) || 1)}
+                  className="w-full bg-white border border-[#E3E3E3] rounded-full py-2.5 px-4 text-xs text-[#1F1F1F] focus:outline-none focus:border-[#5F6368]"
+                />
+              </div>
+              <div>
+                <label className="block mb-1.5 text-xs text-[#757575]">Unit Price (₦)</label>
+                <input
+                  type="number" value={prodPrice} onChange={e => setProdPrice(parseInt(e.target.value) || 0)}
+                  className="w-full bg-white border border-[#E3E3E3] rounded-full py-2.5 px-4 text-xs text-[#1F1F1F] focus:outline-none focus:border-[#5F6368]"
+                />
+              </div>
+              <div className="flex items-end gap-2">
+                <button
+                  type="submit"
+                  className="flex-1 bg-[#1F1F1F] hover:bg-black text-white py-3 rounded-full font-sans text-xs font-semibold cursor-pointer"
+                >
+                  Publish
+                </button>
+                <button
+                  type="button" onClick={() => setShowAddForm(false)}
+                  className="px-4 py-3 border border-[#E3E3E3] text-[#757575] hover:bg-gray-50 rounded-full text-xs cursor-pointer font-medium"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          ) : (
+            <div className="space-y-6">
+              <div className="bg-[#E8F5E9]/50 border border-[#A5D6A7] rounded-2xl p-4 text-xs text-[#2E7D32]">
+                <p className="font-bold flex items-center gap-1.5">
+                  <MessageCircle className="w-4 h-4 text-[#25D366]" />
+                  Secure WhatsApp AI Invoice Pipeline
+                </p>
+                <p className="mt-1 font-sans text-[11px] text-[#2E7D32]/90 leading-relaxed">
+                  When customers send transaction receipts/proofs on WhatsApp, simply upload their screenshot or document below. Eenvoq's backend AI OCR reads the purchase details, verifies the transaction signature, logs the sale, automatically updates inventory stock levels, and dispatches an encrypted digital confirmation receipt back to their phone number.
+                </p>
+              </div>
+
+              {ocrProgress !== null ? (
+                <div className="bg-[#FAFAFA] border border-neutral-250 p-8 rounded-[24px] text-center space-y-4 animate-pulse">
+                  <div className="w-full max-w-xs mx-auto bg-gray-200 h-2 rounded-full overflow-hidden">
+                    <div 
+                      className="bg-green-600 h-full transition-all duration-300"
+                      style={{ width: `${ocrProgress}%` }}
+                    />
+                  </div>
+                  <p className="text-xs font-mono font-bold text-neutral-700">{ocrStatusText}</p>
+                  <p className="text-[10px] text-neutral-400 font-sans">Simulating smart backend OCR validation model...</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {/* File drag-and-drop zone */}
+                  <div 
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                    onDrop={handleDrop}
+                    className={`md:col-span-2 border-2 border-dashed rounded-[24px] p-8 text-center flex flex-col items-center justify-center cursor-pointer transition-all min-h-[190px] select-none ${
+                      dragActive 
+                        ? 'border-green-500 bg-green-50/40 scale-[0.99]' 
+                        : 'border-[#E3E3E3] hover:border-green-400 hover:bg-[#FAFAFA]'
+                    }`}
+                  >
+                    <label className="cursor-pointer flex flex-col items-center justify-center w-full h-full">
+                      <Download className="w-8 h-8 text-neutral-400 stroke-[1.5] mb-2.5" />
+                      <p className="font-sans font-bold text-[#1F1F1F] text-xs">Drag & drop customer invoice screenshot here</p>
+                      <p className="text-[10px] text-[#757575] font-sans mt-1">Accepts JPEG, PNG, PDF up to 4MB or tap to browse</p>
+                      <input 
+                        type="file" 
+                        accept="image/*,application/pdf"
+                        onChange={handleManualFileSelect}
+                        className="hidden" 
+                      />
+                    </label>
+                  </div>
+
+                  {/* Sandbox presets list */}
+                  <div className="bg-[#FAF9F6] border border-neutral-200/70 p-4 rounded-[24px] flex flex-col justify-between">
+                    <div>
+                      <span className="text-[9px] uppercase font-bold text-neutral-500 tracking-wider">Simulate Sandbox Inputs</span>
+                      <p className="text-[11px] text-neutral-700 font-sans mt-0.5 mb-3 leading-tight">Pick a customer WhatsApp payout screenshot preset to test AI verification:</p>
+                      
+                      <div className="space-y-2">
+                        <button
+                          type="button"
+                          onClick={() => handleSimulateOCR_WhatsApp({
+                            customerName: "Amara Cole",
+                            customerPhone: "+234 815 111 2222",
+                            itemName: "Indomie Noodles 40pcs",
+                            itemPrice: 15000,
+                            qty: 5,
+                            fileName: "IMG_202606_Okafor_WhatsApp.jpg"
+                          })}
+                          className="w-full text-left p-2.5 bg-white border border-neutral-200 hover:border-green-400 hover:bg-green-50/20 rounded-[14px] transition text-[11px] font-sans flex flex-col justify-between"
+                        >
+                          <span className="font-bold text-neutral-800">Screenshot: Amara Cole</span>
+                          <span className="text-[10px] text-neutral-500 font-mono mt-0.5">5x Indomie Noodles • ₦75,000</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => handleSimulateOCR_WhatsApp({
+                            customerName: "Chief Sylvester",
+                            customerPhone: "+234 803 765 4321",
+                            itemName: "Milo Refill Packets",
+                            itemPrice: 8500,
+                            qty: 10,
+                            fileName: "WhatsApp_Sylvester_Transfer_Milo.png"
+                          })}
+                          className="w-full text-left p-2.5 bg-white border border-neutral-200 hover:border-green-400 hover:bg-green-50/20 rounded-[14px] transition text-[11px] font-sans flex flex-col justify-between"
+                        >
+                          <span className="font-bold text-neutral-800">Screenshot: Chief Sylvester</span>
+                          <span className="text-[10px] text-neutral-500 font-mono mt-0.5">10x Milo Refill Packets • ₦85,000</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    <button
+                      type="button" 
+                      onClick={() => setShowAddForm(false)}
+                      className="w-full mt-4 py-2 border border-[#E3E3E3] text-[#757575] bg-white hover:bg-gray-50 rounded-full text-[10px] cursor-pointer font-bold transition text-center"
+                    >
+                      Close Overlay Panel
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       )}
 

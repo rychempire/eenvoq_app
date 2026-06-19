@@ -332,6 +332,45 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
     };
 
     setReceipts(prev => [receiptWithAudit, ...prev]);
+
+    // Update inventory levels automatically based on items checked out
+    if (newReceipt.items && newReceipt.items.length > 0) {
+      setInventory(prevInv => {
+        return prevInv.map(invItem => {
+          const soldItem = newReceipt.items.find(item => 
+            invItem.name.toLowerCase().includes(item.name.toLowerCase()) || 
+            item.name.toLowerCase().includes(invItem.name.toLowerCase())
+          );
+          if (soldItem) {
+            const nextStockLevel = Math.max(0, invItem.stockLevel - soldItem.quantity);
+            const nextDepletionDays = invItem.velocity > 0 
+              ? Math.round((nextStockLevel / invItem.velocity) * 10) / 10 
+              : invItem.forecastedDepletionDays;
+
+            // Trigger low-stock alert if level falls below safeMin
+            if (nextStockLevel <= invItem.safeMin && invItem.stockLevel > invItem.safeMin) {
+              const stockAlert: Alert = {
+                id: `ALT-STOCK-${Date.now()}-${invItem.id}`,
+                title: `Low Stock Alert: ${invItem.name}`,
+                description: `Inventory level of ${invItem.name} has fallen to ${nextStockLevel} ${invItem.unit}. Replenishment from supplier ${invItem.supplierName} recommended immediately.`,
+                timestamp: new Date().toISOString(),
+                priority: 'high',
+                category: 'inventory',
+                read: false
+              };
+              setAlerts(prevAlerts => [stockAlert, ...prevAlerts]);
+            }
+
+            return {
+              ...invItem,
+              stockLevel: nextStockLevel,
+              forecastedDepletionDays: nextDepletionDays
+            };
+          }
+          return invItem;
+        });
+      });
+    }
     
     // Add point score feedback notification
     const ptsAlert: Alert = {
@@ -607,7 +646,14 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
       case 'forensic':
         return <ForensicInvestigator />;
       case 'inventory':
-        return <InventoryIntelligence inventory={inventory} onTriggerRestock={handleTriggerRestock} showConfirm={showConfirm} />;
+        return (
+          <InventoryIntelligence 
+            inventory={inventory} 
+            onTriggerRestock={handleTriggerRestock} 
+            showConfirm={showConfirm} 
+            onAddInventoryItem={(newItem) => setInventory(prev => [newItem, ...prev])}
+          />
+        );
       case 'retention':
         return <CustomerRetention showConfirm={showConfirm} />;
       case 'debtor':
