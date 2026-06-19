@@ -242,38 +242,38 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
             SECTION 1: THE HERO SECION (Above the fold)
             ========================================== */}
         <div className="w-full bg-[#1e40af]" id="landing-hero-section">
-          <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20 pb-12 pt-16 md:pt-24 flex flex-col items-center text-center space-y-6">
+          <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20 pb-10 pt-12 md:pt-16 flex flex-col items-center text-center space-y-4">
             <div className="flex items-center gap-2 bg-white/10 border border-sky-400/30 px-3 py-1 rounded-full text-[10px] font-bold text-sky-300 uppercase tracking-wider animate-pulse-once">
               <Sparkles className="w-3.5 h-3.5 stroke-[2] text-sky-400" />
               <span>Autonomous Revenue Protection</span>
             </div>
 
-            <h1 className="text-[40px] sm:text-[44px] md:text-[45px] lg:text-[65px] font-sans font-black text-white leading-[1.08] tracking-tight max-w-5xl">
+            <h1 className="text-[32px] sm:text-[44px] font-sans font-black text-white leading-tight tracking-tight max-w-5xl">
               The Powerful AI Assistant That Tracks Your <span className="text-sky-300">Sales & Revenue</span>
             </h1>
 
-            <p className="text-base md:text-xl text-white/90 max-w-3xl leading-relaxed font-sans font-medium">
+            <p className="text-sm md:text-base text-white/90 max-w-2xl leading-relaxed font-sans font-medium">
               Eenvoq keeps you updated on your finances, <span className="text-sky-300">reduces leaky income</span>, and analyses <span className="text-sky-300">sales, subscription, and tuition streams</span> for your business, school, and organization.
             </p>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 w-full max-w-md animate-fade-in">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2 w-full max-w-sm animate-fade-in">
               <button
                 onClick={onEnterApp}
-                className="bg-sky-400 hover:bg-sky-300 text-[#1e40af] font-sans font-bold py-4.5 px-8 rounded-full text-sm uppercase tracking-wider transition-all duration-150 active:scale-95 shadow-md hover:shadow-lg hover:shadow-sky-400/20 w-full sm:w-auto cursor-pointer border border-transparent whitespace-nowrap flex items-center justify-center gap-2 focus:ring-2 focus:ring-sky-300"
+                className="bg-sky-400 hover:bg-sky-300 text-[#1e40af] font-sans font-bold py-3 px-6 rounded-full text-xs uppercase tracking-wider transition-all duration-150 active:scale-95 shadow-md hover:shadow-lg hover:shadow-sky-400/20 w-full sm:w-auto cursor-pointer border border-transparent whitespace-nowrap flex items-center justify-center gap-2 focus:ring-2 focus:ring-sky-300"
               >
                 <span>Start Free Trial</span>
-                <ArrowRight className="w-4 h-4 text-[#1e40af]" />
+                <ArrowRight className="w-3.5 h-3.5 text-[#1e40af]" />
               </button>
               <button
                 onClick={onEnterApp}
-                className="bg-[#1e40af] hover:bg-[#1a368f] text-white font-sans font-bold py-4.5 px-8 rounded-full text-sm uppercase tracking-wider transition-all duration-150 active:scale-95 border border-white hover:border-sky-300 w-full sm:w-auto cursor-pointer flex items-center justify-center gap-2 shadow-sm focus:ring-2 focus:ring-white/20 whitespace-nowrap"
+                className="bg-[#1e40af] hover:bg-[#1a368f] text-white font-sans font-bold py-3 px-6 rounded-full text-xs uppercase tracking-wider transition-all duration-150 active:scale-95 border border-white hover:border-sky-300 w-full sm:w-auto cursor-pointer flex items-center justify-center gap-2 shadow-sm focus:ring-2 focus:ring-white/20 whitespace-nowrap"
               >
-                <PlayCircle className="w-5 h-5 text-white" />
+                <PlayCircle className="w-4 h-4 text-white" />
                 <span>Book Demo</span>
               </button>
             </div>
 
-            <p className="text-xs text-sky-200/90 font-bold tracking-wide uppercase select-none pt-1">
+            <p className="text-[10px] text-sky-200/90 font-bold tracking-wide uppercase select-none pt-0.5">
               ✓ No credit card required
             </p>
           </div>
