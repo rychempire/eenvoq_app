@@ -116,7 +116,7 @@ export default function Settings({ user, onUpdateUser, showConfirm }: SettingsPr
 
             <button
               type="submit"
-              className="bg-sky-900 hover:bg-sky-950 focus:ring-2 focus:ring-sky-900/20 focus:outline-none text-white font-bold py-3.5 px-6 rounded-full transition text-xs font-sans flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+              className="bg-[#1e40af] hover:bg-[#1a368f] focus:ring-2 focus:ring-[#1e40af]/20 focus:outline-none text-white font-bold py-3.5 px-6 rounded-full transition text-xs font-sans flex items-center justify-center gap-2 cursor-pointer shadow-sm"
             >
               <Save className="w-4 h-4 stroke-[1.5]" />
               Save Configuration

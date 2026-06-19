@@ -515,7 +515,7 @@ export default function ReceiptVerification({
         <button
           type="button"
           onClick={() => setShowAddForm(!showAddForm)}
-          className="bg-sky-900 hover:bg-sky-950 focus:ring-2 focus:ring-sky-900/20 focus:outline-none text-white font-semibold py-3 px-6 rounded-full text-xs transition flex items-center justify-center gap-2 cursor-pointer border border-transparent shadow-sm shrink-0"
+          className="bg-[#1e40af] hover:bg-[#1a368f] focus:ring-2 focus:ring-[#1e40af]/20 focus:outline-none text-white font-semibold py-3 px-6 rounded-full text-xs transition flex items-center justify-center gap-2 cursor-pointer border border-transparent shadow-sm shrink-0"
         >
           <Plus className="w-4 h-4 text-white" />
           <span>Record</span>

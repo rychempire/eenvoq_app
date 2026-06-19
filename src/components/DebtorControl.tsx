@@ -86,7 +86,7 @@ export default function DebtorControl({ debtors, onToggleLock, showConfirm }: De
             <div className="flex items-center justify-end gap-2 text-xs text-[#5F6368] font-medium font-sans">
               <Sliders className="w-4 h-4 text-[#757575] stroke-[1.5]" />
               <button type="button" onClick={() => setFilterRisk('all')} className={`px-4 py-2 rounded-full border transition cursor-pointer font-bold text-xs ${filterRisk === 'all' ? 'bg-[#111111] border-sky-400 text-white shadow-sm' : 'bg-white border-[#E3E3E3] text-[#757575] hover:bg-sky-50/50'}`}>All</button>
-              <button type="button" onClick={() => setFilterRisk('high')} className={`px-4 py-2 rounded-full border transition cursor-pointer font-bold text-xs ${filterRisk === 'high' ? 'bg-sky-900 border-sky-950 text-white shadow-sm' : 'bg-white border-[#E3E3E3] text-[#757575] hover:bg-sky-50/50'}`}>High Risk</button>
+              <button type="button" onClick={() => setFilterRisk('high')} className={`px-4 py-2 rounded-full border transition cursor-pointer font-bold text-xs ${filterRisk === 'high' ? 'bg-[#1e40af] border-[#1e40af] text-white shadow-sm' : 'bg-white border-[#E3E3E3] text-[#757575] hover:bg-sky-50/50'}`}>High Risk</button>
               <button type="button" onClick={() => setFilterRisk('locked')} className={`px-4 py-2 rounded-full border transition cursor-pointer font-bold text-xs ${filterRisk === 'locked' ? 'bg-red-650 border-red-650 text-white shadow-sm' : 'bg-white border-[#E3E3E3] text-[#757575] hover:bg-sky-50/50'}`}>Locked</button>
             </div>
           </div>
@@ -187,7 +187,7 @@ export default function DebtorControl({ debtors, onToggleLock, showConfirm }: De
                 <button
                   type="button"
                   onClick={() => handleSimulateDispatchReminder(selectedDebtor)}
-                  className="w-full bg-sky-900 hover:bg-sky-950 focus:ring-2 focus:ring-sky-900/20 focus:outline-none text-white font-bold py-3 rounded-full text-xs transition flex items-center justify-center gap-2 cursor-pointer border border-transparent shadow-sm"
+                  className="w-full bg-[#1e40af] hover:bg-[#1a368f] focus:ring-2 focus:ring-[#1e40af]/20 focus:outline-none text-white font-bold py-3 rounded-full text-xs transition flex items-center justify-center gap-2 cursor-pointer border border-transparent shadow-sm"
                 >
                   <MessageSquare className="w-4 h-4 stroke-[1.5]" />
                   Send Text Reminder
