@@ -167,33 +167,33 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
       {/* ==========================================
           SECTION 0: NAVIGATION HEADER (Aligned with Hero)
           ========================================== */}
-      <nav className="fixed top-0 left-0 right-0 h-20 bg-white/95 backdrop-blur-md z-50 flex items-center justify-between px-6 md:px-12 lg:px-20 border-b border-sky-100 w-full" id="landing-navbar">
+      <nav className="fixed top-0 left-0 right-0 h-20 bg-[#1e40af]/95 backdrop-blur-md z-50 flex items-center justify-between px-6 md:px-12 lg:px-20 border-b border-sky-400/20 w-full" id="landing-navbar">
 <div className="flex items-center gap-1 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
   {/* Logo Image with background removed via Cloudinary and increased size */}
   <img 
     src="https://res.cloudinary.com/dee01jm0p/image/upload/e_bgremoval/f_auto,q_auto/1001135527_ij6c4q" 
     alt="Eenvoq logo" 
-    className="h-8 w-auto object-contain select-none translate-y-1" 
+    className="h-8 w-auto object-contain select-none translate-y-1 brightness-0 invert" 
   />
 </div>
 
         {/* Desktop Navbar Links */}
-        <div className="hidden lg:flex items-center gap-8 text-xs font-normal text-black-400 tracking-wide uppercase">
-          <a href="#features-showcase" className="hover:text-sky-600 transition-colors">Features</a>
-          <a href="#integrations" className="hover:text-sky-600 transition-colors">Integrations</a>
-          <a href="#pricing-tiers" className="hover:text-sky-600 transition-colors">Pricing</a>
+        <div className="hidden lg:flex items-center gap-8 text-xs font-semibold text-white tracking-wide uppercase">
+          <a href="#features-showcase" className="hover:text-sky-300 transition-colors">Features</a>
+          <a href="#integrations" className="hover:text-sky-300 transition-colors">Integrations</a>
+          <a href="#pricing-tiers" className="hover:text-sky-300 transition-colors">Pricing</a>
         </div>
 
         <div className="hidden lg:flex items-center gap-6">
           <button
             onClick={onEnterApp}
-            className="text-xs font-bold uppercase tracking-wider text-neutral-600 hover:text-sky-600 transition-all cursor-pointer"
+            className="text-xs font-bold uppercase tracking-wider text-sky-300 hover:text-sky-100 transition-all cursor-pointer"
           >
             Log In
           </button>
           <button
             onClick={onEnterApp}
-            className="bg-[#1e40af] hover:bg-[#1a368f] text-white font-bold py-3 px-6 rounded-full text-xs uppercase tracking-wider transition-all active:scale-95 shadow-sm cursor-pointer border border-transparent focus:ring-2 focus:ring-[#1e40af]/20"
+            className="bg-sky-400 hover:bg-sky-300 text-[#1e40af] font-bold py-3 px-6 rounded-full text-xs uppercase tracking-wider transition-all active:scale-95 shadow-sm cursor-pointer border border-transparent focus:ring-2 focus:ring-sky-300"
             id="nav-cta-btn"
           >
             Start Free Trial
@@ -205,7 +205,7 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
           <button 
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 text-neutral-700 hover:text-sky-600 transition-colors focus:outline-none"
+            className="p-2 text-white hover:text-sky-300 transition-colors focus:outline-none"
             aria-label="Toggle Menu"
           >
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -221,15 +221,15 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed top-20 left-0 right-0 bg-white border-b border-sky-100 z-40 lg:hidden shadow-lg overflow-hidden flex flex-col p-6 space-y-4"
+            className="fixed top-20 left-0 right-0 bg-[#1e40af] border-b border-sky-400/25 z-40 lg:hidden shadow-lg overflow-hidden flex flex-col p-6 space-y-4"
           >
             
-            <a href="#features-showcase" onClick={() => setMobileMenuOpen(false)} className="text-sm font-semibold text-neutral-700 hover:text-sky-600 py-2 border-b border-sky-50">Features</a>
-            <a href="#integrations" onClick={() => setMobileMenuOpen(false)} className="text-sm font-semibold text-neutral-700 hover:text-sky-600 py-2 border-b border-sky-50">Integrations</a>
-            <a href="#pricing-tiers" onClick={() => setMobileMenuOpen(false)} className="text-sm font-semibold text-neutral-700 hover:text-sky-600 py-2 border-b border-sky-50">Pricing</a>
+            <a href="#features-showcase" onClick={() => setMobileMenuOpen(false)} className="text-sm font-semibold text-white hover:text-sky-300 py-2 border-b border-sky-400/10">Features</a>
+            <a href="#integrations" onClick={() => setMobileMenuOpen(false)} className="text-sm font-semibold text-white hover:text-sky-300 py-2 border-b border-sky-400/10">Integrations</a>
+            <a href="#pricing-tiers" onClick={() => setMobileMenuOpen(false)} className="text-sm font-semibold text-white hover:text-sky-300 py-2 border-b border-sky-400/10">Pricing</a>
               <div className="pt-4 flex flex-col gap-3">
-              <button onClick={() => { setMobileMenuOpen(false); onEnterApp(); }} className="w-full text-center py-3 font-bold text-neutral-600 rounded-full border border-sky-100 hover:bg-sky-50/20 text-xs uppercase tracking-wide">Log In</button>
-              <button onClick={() => { setMobileMenuOpen(false); onEnterApp(); }} className="w-full text-center py-3 font-bold bg-[#1e40af] hover:bg-[#1a368f] text-white rounded-full text-xs uppercase tracking-wide">Start Free Trial</button>
+              <button onClick={() => { setMobileMenuOpen(false); onEnterApp(); }} className="w-full text-center py-3 font-bold text-sky-300 rounded-full border border-sky-400/30 hover:bg-white/5 text-xs uppercase tracking-wide">Log In</button>
+              <button onClick={() => { setMobileMenuOpen(false); onEnterApp(); }} className="w-full text-center py-3 font-bold bg-sky-400 hover:bg-sky-300 text-[#1e40af] rounded-full text-xs uppercase tracking-wide">Start Free Trial</button>
             </div>
           </motion.div>
         )}
