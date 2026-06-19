@@ -283,122 +283,19 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
         {/* ==========================================
             SECTION 2: THE HERO VISUAL (Product Preview)
             ========================================== */}
-        <div className="w-full px-6 md:px-12 lg:px-20 max-w-7xl mx-auto pb-16" id="product-preview-mockup">
-          <div className="bg-white border border-sky-100/80 rounded-[32px] p-6 lg:p-8 shadow-2xl relative overflow-hidden max-w-5xl mx-auto">
-            
-            {/* Top Device Bar */}
-            <div className="flex items-center justify-between border-b border-sky-100/50 pb-4 mb-6">
-              <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-red-400" />
-                <span className="w-3 h-3 rounded-full bg-amber-400" />
-                <span className="w-3 h-3 rounded-full bg-emerald-400" />
-                <span className="text-xs text-neutral-400 font-mono font-semibold ml-2">https://app.eenvoq.com/audit-desk</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="bg-green-50 border border-green-200 text-green-700 text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 font-mono">
-                  <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" /> CLOUD SECURE
-                </span>
+        <div className="w-full bg-[#1e40af] pb-16" id="product-preview-mockup">
+          <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20">
+            <div className="bg-neutral-900 border border-neutral-800 rounded-xl md:rounded-[24px] p-1 shadow-2xl relative overflow-hidden max-w-5xl mx-auto">
+              {/* Full Image */}
+              <div className="w-full overflow-hidden bg-neutral-900 rounded-lg md:rounded-[18px]">
+                <img 
+                  src="https://i.ibb.co/TBqgcF74/Screenshot-20260619-130027-1.jpg" 
+                  alt="Eenvoq App Overview" 
+                  className="w-full h-auto object-cover select-none"
+                  referrerPolicy="no-referrer"
+                />
               </div>
             </div>
-
-            {/* Dashboard Content Mock */}
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
-              
-              {/* Left Widget Sidebar column */}
-              <div className="md:col-span-4 space-y-4 text-left">
-                <div className="bg-sky-50/40 border border-sky-100/60 rounded-2xl p-5 space-y-3">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-sky-950 font-sans">Active Register Operators</h4>
-                  
-                  <div className="space-y-2 text-xs">
-                    <div className="flex items-center justify-between p-2.5 bg-white border border-sky-100/40 rounded-xl">
-                      <div className="flex items-center gap-2">
-                        <span className="w-2.5 h-2.5 rounded-full bg-sky-500" />
-                        <span className="font-semibold text-neutral-850">Yusuf A.</span>
-                      </div>
-                      <span className="text-[10px] font-mono text-sky-600 bg-sky-50 px-2 py-0.5 rounded-bold">Terminal 1</span>
-                    </div>
-
-                    <div className="flex items-center justify-between p-2.5 bg-white border border-sky-100/40 rounded-xl">
-                      <div className="flex items-center gap-2">
-                        <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-                        <span className="font-semibold text-neutral-850">Chioma N.</span>
-                      </div>
-                      <span className="text-[10px] font-mono text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-bold font-bold">Terminal 2</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-[#FCFAF7] border border-sky-100 rounded-2xl p-5">
-                  <div className="flex items-center justify-between mb-3">
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-sky-950 font-sans">Verification Engine</h4>
-                    <span className="w-2 h-2 rounded-full bg-sky-500 animate-pulse" />
-                  </div>
-                  <button 
-                    onClick={triggerAuditScan}
-                    className="w-full bg-[#1e40af] hover:bg-[#1a368f] text-white font-bold py-2.5 px-4 rounded-xl text-xs uppercase tracking-wider transition-colors duration-150 mb-3 shadow-sm flex items-center justify-center gap-1.5 focus:outline-none"
-                  >
-                    <span>{scannerActive ? "Scanning..." : "Launch Audit"}</span>
-                    <RefreshCw className={`w-3.5 h-3.5 ${scannerActive ? 'animate-spin' : ''}`} />
-                  </button>
-
-                  <div className="bg-neutral-900 rounded-lg p-3 text-[10px] font-mono text-sky-400 space-y-1 h-28 overflow-hidden select-none">
-                    {scannerLogs.map((log, index) => (
-                      <p key={index} className="truncate select-none leading-tight">
-                        <span className="text-neutral-500">{`>`}</span> {log}
-                      </p>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Right Graph/Statistics column */}
-              <div className="md:col-span-8 space-y-6 text-left">
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                  <div className="bg-white border border-sky-100 rounded-2xl p-4 shadow-sm">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-400 block mb-1">Tuition Matches</span>
-                    <span className="text-xl md:text-2xl font-black text-neutral-900 leading-none">99.8%</span>
-                    <span className="text-[9px] text-green-600 font-bold block mt-1">✓ Term Target Reached</span>
-                  </div>
-                  <div className="bg-white border border-sky-100 rounded-2xl p-4 shadow-sm">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-400 block mb-1">Credit Tabs Recovered</span>
-                    <span className="text-xl md:text-2xl font-black text-neutral-900 leading-none">84.2%</span>
-                    <span className="text-[9px] text-sky-600 font-bold block mt-1">↑ +14.5% this term</span>
-                  </div>
-                  <div className="bg-white border border-sky-100 rounded-2xl p-4 shadow-xs col-span-2 md:col-span-1">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-400 block mb-1">Deficit Flag Counts</span>
-                    <span className="text-xl md:text-2xl font-black text-red-650 leading-none">{scannerAlertCount} Leak</span>
-                    <span className="text-[9px] text-red-650 font-bold block mt-1 animate-pulse">● Suspicious log locked</span>
-                  </div>
-                </div>
-
-                <div className="bg-white border border-sky-100 rounded-2xl p-5 shadow-xs">
-                  <div className="flex items-center justify-between mb-4 border-b border-sky-50 pb-3">
-                    <div>
-                      <h4 className="text-xs font-bold uppercase tracking-wider text-neutral-850">Revenue Pipeline Oversight</h4>
-                      <p className="text-[10px] text-neutral-400">Termly school tuition vs retail checkout flow matching</p>
-                    </div>
-                    <span className="text-xs font-bold font-mono text-sky-650">Live Sync</span>
-                  </div>
-
-                  {/* Simple Simulated Chart */}
-                  <div className="h-40 flex items-end justify-between gap-2.5 pt-4">
-                    {[38, 55, 42, 65, 82, 90, 75, 95, 88].map((percent, idx) => (
-                      <div key={idx} className="flex-1 flex flex-col items-center gap-1.5 h-full justify-end">
-                        <div 
-                          style={{ height: `${percent}%` }}
-                          className={`w-full rounded-t-md transition-all duration-500 shadow-xs ${
-                            idx === 7 ? 'bg-sky-500' : 'bg-neutral-200 hover:bg-sky-100'
-                          }`}
-                        />
-                        <span className="text-[9px] font-mono font-bold text-neutral-400 select-none">T{idx+1}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-            </div>
-
           </div>
         </div>
 
