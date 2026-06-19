@@ -17,6 +17,107 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
   // Mobile navigation state
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  // Scroll reveal animation settings for scroll down & up responsive animations
+  const scrollRevealProps = {
+    initial: { opacity: 0, y: 35, scale: 0.98 },
+    whileInView: { opacity: 1, y: 0, scale: 1 },
+    viewport: { once: false, amount: 0.12 },
+    transition: { duration: 0.65, ease: [0.16, 1, 0.3, 1] }
+  };
+
+  const scrollRevealLeftProps = {
+    initial: { opacity: 0, x: -30 },
+    whileInView: { opacity: 1, x: 0 },
+    viewport: { once: false, amount: 0.12 },
+    transition: { duration: 0.65, ease: [0.16, 1, 0.3, 1] }
+  };
+
+  const scrollRevealRightProps = {
+    initial: { opacity: 0, x: 30 },
+    whileInView: { opacity: 1, x: 0 },
+    viewport: { once: false, amount: 0.12 },
+    transition: { duration: 0.65, ease: [0.16, 1, 0.3, 1] }
+  };
+
+  const renderBusinessLogo = (index: number) => {
+    switch (index) {
+      case 0:
+        return (
+          <div className="flex items-center gap-1.5 md:gap-2">
+            <div className="p-1.5 bg-sky-50 rounded-lg text-sky-600 border border-sky-100 shrink-0">
+              <Building className="w-4.5 h-4.5" />
+            </div>
+            <div className="text-left leading-tight shrink-0">
+              <span className="font-extrabold text-neutral-900 text-xs md:text-sm tracking-tight font-sans">sadiq</span>
+              <span className="text-sky-500 font-extrabold text-xs md:text-sm font-sans">.</span>
+              <span className="text-[8px] text-neutral-400 block font-mono uppercase tracking-wider font-semibold leading-none">distributors</span>
+            </div>
+          </div>
+        );
+      case 1:
+        return (
+          <div className="flex items-center gap-1.5 md:gap-2">
+            <div className="p-1.5 bg-indigo-50 rounded-lg text-indigo-600 border border-indigo-100 shrink-0">
+              <BookOpen className="w-4.5 h-4.5" />
+            </div>
+            <div className="text-left leading-tight shrink-0">
+              <span className="font-bold text-[#1e1b4b] text-[10px] md:text-[11px] tracking-widest font-sans uppercase">Adebayo</span>
+              <span className="text-[7px] text-indigo-500 block font-sans font-extrabold tracking-widest uppercase leading-none">College</span>
+            </div>
+          </div>
+        );
+      case 2:
+        return (
+          <div className="flex items-center gap-1.5 md:gap-2">
+            <div className="p-1.5 bg-amber-50 rounded-lg text-amber-600 border border-amber-100 shrink-0">
+              <Landmark className="w-4.5 h-4.5" />
+            </div>
+            <div className="text-left leading-tight shrink-0">
+              <span className="font-semibold text-[#451a03] text-[10px] md:text-xs tracking-wider font-sans uppercase">St. Jude's</span>
+              <span className="text-[7px] text-amber-600 block font-mono font-bold tracking-widest uppercase leading-none">Institution</span>
+            </div>
+          </div>
+        );
+      case 3:
+        return (
+          <div className="flex items-center gap-1.5 md:gap-2">
+            <div className="p-1.5 bg-emerald-50 rounded-lg text-emerald-600 border border-emerald-100 shrink-0">
+              <TrendingUp className="w-4.5 h-4.5" />
+            </div>
+            <div className="text-left leading-tight shrink-0">
+              <span className="font-extrabold text-neutral-900 text-xs md:text-sm tracking-tighter font-sans lowercase">ibadan</span>
+              <span className="text-[7.5px] text-emerald-600 block font-sans font-bold tracking-widest uppercase leading-none">Retail Co</span>
+            </div>
+          </div>
+        );
+      case 4:
+        return (
+          <div className="flex items-center gap-1.5 md:gap-2">
+            <div className="p-1.5 bg-blue-50 rounded-lg text-blue-600 border border-blue-100 shrink-0">
+              <ShieldCheck className="w-4.5 h-4.5" />
+            </div>
+            <div className="text-left leading-tight shrink-0">
+              <span className="font-black text-[#1e3a8a] text-[10px] md:text-xs tracking-tight uppercase">Al-Ansar</span>
+              <span className="text-[7.5px] text-[#1e3a8a]/70 block font-sans uppercase font-semibold leading-none">Academy</span>
+            </div>
+          </div>
+        );
+      case 5:
+      default:
+        return (
+          <div className="flex items-center gap-1.5 md:gap-2">
+            <div className="p-1.5 bg-purple-50 rounded-lg text-purple-600 border border-purple-100 shrink-0">
+              <Sparkles className="w-4.5 h-4.5" />
+            </div>
+            <div className="text-left leading-tight shrink-0">
+              <span className="font-extrabold text-[#3b0764] text-[10px] md:text-xs tracking-wider uppercase font-mono">APEX</span>
+              <span className="text-[7.5px] text-purple-600 block font-sans font-semibold uppercase tracking-wide leading-none">Assembly</span>
+            </div>
+          </div>
+        );
+    }
+  };
+
   // Segmented Value Propositions Selector State
   const [selectedSegment, setSelectedSegment] = useState<'business' | 'school' | 'institutions'>('business');
 
@@ -283,19 +384,28 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
         {/* ==========================================
             SECTION 2: THE HERO VISUAL (Product Preview)
             ========================================== */}
+        {/* ==========================================
+            SECTION 2: THE HERO VISUAL (Product Preview)
+            ========================================== */}
         <div className="w-full bg-[#1e40af] pb-16" id="product-preview-mockup">
           <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20">
-            <div className="bg-neutral-900 border border-neutral-800 rounded-xl md:rounded-[24px] p-1 shadow-2xl relative overflow-hidden max-w-5xl mx-auto">
+            <motion.div 
+              {...scrollRevealProps}
+              className="bg-neutral-950 p-2 md:p-3 shadow-2xl rounded-[24px] md:rounded-[40px] border border-white/10 ring-1 ring-sky-300/15 max-w-5xl mx-auto relative overflow-hidden group"
+            >
+              {/* Subtle visual lens reflection */}
+              <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-white/5 to-transparent pointer-events-none select-none z-10" />
+              
               {/* Full Image */}
-              <div className="w-full overflow-hidden bg-neutral-900 rounded-lg md:rounded-[18px]">
+              <div className="w-full overflow-hidden bg-neutral-900 rounded-[14px] md:rounded-[28px] border border-neutral-900 shadow-inner">
                 <img 
                   src="https://i.ibb.co/TBqgcF74/Screenshot-20260619-130027-1.jpg" 
                   alt="Eenvoq App Overview" 
-                  className="w-full h-auto object-cover select-none"
+                  className="w-full h-auto object-cover select-none transform group-hover:scale-[1.01] transition duration-700"
                   referrerPolicy="no-referrer"
                 />
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
 
@@ -309,18 +419,19 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
               Empowering Cash flow integrity over 4,500+ Regional retail systems & schools
             </span>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 md:gap-8 items-center justify-center opacity-70">
+            <motion.div 
+              {...scrollRevealProps}
+              className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 md:gap-8 items-center justify-center"
+            >
               {clientLogos.map((logo, index) => (
-                <div key={index} className="flex flex-col items-center p-3 hover:opacity-100 transition duration-150 select-none bg-white rounded-xl border border-neutral-150/40 shadow-xs">
-                  <span className="text-[11.5px] font-extrabold font-sans text-neutral-800 leading-none truncate w-full max-w-full text-center">
-                    {logo.name}
-                  </span>
-                  <span className="text-[8px] font-mono uppercase text-sky-600 block mt-1 tracking-wider leading-none">
-                    {logo.type}
-                  </span>
+                <div 
+                  key={index} 
+                  className="flex items-center justify-center p-3 sm:p-4 bg-white rounded-xl border border-neutral-150/40 shadow-xs hover:border-sky-300/60 hover:scale-[1.04] transition duration-300 ease-out select-none"
+                >
+                  {renderBusinessLogo(index)}
                 </div>
               ))}
-            </div>
+            </motion.div>
           </div>
         </div>
 
@@ -342,7 +453,10 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
           </div>
 
           {/* Tab Button Selectors */}
-          <div className="flex items-center justify-center gap-3 p-1.5 bg-neutral-50 border border-neutral-150/80 rounded-full max-w-2xl mx-auto mb-12">
+          <motion.div 
+            {...scrollRevealProps}
+            className="flex items-center justify-center gap-3 p-1.5 bg-neutral-50 border border-neutral-150/80 rounded-full max-w-2xl mx-auto mb-12"
+          >
             <button
               onClick={() => setSelectedSegment('business')}
               className={`flex-1 py-3 text-center text-xs font-bold rounded-full transition-all duration-150 cursor-pointer ${
@@ -357,7 +471,7 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
               onClick={() => setSelectedSegment('school')}
               className={`flex-1 py-3 text-center text-xs font-bold rounded-full transition-all duration-150 cursor-pointer ${
                 selectedSegment === 'school'
-                  ? 'bg-sky-500 text-white shadow-sm'
+                  ? 'bg-sky-505 text-white shadow-sm'
                   : 'text-neutral-500 hover:bg-neutral-100 hover:text-black'
               }`}
             >
@@ -368,15 +482,18 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
               className={`flex-1 py-3 text-center text-xs font-bold rounded-full transition-all duration-150 cursor-pointer ${
                 selectedSegment === 'institutions'
                   ? 'bg-sky-500 text-white shadow-sm'
-                  : 'text-neutral-500 hover:bg-neutral-100 hover:text-black'
+                  : 'text-neutral-505 hover:bg-neutral-100 hover:text-black'
               }`}
             >
               Organizations
             </button>
-          </div>
+          </motion.div>
 
           {/* Interactive tab block */}
-          <div className="bg-[#FCFAF7] border border-sky-100 p-8 md:p-12 rounded-[32px] max-w-5xl mx-auto text-left">
+          <motion.div 
+            {...scrollRevealProps}
+            className="bg-[#FCFAF7] border border-sky-100 p-8 md:p-12 rounded-[32px] max-w-5xl mx-auto text-left"
+          >
             <AnimatePresence mode="wait">
               {selectedSegment === 'business' && (
                 <motion.div 
@@ -525,7 +642,7 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
                 </motion.div>
               )}
             </AnimatePresence>
-          </div>
+          </motion.div>
         </div>
 
 
@@ -549,7 +666,10 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
           <div className="space-y-24 max-w-5xl mx-auto">
             
             {/* Feature 1: Live Cash Reconciliation (Image Left / Text Right) */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center">
+            <motion.div 
+              {...scrollRevealProps}
+              className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center"
+            >
               <div className="lg:col-span-5 bg-sky-50/40 border border-sky-100 p-8 rounded-[32px] hover:border-sky-300 transition duration-150 order-2 lg:order-1">
                 {/* Visual mockup detail */}
                 <div className="space-y-4">
@@ -579,10 +699,13 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
                   When a cashier operates a register, the cash drawers must match expected product totals down to the last penny. Eenvoq forces strict drawer counts at every supervisor swap, flagging and reporting mismatch leaks instantly to your parent screen.
                 </p>
               </div>
-            </div>
+            </motion.div>
 
             {/* Feature 2: Digital Bank Alert Pairing (Text Left / Image Right) */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center">
+            <motion.div 
+              {...scrollRevealProps}
+              className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center"
+            >
               <div className="lg:col-span-7 text-left space-y-4">
                 <span className="text-sky-600 font-mono text-xs font-black uppercase tracking-wider">02 / FRAUD BLOCKER</span>
                 <h3 className="text-2xl md:text-3.5xl font-sans font-black text-black leading-tight">
@@ -604,10 +727,13 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
                   </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
 
             {/* Feature 3: Automated Overdue Alerts (Image Left / Text Right) */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center">
+            <motion.div 
+              {...scrollRevealProps}
+              className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center"
+            >
               <div className="lg:col-span-5 bg-sky-50/40 border border-sky-100 p-8 rounded-[32px] hover:border-sky-300 transition duration-150 order-2 lg:order-1">
                 <div className="space-y-4">
                   <span className="text-[9px] font-mono text-red-650 bg-red-50 px-2.5 py-1 rounded-full uppercase font-bold">Debtor Control Protocol</span>
@@ -631,10 +757,13 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
                   Say goodbye to chasing down parents or subscribers manually. Eenvoq's AR module tracks overdue tuition and invoices schedules, dispatching instant text updates via WhatsApp, and automatically locking those guest profiles at register point checkouts.
                 </p>
               </div>
-            </div>
+            </motion.div>
 
             {/* Feature 4: Staff Terminal Control & Multi-Operator Tracking (Text Left / Image Right) */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center">
+            <motion.div 
+              {...scrollRevealProps}
+              className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center"
+            >
               <div className="lg:col-span-7 text-left space-y-4">
                 <span className="text-sky-600 font-mono text-xs font-black uppercase tracking-wider">04 / AUDIT COMPLIANCE</span>
                 <h3 className="text-2xl md:text-3.5xl font-sans font-black text-black leading-tight">
@@ -656,10 +785,13 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
                   </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
 
             {/* Feature 5: Real-Time Interactive On-The-Go Cash Correction (Image Left / Text Right) */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center">
+            <motion.div 
+              {...scrollRevealProps}
+              className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center"
+            >
               <div className="lg:col-span-5 bg-sky-50/40 border border-sky-100 p-8 rounded-[32px] hover:border-sky-300 transition duration-150 order-2 lg:order-1">
                 <div 
                   onClick={() => setShowBottomSheet(!showBottomSheet)}
@@ -700,10 +832,13 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
                   When a till closes short, supervisors shouldn't wait days to trace cash journal gaps. Eenvoq launches on-screen corrective bottom-drawers allowing managers to balance registers against bank reference transfers instantly or lock terminal cashiers immediately.
                 </p>
               </div>
-            </div>
+            </motion.div>
 
             {/* Feature 6: Stock Velocity Forecasting (Text Left / Image Right) */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center">
+            <motion.div 
+              {...scrollRevealProps}
+              className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center"
+            >
               <div className="lg:col-span-7 text-left space-y-4">
                 <span className="text-sky-600 font-mono text-xs font-black uppercase tracking-wider">06 / FORECAST ENGINE</span>
                 <h3 className="text-2xl md:text-3.5xl font-sans font-black text-black leading-tight">
@@ -728,7 +863,7 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
                   </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
 
           </div>
         </div>
@@ -751,7 +886,10 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
               </p>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto">
+            <motion.div 
+              {...scrollRevealProps}
+              className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto"
+            >
               {[
                 { name: "Stripe Connect", type: "Credit Cards & SaaS", desc: "Sync direct customer dockets and subscription logs." },
                 { name: "PayPal Gateway", type: "International Sales", desc: "Automate reference signature and balance confirmations." },
@@ -771,7 +909,7 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
                   <p className="text-xs text-neutral-500 leading-normal font-sans font-normal">{item.desc}</p>
                 </div>
               ))}
-            </div>
+            </motion.div>
           </div>
         </div>
 
@@ -794,7 +932,10 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
           </div>
 
           {/* Symmetrical Table matrix */}
-          <div className="border border-sky-100 rounded-[32px] overflow-hidden max-w-5xl mx-auto shadow-sm">
+          <motion.div 
+            {...scrollRevealProps}
+            className="border border-sky-100 rounded-[32px] overflow-hidden max-w-5xl mx-auto shadow-sm"
+          >
             
             {/* Header */}
             <div className="grid grid-cols-1 md:grid-cols-12 bg-neutral-900 text-white p-5 text-sm font-bold uppercase tracking-wide text-left select-none gap-4">
@@ -852,7 +993,7 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
               </div>
             ))}
 
-          </div>
+          </motion.div>
         </div>
 
 
@@ -877,7 +1018,10 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-5xl mx-auto text-left">
+            <motion.div 
+              {...scrollRevealProps}
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-5xl mx-auto text-left"
+            >
               {[
                 {
                   title: "Bank-Grade Encryption",
@@ -904,7 +1048,7 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
                   <p className="text-xs text-neutral-400 leading-relaxed font-sans font-normal">{item.desc}</p>
                 </div>
               ))}
-            </div>
+            </motion.div>
 
           </div>
         </div>
@@ -927,7 +1071,10 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center max-w-5xl mx-auto">
+          <motion.div 
+            {...scrollRevealProps}
+            className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center max-w-5xl mx-auto"
+          >
             
             {/* Left Column Image Overlay */}
             <div className="lg:col-span-5 rounded-[24px] overflow-hidden border border-sky-100 h-[380px] relative hidden lg:block shadow-sm">
@@ -982,7 +1129,7 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
               {/* Slider Navigation Controls */}
               <div className="flex items-center justify-start gap-4 mt-6">
                 <button
-                  type="button"
+                   type="button"
                   onClick={() => scrollTestimonials('left')}
                   className="w-10 h-10 rounded-full border border-sky-100 bg-white hover:bg-sky-50/50 text-neutral-800 inline-flex items-center justify-center cursor-pointer transition active:scale-95 focus:outline-none"
                   aria-label="Previous Testimonial"
@@ -1015,7 +1162,7 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
 
             </div>
 
-          </div>
+          </motion.div>
         </div>
 
 
@@ -1038,7 +1185,10 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
             </div>
 
             {/* Slider Widget Card */}
-            <div className="bg-white border border-sky-100 rounded-[32px] p-6 md:p-10 shadow-sm text-left space-y-8 max-w-2xl mx-auto">
+            <motion.div 
+              {...scrollRevealProps}
+              className="bg-white border border-sky-100 rounded-[32px] p-6 md:p-10 shadow-sm text-left space-y-8 max-w-2xl mx-auto"
+            >
               
               {/* Currency Selector Toggle */}
               <div className="flex items-center justify-between border-b border-sky-50 pb-4">
@@ -1112,7 +1262,7 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
                 </div>
               </div>
 
-            </div>
+            </motion.div>
 
           </div>
         </div>
@@ -1153,7 +1303,10 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          <motion.div 
+            {...scrollRevealProps}
+            className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto"
+          >
 
             {/* Plan 1: Business Starter */}
             <div className="bg-white border border-sky-100 rounded-[32px] p-8 space-y-6 flex flex-col text-left hover:border-sky-300 transition duration-150">
@@ -1296,7 +1449,7 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
               </ul>
             </div>
 
-          </div>
+          </motion.div>
         </div>
 
 
@@ -1318,7 +1471,10 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
               </p>
             </div>
 
-            <div className="max-w-3xl mx-auto space-y-4 text-left">
+            <motion.div 
+              {...scrollRevealProps}
+              className="max-w-3xl mx-auto space-y-4 text-left"
+            >
               {[
                 {
                   q: "What digital security precautions are implemented to guard audit trails?",
@@ -1360,7 +1516,7 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
                   </div>
                 );
               })}
-            </div>
+            </motion.div>
 
           </div>
         </div>
@@ -1370,7 +1526,10 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
             SECTION 13: CUSTOMER SUPPORT & CONCIERGE
             ========================================== */}
         <div className="w-full bg-white py-20 border-b border-sky-100 scroll-mt-24" id="support-concierge">
-          <div className="max-w-5xl mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center text-left">
+          <motion.div 
+            {...scrollRevealProps}
+            className="max-w-5xl mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center text-left"
+          >
             
             <div className="lg:col-span-6 space-y-6">
               <span className="bg-sky-50 border border-sky-100 text-sky-700 font-mono text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider inline-block">
@@ -1435,7 +1594,7 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
               </button>
             </div>
 
-          </div>
+          </motion.div>
         </div>
 
 
@@ -1443,7 +1602,10 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
             SECTION 14: THE FINAL CALL TO ACTION (Footer CTA)
             ========================================== */}
         <div className="w-full bg-neutral-900 py-20 px-6 text-center text-white relative overflow-hidden" id="final-cta-fold">
-          <div className="max-w-3xl mx-auto space-y-8 relative z-10">
+          <motion.div 
+            {...scrollRevealProps}
+            className="max-w-3xl mx-auto space-y-8 relative z-10"
+          >
             
             <span className="bg-neutral-805 border border-sky-500/20 text-sky-400 font-mono text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider select-none">
               Risk-Free Revenue Guard
@@ -1476,7 +1638,7 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
             <p className="text-[10px] text-neutral-500 uppercase tracking-wider font-mono font-bold select-none pt-2">
               ✓ No contract. No credit card. Close account any instant.
             </p>
-          </div>
+          </motion.div>
         </div>
 
       </div>
