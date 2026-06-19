@@ -256,17 +256,17 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
               Eenvoq keeps you updated on your finances, <span className="text-sky-300">reduces leaky income</span>, and analyses <span className="text-sky-300">sales, subscription, and tuition streams</span> for your business, school, and organization.
             </p>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2 w-full max-w-sm animate-fade-in">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2 w-full max-w-xl animate-fade-in">
               <button
                 onClick={onEnterApp}
-                className="bg-sky-400 hover:bg-sky-300 text-[#1e40af] font-sans font-bold py-2.5 w-40 rounded-full text-xs uppercase tracking-wider transition-all duration-150 active:scale-95 shadow-md hover:shadow-lg hover:shadow-sky-400/20 cursor-pointer border border-transparent whitespace-nowrap flex items-center justify-center gap-2 focus:ring-2 focus:ring-sky-300"
+                className="bg-sky-400 hover:bg-sky-300 text-[#1e40af] font-sans font-bold py-2.5 w-60 rounded-full text-xs uppercase tracking-wider transition-all duration-150 active:scale-95 shadow-md hover:shadow-lg hover:shadow-sky-400/20 cursor-pointer border border-transparent whitespace-nowrap flex items-center justify-center gap-2 focus:ring-2 focus:ring-sky-300"
               >
                 <span>Start Free Trial</span>
                 <ArrowRight className="w-3.5 h-3.5 text-[#1e40af]" />
               </button>
               <button
                 onClick={onEnterApp}
-                className="bg-[#1e40af] hover:bg-[#1a368f] text-white font-sans font-bold py-2.5 w-40 rounded-full text-xs uppercase tracking-wider transition-all duration-150 active:scale-95 border border-white hover:border-sky-300 cursor-pointer flex items-center justify-center gap-2 shadow-sm focus:ring-2 focus:ring-white/20 whitespace-nowrap"
+                className="bg-[#1e40af] hover:bg-[#1a368f] text-white font-sans font-bold py-2.5 w-60 rounded-full text-xs uppercase tracking-wider transition-all duration-150 active:scale-95 border border-white hover:border-sky-300 cursor-pointer flex items-center justify-center gap-2 shadow-sm focus:ring-2 focus:ring-white/20 whitespace-nowrap"
               >
                 <PlayCircle className="w-4 h-4 text-white" />
                 <span>Book Demo</span>
