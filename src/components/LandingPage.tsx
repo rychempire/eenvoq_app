@@ -167,7 +167,7 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
       {/* ==========================================
           SECTION 0: NAVIGATION HEADER (Aligned with Hero)
           ========================================== */}
-      <nav className="fixed top-0 left-0 right-0 h-20 bg-[#1e40af]/95 backdrop-blur-md z-50 flex items-center justify-between px-6 md:px-12 lg:px-20 border-b border-sky-400/20 w-full" id="landing-navbar">
+      <nav className="fixed top-0 left-0 right-0 h-20 bg-[#1e40af] z-50 flex items-center justify-between px-6 md:px-12 lg:px-20 border-b border-sky-400/20 w-full" id="landing-navbar">
 <div className="flex items-center gap-1 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
   {/* Logo Image with background removed via Cloudinary and increased size */}
   <img 
