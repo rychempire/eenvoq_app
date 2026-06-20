@@ -193,11 +193,11 @@ export default function Dashboard({
                 {businessName}
               </h1>
               <span className="bg-sky-50 text-sky-850 text-[9px] font-medium px-2 py-0.5 rounded-full border border-sky-200/40 uppercase tracking-wider font-mono">
-                Live Sentry
+                You're Online
               </span>
             </div>
             <p className="text-sm font-sans font-normal text-neutral-900 mt-1.5">
-              Good morning, <span className="text-[#102a43] font-medium">{userName}</span> &bull; <span className="text-neutral-900 font-normal">All systems active, control desk synchronized</span>
+              Good morning, <span className="text-[#102a43] font-medium">{userName}</span> &bull;
             </p>
           </div>
 
@@ -240,34 +240,6 @@ export default function Dashboard({
                 <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse" />
                 <span className="text-xs font-medium text-emerald-800 font-mono">+12.4% vs yesterday</span>
               </div>
-            </div>
-
-            {/* Decorative Vector Gauge Arch intersecting bottom-right corner of hero card */}
-            <div className="absolute right-6 bottom-[-16px] w-24 h-11 z-20 pointer-events-none hidden sm:block">
-              <svg viewBox="0 0 100 50" className="w-full h-full">
-                <path 
-                  d="M 10 50 A 40 40 0 0 1 90 50" 
-                  fill="none" 
-                  stroke="#E2E8F0" 
-                  strokeWidth="6" 
-                  strokeLinecap="round" 
-                />
-                <path 
-                  d="M 10 50 A 40 40 0 0 1 90 50" 
-                  fill="none" 
-                  stroke="url(#balance-gauge-grad)" 
-                  strokeWidth="6" 
-                  strokeDasharray="125" 
-                  strokeDashoffset="45" 
-                  strokeLinecap="round" 
-                />
-                <defs>
-                  <linearGradient id="balance-gauge-grad" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="#F59E0B" /> {/* amber gold */}
-                    <stop offset="100%" stopColor="#0284C7" /> {/* rich ocean blue */}
-                  </linearGradient>
-                </defs>
-              </svg>
             </div>
 
           </div>
@@ -363,8 +335,8 @@ export default function Dashboard({
               <EenvoqIcon className="w-4.5 h-4.5 text-sky-300 animate-pulse" />
             </div>
             <div className="text-left">
-              <span className="text-[10px] font-black uppercase tracking-widest text-sky-300 font-mono block">Autonomous Intelligence Sentry</span>
-              <h2 className="text-lg font-sans font-black text-white leading-none">Eenvoq Sentry Core</h2>
+              <span className="text-[10px] font-black uppercase tracking-widest text-sky-300 font-mono block">Autonomous Intelligence</span>
+              <h2 className="text-lg font-sans font-black text-white leading-none">Eenvoq Core</h2>
             </div>
           </div>
 
