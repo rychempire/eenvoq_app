@@ -412,7 +412,6 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
     </div>
 
     {/* Hero Visual Preview (Right Column on Desktop, Center on Mobile) */}
-    {/* Added 'flex justify-center' below to keep the scaled mockup centered in its grid cell */}
     <div className="relative w-full overflow-visible flex justify-center" id="product-preview-mockup">
       {/* Abstract radial dot matrix background grid centered under the frame */}
       <div className="absolute -inset-10 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.08)_1px,transparent_1px)] bg-[size:16px_16px] pointer-events-none -z-10 opacity-80" />
@@ -425,20 +424,20 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
       <div className="absolute left-1/2 -translate-x-1/2 -top-4 w-[1px] h-6 bg-gradient-to-t from-white/30 to-transparent pointer-events-none z-0" />
       <div className="absolute left-1/2 -translate-x-1/2 -bottom-4 w-[1px] h-6 bg-gradient-to-b from-white/30 to-transparent pointer-events-none z-0" />
 
-      {/* MODIFIED: Reduced width on all device viewports cleanly using responsive width fractions */}
+      {/* MODIFIED: Significantly tightened the widths and added precise max-widths to clamp size */}
       <motion.div 
         {...scrollRevealProps}
-        className="bg-white/10 p-[1.5px] shadow-2xl rounded-[16px] md:rounded-[32px] border border-white/20 w-11/12 sm:w-5/6 md:w-3/4 lg:w-11/12 xl:w-5/6 relative overflow-visible group"
+        className="bg-white/10 p-[1.5px] shadow-2xl rounded-[16px] md:rounded-[32px] border border-white/20 w-4/5 sm:w-2/3 md:w-1/2 lg:w-4/5 xl:w-3/4 max-w-sm lg:max-w-md xl:max-w-lg relative overflow-visible group"
       >
 
         {/* Status and telemetry indicator pill layered on the top edge code bar */}
-        <div className="absolute -top-2.5 left-8 px-2 py-0.5 rounded-full border border-white/20 bg-neutral-950 text-[8px] font-mono text-sky-300 select-none z-20 flex items-center gap-1.5 shadow-sm">
+        <div className="absolute -top-2.5 left-6 px-2 py-0.5 rounded-full border border-white/20 bg-neutral-950 text-[8px] font-mono text-sky-300 select-none z-20 flex items-center gap-1.5 shadow-sm">
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
           SECURE_REVENUE_RECONCILIATION
         </div>
 
         {/* Dimension telemetry indicator layered on the bottom edge code bar */}
-        <div className="absolute -bottom-2.5 right-8 px-2 py-0.5 rounded-full border border-white/20 bg-neutral-950 text-[8px] font-mono text-white/70 select-none z-20 shadow-sm">
+        <div className="absolute -bottom-2.5 right-6 px-2 py-0.5 rounded-full border border-white/20 bg-neutral-950 text-[8px] font-mono text-white/70 select-none z-20 shadow-sm">
           ALL_YOUR_SALES_IN_ONE_TRACKER
         </div>
 
