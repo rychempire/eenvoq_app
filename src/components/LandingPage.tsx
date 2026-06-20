@@ -411,49 +411,50 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
                   </p>
                 </div>
 
-                {/* Hero Visual Preview (Right Column on Desktop, Center on Mobile) */}
-                <div className="relative w-full overflow-visible" id="product-preview-mockup">
-                  {/* Abstract radial dot matrix background grid centered under the frame */}
-                  <div className="absolute -inset-10 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.08)_1px,transparent_1px)] bg-[size:16px_16px] pointer-events-none -z-10 opacity-80" />
-                  
-                  {/* Atmospheric glowing neon background aura under the frame */}
-                  <div className="absolute inset-x-12 top-10 bottom-10 bg-sky-400/20 rounded-full filter blur-[70px] pointer-events-none -z-10 mix-blend-screen animate-pulse" style={{ animationDuration: '6s' }} />
-                  <div className="absolute -inset-y-3 -inset-x-2 bg-gradient-to-r from-sky-300/10 to-indigo-500/10 rounded-[44px] filter blur-xl pointer-events-none -z-10" />
+              {/* Hero Visual Preview (Right Column on Desktop, Center on Mobile) */}
+{/* CHANGED: added max-widths and mx-auto to scale down the entire container together */}
+<div className="relative w-full max-w-sm sm:max-w-md md:max-w-xl lg:max-w-2xl mx-auto overflow-visible" id="product-preview-mockup">
+  {/* Abstract radial dot matrix background grid centered under the frame */}
+  <div className="absolute -inset-10 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.08)_1px,transparent_1px)] bg-[size:16px_16px] pointer-events-none -z-10 opacity-80" />
+  
+  {/* Atmospheric glowing neon background aura under the frame */}
+  <div className="absolute inset-x-12 top-10 bottom-10 bg-sky-400/20 rounded-full filter blur-[70px] pointer-events-none -z-10 mix-blend-screen animate-pulse" style={{ animationDuration: '6s' }} />
+  <div className="absolute -inset-y-3 -inset-x-2 bg-gradient-to-r from-sky-300/10 to-indigo-500/10 rounded-[44px] filter blur-xl pointer-events-none -z-10" />
 
-                  {/* Structural vertical Swiss line accents extending from the top and bottom of the frame */}
-                  <div className="absolute left-1/2 -translate-x-1/2 -top-4 w-[1px] h-6 bg-gradient-to-t from-white/30 to-transparent pointer-events-none z-0" />
-                  <div className="absolute left-1/2 -translate-x-1/2 -bottom-4 w-[1px] h-6 bg-gradient-to-b from-white/30 to-transparent pointer-events-none z-0" />
+  {/* Structural vertical Swiss line accents extending from the top and bottom of the frame */}
+  <div className="absolute left-1/2 -translate-x-1/2 -top-4 w-[1px] h-6 bg-gradient-to-t from-white/30 to-transparent pointer-events-none z-0" />
+  <div className="absolute left-1/2 -translate-x-1/2 -bottom-4 w-[1px] h-6 bg-gradient-to-b from-white/30 to-transparent pointer-events-none z-0" />
 
-                  <motion.div 
-                    {...scrollRevealProps}
-                    className="bg-white/10 p-[1.5px] shadow-2xl rounded-[16px] md:rounded-[32px] border border-white/20 w-full relative overflow-visible group"
-                  >
+  <motion.div 
+    {...scrollRevealProps}
+    className="bg-white/10 p-[1.5px] shadow-2xl rounded-[16px] md:rounded-[32px] border border-white/20 w-full relative overflow-visible group"
+  >
 
-                    {/* Status and telemetry indicator pill layered on the top edge code bar */}
-                    <div className="absolute -top-2.5 left-8 px-2 py-0.5 rounded-full border border-white/20 bg-neutral-950 text-[8px] font-mono text-sky-300 select-none z-20 flex items-center gap-1.5 shadow-sm">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                      SECURE_REVENUE_RECONCILIATION
-                    </div>
+    {/* Status and telemetry indicator pill layered on the top edge code bar */}
+    <div className="absolute -top-2.5 left-8 px-2 py-0.5 rounded-full border border-white/20 bg-neutral-950 text-[8px] font-mono text-sky-300 select-none z-20 flex items-center gap-1.5 shadow-sm">
+      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+      SECURE_REVENUE_RECONCILIATION
+    </div>
 
-                    {/* Dimension telemetry indicator layered on the bottom edge code bar */}
-                    <div className="absolute -bottom-2.5 right-8 px-2 py-0.5 rounded-full border border-white/20 bg-neutral-950 text-[8px] font-mono text-white/70 select-none z-20 shadow-sm">
-                      ALL_YOUR_SALES_IN_ONE_TRACKER
-                    </div>
+    {/* Dimension telemetry indicator layered on the bottom edge code bar */}
+    <div className="absolute -bottom-2.5 right-8 px-2 py-0.5 rounded-full border border-white/20 bg-neutral-950 text-[8px] font-mono text-white/70 select-none z-20 shadow-sm">
+      ALL_YOUR_SALES_IN_ONE_TRACKER
+    </div>
 
-                    {/* Subtle visual lens reflection */}
-                    <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-white/5 to-transparent pointer-events-none select-none z-10 rounded-[14px] md:rounded-[28px]" />
-                    
-                    {/* Full Image with a micro thin border to isolate the asset within the parent frame */}
-                    <div className="w-full overflow-hidden bg-neutral-900 rounded-[14px] md:rounded-[30px] border border-white/5 shadow-inner">
-                      <img 
-                        src="https://i.ibb.co/TBqgcF74/Screenshot-20260619-130027-1.jpg" 
-                        alt="Eenvoq App Overview" 
-                        className="w-full h-auto object-cover select-none transform group-hover:scale-[1.01] transition duration-700"
-                        referrerPolicy="no-referrer"
-                      />
-                    </div>
-                  </motion.div>
-                </div>
+    {/* Subtle visual lens reflection */}
+    <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-white/5 to-transparent pointer-events-none select-none z-10 rounded-[14px] md:rounded-[28px]" />
+    
+    {/* Full Image with a micro thin border to isolate the asset within the parent frame */}
+    <div className="w-full overflow-hidden bg-neutral-900 rounded-[14px] md:rounded-[30px] border border-white/5 shadow-inner">
+      <img 
+        src="https://i.ibb.co/TBqgcF74/Screenshot-20260619-130027-1.jpg" 
+        alt="Eenvoq App Overview" 
+        className="w-full h-auto object-cover select-none transform group-hover:scale-[1.01] transition duration-700"
+        referrerPolicy="no-referrer"
+      />
+    </div>
+  </motion.div>
+</div>
 
               </div>
             </div>
