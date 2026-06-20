@@ -1,20 +1,25 @@
 import { useState } from 'react';
 import { 
-  Sparkles, Thermometer, Clock, ShieldAlert, UserCheck, ArrowLeft
+  Sparkles, Thermometer, Clock, ShieldAlert, UserCheck
 } from 'lucide-react';
 import EenvoqIcon from './EenvoqIcon';
+import { formatCurrency } from '../utils/currency';
 
-export default function ForensicInvestigator() {
+interface ForensicInvestigatorProps {
+  currency: string;
+}
+
+export default function ForensicInvestigator({ currency }: ForensicInvestigatorProps) {
   const [selectedAnomaly, setSelectedAnomaly] = useState<string | null>("ANM-001");
 
   // Hourly shift telemetry
   const shiftHours = [
-    { hour: "08:00 - 10:00", sales: "₦85,000", overrides: 0, status: "Secure", risk: "low" },
-    { hour: "10:00 - 12:00", sales: "₦142,000", overrides: 1, status: "Secure", risk: "low" },
-    { hour: "12:00 - 14:00", sales: "₦210,000", overrides: 2, status: "Stable", risk: "medium" },
-    { hour: "14:00 - 16:00", sales: "₦195,000", overrides: 8, status: "LEAKAGE ALERT", risk: "critical" }, // Peak leakage!
-    { hour: "16:00 - 18:00", sales: "₦110,000", overrides: 4, status: "Discrepancy", risk: "medium" },
-    { hour: "18:00 - 20:00", sales: "₦75,000", overrides: 0, status: "Secure", risk: "low" }
+    { hour: "08:00 - 10:00", salesAmount: 85000, overrides: 0, status: "Secure", risk: "low" },
+    { hour: "10:00 - 12:00", salesAmount: 142000, overrides: 1, status: "Secure", risk: "low" },
+    { hour: "12:00 - 14:00", salesAmount: 210000, overrides: 2, status: "Stable", risk: "medium" },
+    { hour: "14:00 - 16:00", salesAmount: 195000, overrides: 8, status: "LEAKAGE ALERT", risk: "critical" }, // Peak leakage!
+    { hour: "16:00 - 18:00", salesAmount: 110000, overrides: 4, status: "Discrepancy", risk: "medium" },
+    { hour: "18:00 - 20:00", salesAmount: 75000, overrides: 0, status: "Secure", risk: "low" }
   ];
 
   // Forensic anomalies database
@@ -25,7 +30,7 @@ export default function ForensicInvestigator() {
       time: "June 13th, 15:24",
       riskLevel: "Critical",
       score: 91,
-      impact: "₦45,000",
+      impactAmount: 45000,
       description: "Cashier cancelled a sale of 3 noodle cartons right after the customer paid cash. The customer left without a bill, and no record was saved in the app.",
       explanation: "This is a classic cash skimming issue. Since the customer did not ask for loyalty points or a bill, the cashier was able to cancel the sale on the screen and keep the cash. The app logs flag register staff: T-01 Okafor."
     },
@@ -35,7 +40,7 @@ export default function ForensicInvestigator() {
       time: "June 12th, 23:15",
       riskLevel: "Medium",
       score: 64,
-      impact: "₦18,900",
+      impactAmount: 18900,
       description: "Checking the shelf showed 2 missing cartons of Mamador Oil that weren't registered as sold in the app.",
       explanation: "Administrative inventory leakage discrepancy. Possible unrecorded promotional bundle issues or supplier stock routing discrepancies. Highly advise manager-level stock re-check."
     },
@@ -45,7 +50,7 @@ export default function ForensicInvestigator() {
       time: "June 13th, 10:11",
       riskLevel: "High",
       score: 82,
-      impact: "₦350,000",
+      impactAmount: 350000,
       description: "System locks were ignored, allowing Baba Sadiq to take 12 crates of soap on credit even though he owes past unpaid debts.",
       explanation: "Rules were bypassed. Baba Sadiq is not supposed to take more products because he hasn't paid past debts. Someone on register #2 manually skipped the lock."
     }
@@ -58,34 +63,29 @@ export default function ForensicInvestigator() {
       
       <div>
         <div className="flex items-center gap-3">
-          <button 
-            onClick={() => window.location.hash = 'dashboard'}
-            className="p-1 px-1.5 hover:bg-gray-100 rounded-full transition text-[#1F1F1F] cursor-pointer flex items-center justify-center shrink-0"
-            title="Back to Dashboard"
-          >
-            <ArrowLeft className="w-6 h-6 stroke-[1.5]" />
-          </button>
-          <h1 className="text-[22px] font-sans font-semibold text-[#1F1F1F] tracking-tight">Missing Money Investigator</h1>
+          <EenvoqIcon className="w-8 h-8 text-[#1F1F1F] stroke-[1.5]" />
+          <h1 className="text-3xl font-sans font-extrabold tracking-tight text-[#1F1F1F]">
+            Forensic Investigator
+          </h1>
         </div>
-        <p className="text-xs text-[#757575] font-normal mt-1 font-sans ml-11">Find cash mistakes, deleted sales, and where money is getting lost during shifts.</p>
+        <p className="text-[#5F6368] text-xs font-sans mt-1.5 max-w-xl font-medium">
+          Automatically tracks register voids, unlogged deletions, and suspicious transactions in real time.
+        </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8" id="forensic-grids-split">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         
-        {/* Left Columns: Risk Matrix Heatmaps & chronological anomaly list */}
-        <div className="lg:col-span-2 space-y-8">
+        {/* Left Columns (Shift Telemetry & Logs) */}
+        <div className="lg:col-span-2 space-y-8" id="forensic-history-panel">
           
-          {/* Thermal Shift Risk Map */}
-          <div className="bg-[#FCF5E8] rounded-[24px] p-6 border border-[#ECDCCB] shadow-sm space-y-5" id="shift-risk-thermal-matrix">
-            <div className="flex items-center justify-between border-b border-[#ECDCCB] pb-3 mb-2 select-none">
-              <h3 className="font-sans font-bold text-[#78350F] text-sm flex items-center gap-2">
-                <Thermometer className="w-5 h-5 text-red-600 stroke-[1.5]" />
-                Store Sales & Risk Status by the Hour
-              </h3>
-              <span className="text-[10px] text-[#B45309] font-mono font-semibold">Real-time Feed Active</span>
+          {/* Shift Telemetry Hourly block */}
+          <div className="bg-white rounded-[24px] border border-[#E3E3E3] p-6 shadow-sm space-y-5" id="hourly-shift-telemetry">
+            <div className="flex items-center gap-2 select-none">
+              <Thermometer className="w-4.5 h-4.5 text-[#5F6368]" />
+              <h3 className="font-sans font-semibold text-[#1F1F1F] text-xs">Shift Heatmap (June 13th Activity)</h3>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3" id="grid-thermal-capsules">
+            <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-4 select-none">
               {shiftHours.map((sh, idx) => (
                 <div 
                   key={idx}
@@ -99,7 +99,7 @@ export default function ForensicInvestigator() {
                     <Clock className="w-3 h-3 text-[#5F6368] stroke-[1.5]" />
                     {sh.hour.split(' ')[0]}
                   </p>
-                  <p className="text-xs font-semibold font-mono my-2">{sh.sales}</p>
+                  <p className="text-xs font-semibold font-mono my-2">{formatCurrency(sh.salesAmount, currency)}</p>
                   <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded-full ${
                     sh.risk === 'critical' ? 'bg-red-200 text-red-800' :
                     sh.risk === 'medium' ? 'bg-amber-100 text-amber-800' :
@@ -150,7 +150,7 @@ export default function ForensicInvestigator() {
 
                   <div className="text-right shrink-0">
                     <span className="text-xs font-mono font-semibold text-red-600 bg-red-50 border border-red-100 px-2 shadow-none py-0.5 rounded-full block">
-                      {anomaly.impact}
+                      {formatCurrency(anomaly.impactAmount, currency)}
                     </span>
                     <span className="text-[10px] text-[#757575] font-mono mt-1.5 block">Confidence: {anomaly.score}%</span>
                   </div>
@@ -162,7 +162,7 @@ export default function ForensicInvestigator() {
         </div>
 
         {/* Right Column: AI Explanations & Deep Diagnostics */}
-        <div className="bg-white border-2 border-black rounded-[24px] p-6 self-start space-y-6 flex flex-col pt-6 shadow-sm" id="forensic-deep-diagnose">
+        <div className="bg-white border border-black rounded-[24px] p-6 self-start space-y-6 flex flex-col pt-6 shadow-sm" id="forensic-deep-diagnose">
           
           <div className="border-b border-[#E3E3E3] pb-4 select-none">
             <span className="text-[10px] text-[#757575] font-mono block uppercase">What Happened Here?</span>
@@ -177,7 +177,7 @@ export default function ForensicInvestigator() {
               </div>
               <div className="bg-[#FCFAF7] border border-[#E3E3E3] p-4 rounded-xl">
                 <span className="text-[10px] font-semibold text-[#5F6368] uppercase font-sans">Money Lost</span>
-                <p className="text-base font-mono font-bold text-red-600 mt-1">{activeAnomalyData.impact}</p>
+                <p className="text-base font-mono font-bold text-red-600 mt-1">{formatCurrency(activeAnomalyData.impactAmount, currency)}</p>
               </div>
             </div>
 

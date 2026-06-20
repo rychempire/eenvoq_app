@@ -1,0 +1,38 @@
+{
+  "name": "Eenvoq",
+  "short_name": "Eenvoq",
+  "description": "Autonomous Revenue Protection & Sales Assistant",
+  "id": "/",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1e40af",
+  "orientation": "any",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "https://res.cloudinary.com/dee01jm0p/image/upload/e_bgremoval,w_192,h_192,f_auto,q_auto/1001135527_ij6c4q",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://res.cloudinary.com/dee01jm0p/image/upload/e_bgremoval,w_192,h_192,f_auto,q_auto/1001135527_ij6c4q",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "https://res.cloudinary.com/dee01jm0p/image/upload/e_bgremoval,w_512,h_512,f_auto,q_auto/1001135527_ij6c4q",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://res.cloudinary.com/dee01jm0p/image/upload/e_bgremoval,w_512,h_512,f_auto,q_auto/1001135527_ij6c4q",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

@@ -8,12 +8,14 @@ import {
   Flame, Coins, History, BookOpen, Sliders, AlertTriangle, ArrowUpRight,
   Shield, CheckCircle, Smartphone as PhoneIcon
 } from 'lucide-react';
+import LegalPolicies from './LegalPolicies';
 
 interface LandingPageProps {
   onEnterApp: () => void;
 }
 
 export default function LandingPage({ onEnterApp }: LandingPageProps) {
+  const [activeLegalTab, setActiveLegalTab] = useState<'privacy' | 'terms' | 'cookie' | null>(null);
   // Mobile navigation state
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -137,8 +139,8 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
   const [activeTestimonialIdx, setActiveTestimonialIdx] = useState<number>(0);
 
   // Interactive ROI Calculator State (Section 10)
-  const [monthlyRevenue, setMonthlyRevenue] = useState<number>(2500000); // in NGN (approx 5,000 USD slider equivalent)
-  const [revenueCurrency, setRevenueCurrency] = useState<'ngn' | 'usd'>('ngn');
+  const [monthlyRevenue, setMonthlyRevenue] = useState<number>(10000); // defaulted to USD 10k style
+  const [revenueCurrency, setRevenueCurrency] = useState<'ngn' | 'usd'>('usd');
 
   // Pricing toggle state (Section 11)
   const [isAnnualPricing, setIsAnnualPricing] = useState<boolean>(true);
@@ -1317,7 +1319,7 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
 
               <div className="flex items-baseline gap-1">
                 <span className="text-3xl md:text-4xl font-black text-neutral-950 font-mono">
-                  {isAnnualPricing ? "₦7,600" : "₦9,500"}
+                  {isAnnualPricing ? "$8" : "$10"}
                 </span>
                 <span className="text-xs text-neutral-400 font-sans font-bold">/ month</span>
               </div>
@@ -1364,7 +1366,7 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
 
               <div className="flex items-baseline gap-1">
                 <span className="text-3xl md:text-4xl font-black text-neutral-950 font-mono">
-                  {isAnnualPricing ? "₦19,600" : "₦24,500"}
+                  {isAnnualPricing ? "$20" : "$25"}
                 </span>
                 <span className="text-xs text-neutral-400 font-sans font-bold">/ month</span>
               </div>
@@ -1411,7 +1413,7 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
 
               <div className="flex items-baseline gap-1">
                 <span className="text-3xl md:text-4xl font-black text-neutral-950 font-mono">
-                  {isAnnualPricing ? "₦51,600" : "₦64,500"}
+                  {isAnnualPricing ? "$52" : "$65"}
                 </span>
                 <span className="text-xs text-neutral-400 font-sans font-bold">/ month</span>
               </div>
@@ -1722,12 +1724,16 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
             &copy; 2026 Eenvoq. Safeguarding Retail & Organizational Ecosystem Income. All rights reserved.
           </p>
           <div className="flex gap-6 mt-4 md:mt-0 font-sans">
-            <span className="hover:text-sky-600 transition cursor-pointer">Security Compliance</span>
-            <span className="hover:text-sky-600 transition cursor-pointer">Privacy Policy</span>
-            <span className="hover:text-sky-600 transition cursor-pointer">Terms of Service</span>
+            <span onClick={() => setActiveLegalTab('cookie')} className="hover:text-sky-600 transition cursor-pointer">Cookie Policy</span>
+            <span onClick={() => setActiveLegalTab('privacy')} className="hover:text-sky-600 transition cursor-pointer">Privacy Policy</span>
+            <span onClick={() => setActiveLegalTab('terms')} className="hover:text-sky-600 transition cursor-pointer">Terms of Service</span>
           </div>
         </div>
       </footer>
+
+      {activeLegalTab && (
+        <LegalPolicies activeTab={activeLegalTab} onClose={() => setActiveLegalTab(null)} />
+      )}
 
     </div>
   );

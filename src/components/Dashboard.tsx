@@ -6,6 +6,7 @@ import {
   Activity, Users, ShoppingCart, BookOpen, AlertCircle, 
   Sparkles, ChevronRight, ArrowLeft, X, Check, Scale, Plus
 } from 'lucide-react';
+import { formatCurrency, CURRENCIES } from '../utils/currency';
 
 interface DashboardProps {
   receipts: Receipt[];
@@ -19,6 +20,7 @@ interface DashboardProps {
   onAddAudit?: (newAudit: TruthAudit) => void;
   showConfirm?: (title: string, message: string, onConfirm: () => void, confirmLabel?: string, cancelLabel?: string) => void;
   user?: any;
+  currency: string;
 }
 
 export default function Dashboard({ 
@@ -32,10 +34,12 @@ export default function Dashboard({
   onNavigateToAssistant,
   onAddAudit,
   showConfirm,
-  user
+  user,
+  currency
 }: DashboardProps) {
 
   const userCategory = user?.role || 'Retail Store';
+  const currencySymbol = CURRENCIES[currency]?.symbol || '$';
   
   // Custom context personalization tags
   const getCustomerLabel = () => {
@@ -167,7 +171,7 @@ export default function Dashboard({
         riskLevel: calculatedRisk,
         details: netDiff === 0
           ? "All your cash and sales match perfectly with nothing missing."
-          : `A difference of ₦${Math.abs(netDiff).toLocaleString()} was found between your drawer cash count and today's recorded sales.`
+          : `A difference of ${formatCurrency(Math.abs(netDiff), currency)} was found between your drawer cash count and today's recorded sales.`
       };
 
       if (onAddAudit) {
@@ -290,7 +294,7 @@ export default function Dashboard({
           <div className="space-y-1">
             <span className="text-xs text-[#1e40af] font-bold tracking-tight font-sans block uppercase tracking-wider">Today's Recorded Sales</span>
             <h3 className="text-[28px] font-extrabold text-[#1F1F1F] tracking-tight font-sans leading-none">
-              ₦{expectedToday.toLocaleString()}
+              {formatCurrency(expectedToday, currency)}
             </h3>
             <p className="text-xs text-sky-850 font-semibold mt-1 font-sans">{todayReceipts.length} bills</p>
           </div>
@@ -308,7 +312,7 @@ export default function Dashboard({
           <div className="space-y-1">
             <span className="text-xs text-[#B45309] font-bold tracking-tight font-sans block uppercase tracking-wider">Drawer Cash Counted</span>
             <h3 className="text-[28px] font-extrabold text-[#1F1F1F] tracking-tight font-sans leading-none">
-              ₦{latestAudit.declaredRevenue.toLocaleString()}
+              {formatCurrency(latestAudit.declaredRevenue, currency)}
             </h3>
             <p className="text-xs text-[#78350F]/80 font-semibold mt-1 font-sans">Money in register</p>
           </div>
@@ -332,7 +336,7 @@ export default function Dashboard({
               {cashVariance < 0 ? 'Cash Difference / Loss' : 'Audit Variance Status'}
             </span>
             <h3 className="text-[28px] font-extrabold tracking-tight font-sans leading-none">
-              {cashVariance < 0 ? `-₦${Math.abs(cashVariance).toLocaleString()}` : `₦${cashVariance.toLocaleString()}`}
+              {cashVariance < 0 ? `-${formatCurrency(Math.abs(cashVariance), currency)}` : `+${formatCurrency(cashVariance, currency)}`}
             </h3>
             <p className="text-xs font-semibold mt-1 font-sans">
               {cashVariance < 0 ? 'Shortage alert' : 'Matches perfectly'}
@@ -397,7 +401,7 @@ export default function Dashboard({
             <form onSubmit={handleInlineAuditSubmit} className="space-y-4 text-xs font-semibold text-[#1F1F1F]">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block mb-1.5 text-xs text-[#757575] font-sans font-medium">Physical Cash in Drawer (₦)</label>
+                  <label className="block mb-1.5 text-xs text-[#757575] font-sans font-medium">Physical Cash in Drawer ({currencySymbol})</label>
                   <input
                     type="number" 
                     value={inlineCash} 
@@ -406,7 +410,7 @@ export default function Dashboard({
                   />
                 </div>
                 <div>
-                  <label className="block mb-1.5 text-xs text-[#757575] font-sans font-medium">Bank / Card / OPay / POS (₦)</label>
+                  <label className="block mb-1.5 text-xs text-[#757575] font-sans font-medium">Bank / Card / OPay / POS ({currencySymbol})</label>
                   <input
                     type="number" 
                     value={inlineOthers} 
@@ -418,7 +422,7 @@ export default function Dashboard({
 
               <div className="p-3 bg-white border border-[#E3E3E3] rounded-[24px] text-xs font-sans text-[#5F6368] font-normal flex justify-between">
                 <span>Sales Recorded on System:</span>
-                <span className="font-bold text-[#1F1F1F] font-mono">₦{expectedToday.toLocaleString()}</span>
+                <span className="font-bold text-[#1F1F1F] font-mono">{formatCurrency(expectedToday, currency)}</span>
               </div>
 
               <div className="flex gap-2">
@@ -463,7 +467,7 @@ export default function Dashboard({
                     <div className="flex justify-between">
                       <span className="text-[#5F6368] font-normal">Difference:</span>
                       <span className={`font-bold font-mono ${inlineResult.difference < 0 ? 'text-red-600' : 'text-green-600'}`}>
-                        {inlineResult.difference < 0 ? '-' : '+'}₦{Math.abs(inlineResult.difference).toLocaleString()}
+                        {inlineResult.difference < 0 ? '-' : '+'}{formatCurrency(Math.abs(inlineResult.difference), currency)}
                       </span>
                     </div>
                     <div className="flex justify-between">
@@ -648,8 +652,8 @@ export default function Dashboard({
           </div>
         </div>
 
-        {/* Right column: Outstanding Debts (Clean White Card with Solid 2px Black Border style) */}
-        <div className="bg-white rounded-[24px] p-6 border-2 border-black shadow-sm flex flex-col justify-between animate-fade-in" id="debtors-indices-panel">
+        {/* Right column: Outstanding Debts (Clean White Card with Solid 1px Black Border style) */}
+        <div className="bg-white rounded-[24px] p-6 border border-black shadow-sm flex flex-col justify-between animate-fade-in" id="debtors-indices-panel">
           <div>
             <div className="flex items-center justify-between mb-6 border-b border-black pb-3">
               <h3 className="font-sans font-bold text-[#1F1F1F] flex items-center gap-2 text-[22px] tracking-tight">
@@ -669,7 +673,7 @@ export default function Dashboard({
                 className="p-4 pb-7 bg-black text-white border border-neutral-900 rounded-[24px] mb-2 flex items-center justify-between text-xs transition-all duration-150 ease-out hover:bg-neutral-900 hover:scale-[0.99] active:scale-[0.98] cursor-pointer relative group"
               >
                 <span className="text-neutral-400 font-semibold font-sans">{getTotalOwedLabel()}</span>
-                <span className="font-mono font-extrabold text-white text-sm">₦{totalDebtorVolume.toLocaleString()}</span>
+                <span className="font-mono font-extrabold text-white text-sm">{formatCurrency(totalDebtorVolume, currency)}</span>
                 <span className="absolute bottom-1.5 right-4 text-[9px] text-neutral-400 font-bold font-sans tracking-tight opacity-75 group-hover:opacity-100 transition-opacity">Open Owed List</span>
               </div>
               
@@ -694,7 +698,7 @@ export default function Dashboard({
                   </div>
                   <div className="text-right shrink-0">
                     <span className={`text-xs font-bold font-mono ${debtor.locked ? 'text-[#9B1C1C]' : 'text-gray-900'}`}>
-                      ₦{debtor.amountOwed.toLocaleString()}
+                      {formatCurrency(debtor.amountOwed, currency)}
                     </span>
                     <span className={`block text-[9px] font-bold uppercase mt-0.5 ${debtor.locked ? 'text-[#C5221F]' : 'text-[#757575]'}`}>
                       {debtor.riskRating} risk
@@ -760,8 +764,8 @@ export default function Dashboard({
               {/* Verified receipts log items */}
               <div className="flex-1 overflow-y-auto p-6 space-y-4 max-h-[calc(100vh-12rem)]">
                 <div className="bg-[#FCFAF7] rounded-[24px] p-5 border border-[#E3E3E3] text-xs space-y-1 select-none">
-                  <p className="font-semibold text-[#1F1F1F] font-sans">Recorded Bills List</p>
-                  <p className="text-[#5F6368] font-sans">Check today's bills log to see if they match today's total register amount of ₦{expectedToday.toLocaleString()}.</p>
+                   <p className="font-semibold text-[#1F1F1F] font-sans">Recorded Bills List</p>
+                  <p className="text-[#5F6368] font-sans">Check today's bills log to see if they match today's total register amount of {formatCurrency(expectedToday, currency)}.</p>
                 </div>
 
                 <div className="space-y-3">
@@ -783,7 +787,7 @@ export default function Dashboard({
                         <p className="text-[10px] text-[#757575] font-mono mt-0.5 truncate">{receipt.securitySignature}</p>
                       </div>
                       <div className="text-right shrink-0">
-                        <span className="text-sm font-mono font-semibold text-[#1F1F1F]">₦{receipt.totalAmount.toLocaleString()}</span>
+                        <span className="text-sm font-mono font-semibold text-[#1F1F1F]">{formatCurrency(receipt.totalAmount, currency)}</span>
                         <p className="text-[9px] text-[#757575] mt-1 font-mono">Today</p>
                       </div>
                       <span className="absolute bottom-2.5 right-5 text-[8.5px] font-semibold text-[#757575] font-sans tracking-tight">Tap to view</span>

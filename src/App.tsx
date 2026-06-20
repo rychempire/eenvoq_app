@@ -27,8 +27,10 @@ import ReportingCenter from './components/ReportingCenter';
 import NotificationsCenter from './components/NotificationsCenter';
 import Settings from './components/Settings';
 import LandingPage from './components/LandingPage';
+import { getStoredCurrency, setStoredCurrency, formatCurrency } from './utils/currency';
 
 export default function App() {
+  const [currency, setCurrency] = useState<string>(getStoredCurrency);
   const [userSession, setUserSession] = useState<UserSession | null>(() => {
     const saved = localStorage.getItem('eenvoq_user_session');
     return saved ? JSON.parse(saved) : null;
@@ -609,6 +611,7 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
             onAddAudit={handleAddAudit}
             showConfirm={showConfirm}
             user={userSession || undefined}
+            currency={currency}
           />
         );
       case 'assistant':
@@ -639,12 +642,13 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
             activeOperatorId={activeOperatorId}
             onChangeActiveOperator={setActiveOperatorId}
             showConfirm={showConfirm} 
+            currency={currency}
           />
         );
       case 'truthcheck':
-        return <TruthCheck audits={audits} receipts={receipts} onAddAudit={handleAddAudit} showConfirm={showConfirm} />;
+        return <TruthCheck audits={audits} receipts={receipts} onAddAudit={handleAddAudit} showConfirm={showConfirm} currency={currency} />;
       case 'forensic':
-        return <ForensicInvestigator />;
+        return <ForensicInvestigator currency={currency} />;
       case 'inventory':
         return (
           <InventoryIntelligence 
@@ -652,12 +656,13 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
             onTriggerRestock={handleTriggerRestock} 
             showConfirm={showConfirm} 
             onAddInventoryItem={(newItem) => setInventory(prev => [newItem, ...prev])}
+            currency={currency}
           />
         );
       case 'retention':
         return <CustomerRetention showConfirm={showConfirm} />;
       case 'debtor':
-        return <DebtorControl debtors={debtors} onToggleLock={handleToggleDebtorLock} showConfirm={showConfirm} />;
+        return <DebtorControl debtors={debtors} onToggleLock={handleToggleDebtorLock} showConfirm={showConfirm} currency={currency} />;
       case 'reports':
         return <ReportingCenter showConfirm={showConfirm} />;
       case 'notifications':
@@ -669,7 +674,18 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
           />
         );
       case 'settings':
-        return <Settings user={userSession} onUpdateUser={setUserSession} showConfirm={showConfirm} />;
+        return (
+          <Settings 
+            user={userSession} 
+            onUpdateUser={setUserSession} 
+            showConfirm={showConfirm} 
+            currency={currency} 
+            onChangeCurrency={(c) => {
+              setCurrency(c);
+              setStoredCurrency(c);
+            }} 
+          />
+        );
       default:
         return <div className="text-center py-12">Action context not found.</div>;
     }

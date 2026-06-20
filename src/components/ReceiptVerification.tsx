@@ -5,6 +5,7 @@ import {
   ChevronLeft, ChevronRight, Calendar, Pencil, Trash2, Users, Check, AlertCircle, Undo, ArrowUpDown
 } from 'lucide-react';
 import { Receipt, TeamMember } from '../types';
+import { formatCurrency, CURRENCIES } from '../utils/currency';
 
 interface ReceiptVerificationProps {
   receipts: Receipt[];
@@ -19,6 +20,7 @@ interface ReceiptVerificationProps {
   showConfirm?: (title: string, message: string, onConfirm: () => void, confirmLabel?: string, cancelLabel?: string) => void;
   onLogout?: () => void;
   onUpdateTeamMembers?: (members: TeamMember[]) => void;
+  currency: string;
 }
 
 export default function ReceiptVerification({ 
@@ -33,8 +35,10 @@ export default function ReceiptVerification({
   onChangeActiveOperator,
   showConfirm,
   onLogout,
-  onUpdateTeamMembers
+  onUpdateTeamMembers,
+  currency
 }: ReceiptVerificationProps) {
+  const currencySymbol = CURRENCIES[currency]?.symbol || '$';
   const currentActiveOperator = teamMembers.find(m => m.id === activeOperatorId) || teamMembers[0];
   const isOwner = currentActiveOperator?.isCreator === true || currentActiveOperator?.role === 'Owner';
 
@@ -773,7 +777,7 @@ export default function ReceiptVerification({
         <div className="bg-[#f0f9ff] border border-[#bae6fd] rounded-[24px] p-5 shadow-sm flex flex-col justify-between select-none text-[#0284c7]">
           <div>
             <span className="text-[10px] uppercase font-mono tracking-wider font-semibold text-[#0284c7]/70 font-sans">Filter-Matched Volume</span>
-            <p className="text-xl font-mono font-bold text-[#0284c7] mt-1.5">₦{totalVolume.toLocaleString()}</p>
+            <p className="text-xl font-mono font-bold text-[#0284c7] mt-1.5">{formatCurrency(totalVolume, currency)}</p>
           </div>
           <p className="text-[10px] text-[#0284c7]/85 font-sans mt-3">Sum of sales meeting active target bounds</p>
         </div>
@@ -789,7 +793,7 @@ export default function ReceiptVerification({
         <div className="bg-black border border-neutral-900 text-white rounded-[24px] p-5 shadow-sm flex flex-col justify-between select-none">
           <div>
             <span className="text-[10px] uppercase font-mono tracking-wider font-semibold text-neutral-400">Average Ticket Size</span>
-            <p className="text-xl font-mono font-bold text-white mt-1.5">₦{avgVal.toLocaleString()}</p>
+            <p className="text-xl font-mono font-bold text-white mt-1.5">{formatCurrency(avgVal, currency)}</p>
           </div>
           <p className="text-[10px] text-neutral-300 font-sans mt-3">Mean ticket weight in filtered database</p>
         </div>
@@ -864,7 +868,7 @@ export default function ReceiptVerification({
                 />
               </div>
               <div>
-                <label className="block mb-1.5 text-xs text-[#757575]">Unit Price (₦)</label>
+                <label className="block mb-1.5 text-xs text-[#757575]">Unit Price ({currencySymbol})</label>
                 <input
                   type="number" value={prodPrice} onChange={e => setProdPrice(parseInt(e.target.value) || 0)}
                   className="w-full bg-white border border-[#E3E3E3] rounded-full py-2.5 px-4 text-xs text-[#1F1F1F] focus:outline-none focus:border-[#5F6368]"
@@ -915,7 +919,7 @@ export default function ReceiptVerification({
                     onDragOver={handleDragOver}
                     onDragLeave={handleDragLeave}
                     onDrop={handleDrop}
-                    className={`md:col-span-2 border-2 border-dashed rounded-[24px] p-8 text-center flex flex-col items-center justify-center cursor-pointer transition-all min-h-[190px] select-none ${
+                    className={`md:col-span-2 border border-dashed rounded-[24px] p-8 text-center flex flex-col items-center justify-center cursor-pointer transition-all min-h-[190px] select-none ${
                       dragActive 
                         ? 'border-green-500 bg-green-50/40 scale-[0.99]' 
                         : 'border-[#E3E3E3] hover:border-green-400 hover:bg-[#FAFAFA]'
@@ -954,7 +958,7 @@ export default function ReceiptVerification({
                           className="w-full text-left p-2.5 bg-white border border-neutral-200 hover:border-green-400 hover:bg-green-50/20 rounded-[14px] transition text-[11px] font-sans flex flex-col justify-between"
                         >
                           <span className="font-bold text-neutral-800">Screenshot: Amara Cole</span>
-                          <span className="text-[10px] text-neutral-500 font-mono mt-0.5">5x Indomie Noodles • ₦75,000</span>
+                          <span className="text-[10px] text-neutral-500 font-mono mt-0.5">5x Indomie Noodles • {formatCurrency(75000, currency)}</span>
                         </button>
 
                         <button
@@ -970,7 +974,7 @@ export default function ReceiptVerification({
                           className="w-full text-left p-2.5 bg-white border border-neutral-200 hover:border-green-400 hover:bg-green-50/20 rounded-[14px] transition text-[11px] font-sans flex flex-col justify-between"
                         >
                           <span className="font-bold text-neutral-800">Screenshot: Chief Sylvester</span>
-                          <span className="text-[10px] text-neutral-500 font-mono mt-0.5">10x Milo Refill Packets • ₦85,000</span>
+                          <span className="text-[10px] text-neutral-500 font-mono mt-0.5">10x Milo Refill Packets • {formatCurrency(85000, currency)}</span>
                         </button>
                       </div>
                     </div>
@@ -1074,7 +1078,7 @@ export default function ReceiptVerification({
                   </div>
 
                   <div className="text-right shrink-0">
-                    <span className={`text-sm font-mono font-semibold block ${receipt.deleted ? 'line-through text-gray-400' : 'text-[#1F1F1F]'}`}>₦{receipt.totalAmount.toLocaleString()}</span>
+                    <span className={`text-sm font-mono font-semibold block ${receipt.deleted ? 'line-through text-gray-400' : 'text-[#1F1F1F]'}`}>{formatCurrency(receipt.totalAmount, currency)}</span>
                     <span className="text-[10px] text-[#757575] block mt-1">
                       {new Date(receipt.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </span>
@@ -1152,7 +1156,7 @@ export default function ReceiptVerification({
         </div>
 
         {/* Right Column: Encrypted Invoice visual card mockup */}
-        <div className="bg-white border-2 border-black rounded-[24px] p-6 self-start space-y-6 flex flex-col pt-6 shadow-sm" id="receipt-visualizer-card">
+        <div className="bg-white border border-black rounded-[24px] p-6 self-start space-y-6 flex flex-col pt-6 shadow-sm" id="receipt-visualizer-card">
           {displayedReceipt ? (
             isEditing ? (
               <form onSubmit={handleSaveEdit} className="space-y-4 animate-fade-in text-xs font-semibold text-[#1F1F1F]">
@@ -1206,7 +1210,7 @@ export default function ReceiptVerification({
                     />
                   </div>
                   <div>
-                    <label className="block mb-1 text-xs text-[#757575]">Price (₦)</label>
+                    <label className="block mb-1 text-xs text-[#757575]">Price ({currencySymbol})</label>
                     <input
                       type="number"
                       min="0"
@@ -1235,7 +1239,7 @@ export default function ReceiptVerification({
                   <p className="font-semibold text-[#1F1F1F]">Estimated Totals:</p>
                   <div className="flex justify-between font-mono">
                     <span>Computed Sum:</span>
-                    <span className="font-bold text-[#1F1F1F]">₦{(editProdQty * editProdPrice).toLocaleString()}</span>
+                    <span className="font-bold text-[#1F1F1F]">{formatCurrency(editProdQty * editProdPrice, currency)}</span>
                   </div>
                   <div className="flex justify-between font-mono">
                     <span>Audited Reward points:</span>
@@ -1308,7 +1312,7 @@ export default function ReceiptVerification({
                       {displayedReceipt.items && displayedReceipt.items.map((it, idx) => (
                         <div key={idx} className="flex justify-between text-xs text-[#1F1F1F]">
                           <span className={`truncate max-w-[150px] font-normal ${displayedReceipt.deleted ? 'line-through text-gray-400' : ''}`}>{it.name} (x{it.quantity})</span>
-                          <span className={`font-mono font-medium ${displayedReceipt.deleted ? 'line-through text-gray-400' : ''}`}>₦{(it.price * it.quantity).toLocaleString()}</span>
+                          <span className={`font-mono font-medium ${displayedReceipt.deleted ? 'line-through text-gray-400' : ''}`}>{formatCurrency(it.price * it.quantity, currency)}</span>
                         </div>
                       ))}
                     </div>
@@ -1317,7 +1321,7 @@ export default function ReceiptVerification({
 
                     <div className="flex justify-between text-xs text-[#1F1F1F] font-semibold font-sans">
                       <span>Total Price:</span>
-                      <span className={`font-mono ${displayedReceipt.deleted ? 'line-through text-gray-400 font-normal' : ''}`}>₦{displayedReceipt.totalAmount.toLocaleString()}</span>
+                      <span className={`font-mono ${displayedReceipt.deleted ? 'line-through text-gray-400 font-normal' : ''}`}>{formatCurrency(displayedReceipt.totalAmount, currency)}</span>
                     </div>
                   </div>
 
@@ -1639,7 +1643,7 @@ export default function ReceiptVerification({
       {/* Private Secure PIN Handover Modal */}
       {pinSetupMemberId && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-gray-950/70 backdrop-blur-md">
-          <div className="w-full max-w-sm bg-white rounded-[28px] border-2 border-black p-6 text-center shadow-xl animate-fade-in relative">
+          <div className="w-full max-w-sm bg-white rounded-[28px] border border-black p-6 text-center shadow-xl animate-fade-in relative">
             <div className="mx-auto w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center mb-4 border border-blue-100">
               <ShieldCheck className="w-6 h-6 text-blue-600 animate-pulse" />
             </div>

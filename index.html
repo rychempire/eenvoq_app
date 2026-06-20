@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#1e40af" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Eenvoq" />
+    <link rel="manifest" href="/manifest.json" />
     
     <!-- Favicon & Touch Icon Configured with Official Brand Logo -->
     <link rel="icon" type="image/png" sizes="32x32" href="https://res.cloudinary.com/dee01jm0p/image/upload/e_bgremoval,w_32,h_32,f_auto,q_auto/1001135527_ij6c4q" />
@@ -76,6 +79,19 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then((reg) => {
+              console.log('Eenvoq PWA Service Worker registered successfully in scope:', reg.scope);
+            })
+            .catch((err) => {
+              console.error('Eenvoq PWA Service Worker registration failed:', err);
+            });
+        });
+      }
+    </script>
   </body>
 </html>
 

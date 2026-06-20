@@ -5,20 +5,24 @@ import {
 } from 'lucide-react';
 import EenvoqIcon from './EenvoqIcon';
 import { InventoryItem } from '../types';
+import { formatCurrency, CURRENCIES } from '../utils/currency';
 
 interface InventoryIntelligenceProps {
   inventory: InventoryItem[];
   onTriggerRestock: (itemId: string, qty: number) => void;
   showConfirm?: (title: string, message: string, onConfirm: () => void, confirmLabel?: string, cancelLabel?: string) => void;
   onAddInventoryItem?: (newItem: InventoryItem) => void;
+  currency: string;
 }
 
 export default function InventoryIntelligence({ 
   inventory, 
   onTriggerRestock, 
   showConfirm,
-  onAddInventoryItem
+  onAddInventoryItem,
+  currency
 }: InventoryIntelligenceProps) {
+  const currencySymbol = CURRENCIES[currency]?.symbol || '$';
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState<'all' | 'critical' | 'grains' | 'dairy'>('all');
   const [selectedItem, setSelectedItem] = useState<InventoryItem | null>(inventory[0] || null);
@@ -234,7 +238,7 @@ export default function InventoryIntelligence({
                         <p className="text-[10px] text-[#757575] font-sans mt-0.5">Sales rate: {item.velocity} items per day</p>
                       </td>
                       <td className="py-4 px-6 text-right font-mono font-bold text-[#1F1F1F]">
-                        ₦{item.basePrice.toLocaleString()}
+                        {formatCurrency(item.basePrice, currency)}
                       </td>
                     </tr>
                   );
@@ -246,7 +250,7 @@ export default function InventoryIntelligence({
         </div>
 
         {/* Right Side: Supplier Order panel & predictive AI analysis */}
-        <div className="bg-white border-2 border-black rounded-[24px] p-6 self-start space-y-6 flex flex-col shadow-sm" id="inventory-item-details-panel">
+        <div className="bg-white border border-black rounded-[24px] p-6 self-start space-y-6 flex flex-col shadow-sm" id="inventory-item-details-panel">
           {selectedItem ? (
             <>
               {/* Product Info Block */}
@@ -390,7 +394,7 @@ export default function InventoryIntelligence({
                 </div>
 
                 <div>
-                  <label className="block text-[#757575] mb-1.5 font-medium">Standard Cost (₦)</label>
+                  <label className="block text-[#757575] mb-1.5 font-medium">Standard Cost ({currencySymbol})</label>
                   <input 
                     type="number" required min="1"
                     value={newBasePrice} onChange={e => setNewBasePrice(parseInt(e.target.value) || 0)}

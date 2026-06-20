@@ -4,15 +4,18 @@ import {
 } from 'lucide-react';
 import EenvoqIcon from './EenvoqIcon';
 import { TruthAudit, Receipt } from '../types';
+import { formatCurrency, CURRENCIES } from '../utils/currency';
 
 interface TruthCheckProps {
   audits: TruthAudit[];
   receipts: Receipt[];
   onAddAudit: (newAudit: TruthAudit) => void;
   showConfirm?: (title: string, message: string, onConfirm: () => void, confirmLabel?: string, cancelLabel?: string, onCancel?: () => void) => void;
+  currency: string;
 }
 
-export default function TruthCheck({ audits, receipts, onAddAudit, showConfirm }: TruthCheckProps) {
+export default function TruthCheck({ audits, receipts, onAddAudit, showConfirm, currency }: TruthCheckProps) {
+  const currencySymbol = CURRENCIES[currency]?.symbol || '$';
   // Input fields for cash declared reconciliation
   const [cashVal, setCashVal] = useState(120000);
   const [transfersVal, setTransfersVal] = useState(350000);
@@ -45,7 +48,7 @@ export default function TruthCheck({ audits, receipts, onAddAudit, showConfirm }
 
       const detailsExplanation = netDiff === 0
         ? "Perfect transaction matching. Net variance is balanced across physical cash drawers and bank ledger transfers."
-        : `Discrepancy of ₦${Math.abs(netDiff).toLocaleString()} measured between physical registries and system checkout totals. eenvoq's security metrics indicate a high leakage rate during peak transactions (3 PM - 5 PM). Recommend manual reconciliation of till register #1.`;
+        : `Discrepancy of ${formatCurrency(Math.abs(netDiff), currency)} measured between physical registries and system checkout totals. eenvoq's security metrics indicate a high leakage rate during peak transactions (3 PM - 5 PM). Recommend manual reconciliation of till register #1.`;
 
       const completedAudit: TruthAudit = {
         id: `AUD-NEW-${Math.floor(Math.random() * 900) + 100}`,
@@ -100,7 +103,7 @@ export default function TruthCheck({ audits, receipts, onAddAudit, showConfirm }
           <form onSubmit={handleExecuteAudit} className="space-y-5 text-xs font-semibold text-[#1F1F1F]">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block mb-1.5 text-xs text-[#B45309] font-sans font-bold">Cash in Register Drawer (₦)</label>
+                <label className="block mb-1.5 text-xs text-[#B45309] font-sans font-bold">Cash in Register Drawer ({currencySymbol})</label>
                 <input
                   type="number" value={cashVal} onChange={e => setCashVal(parseInt(e.target.value) || 0)}
                   className="w-full bg-white text-[#1F1F1F] border border-[#ECDCCB] rounded-full py-2.5 px-4 text-xs focus:outline-none focus:border-[#78350F] font-mono shadow-sm"
@@ -108,7 +111,7 @@ export default function TruthCheck({ audits, receipts, onAddAudit, showConfirm }
               </div>
 
               <div>
-                <label className="block mb-1.5 text-xs text-[#B45309] font-sans font-bold">Card Machine Cash (POS) (₦)</label>
+                <label className="block mb-1.5 text-xs text-[#B45309] font-sans font-bold">Card Machine Cash (POS) ({currencySymbol})</label>
                 <input
                   type="number" value={posVal} onChange={e => setPosVal(parseInt(e.target.value) || 0)}
                   className="w-full bg-white text-[#1F1F1F] border border-[#ECDCCB] rounded-full py-2.5 px-4 text-xs focus:outline-none focus:border-[#78350F] font-mono shadow-sm"
@@ -118,7 +121,7 @@ export default function TruthCheck({ audits, receipts, onAddAudit, showConfirm }
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block mb-1.5 text-xs text-[#B45309] font-sans font-bold">Direct Bank transfers (₦)</label>
+                <label className="block mb-1.5 text-xs text-[#B45309] font-sans font-bold">Direct Bank transfers ({currencySymbol})</label>
                 <input
                   type="number" value={transfersVal} onChange={e => setTransfersVal(parseInt(e.target.value) || 0)}
                   className="w-full bg-white text-[#1F1F1F] border border-[#ECDCCB] rounded-full py-2.5 px-4 text-xs focus:outline-none focus:border-[#78350F] font-mono shadow-sm"
@@ -126,7 +129,7 @@ export default function TruthCheck({ audits, receipts, onAddAudit, showConfirm }
               </div>
 
               <div>
-                <label className="block mb-1.5 text-xs text-[#B45309] font-sans font-bold">Mobile Wallet pay (OPay etc.) (₦)</label>
+                <label className="block mb-1.5 text-xs text-[#B45309] font-sans font-bold">Mobile Wallet pay (OPay etc.) ({currencySymbol})</label>
                 <input
                   type="number" value={momoVal} onChange={e => setMomoVal(parseInt(e.target.value) || 0)}
                   className="w-full bg-white text-[#1F1F1F] border border-[#ECDCCB] rounded-full py-2.5 px-4 text-xs focus:outline-none focus:border-[#78350F] font-mono shadow-sm"
@@ -135,7 +138,7 @@ export default function TruthCheck({ audits, receipts, onAddAudit, showConfirm }
             </div>
 
             <div>
-              <label className="block mb-1.5 text-xs text-[#B45309] font-sans font-bold">Other sales money (₦)</label>
+              <label className="block mb-1.5 text-xs text-[#B45309] font-sans font-bold">Other sales money ({currencySymbol})</label>
               <input
                 type="number" value={otherVal} onChange={e => setOtherVal(parseInt(e.target.value) || 0)}
                 className="w-full bg-white text-[#1F1F1F] border border-[#ECDCCB] rounded-full py-2.5 px-4 text-xs focus:outline-none focus:border-[#78350F] font-mono shadow-sm"
@@ -170,7 +173,7 @@ export default function TruthCheck({ audits, receipts, onAddAudit, showConfirm }
         {/* Right Side: Reconciliation result analytics */}
         <div className="space-y-4 flex flex-col justify-start" id="reconciliation-output-intelligence">
           {results ? (
-            <div className="bg-white border-2 border-black rounded-[24px] p-6 shadow-sm space-y-6 flex flex-col" id="audit-results-card">
+            <div className="bg-white border border-black rounded-[24px] p-6 shadow-sm space-y-6 flex flex-col" id="audit-results-card">
               <div className="flex items-center justify-between border-b border-[#E3E3E3] pb-4 select-none">
                 <span className="text-[10px] font-mono font-semibold text-[#757575] uppercase">Audit Summary: {results.date}</span>
                 <span className={`text-[10px] font-semibold px-3 py-1 rounded-full uppercase ${
@@ -187,13 +190,13 @@ export default function TruthCheck({ audits, receipts, onAddAudit, showConfirm }
                 <div className="bg-[#FCFAF7] p-4 rounded-[24px] border border-[#E3E3E3]">
                   <span className="text-[10px] font-semibold text-[#757575] uppercase">What Sales Book Says</span>
                   <p className="text-lg font-bold text-[#1F1F1F] font-mono mt-1">
-                    ₦{results.expectedRevenue.toLocaleString()}
+                    {formatCurrency(results.expectedRevenue, currency)}
                   </p>
                 </div>
                 <div className="bg-[#FCFAF7] p-4 rounded-[24px] border border-[#E3E3E3]">
                   <span className="text-[10px] font-semibold text-[#757575] uppercase">What Is in Register</span>
                   <p className="text-lg font-bold text-[#1F1F1F] font-mono mt-1">
-                    ₦{results.declaredRevenue.toLocaleString()}
+                    {formatCurrency(results.declaredRevenue, currency)}
                   </p>
                 </div>
               </div>
@@ -210,7 +213,7 @@ export default function TruthCheck({ audits, receipts, onAddAudit, showConfirm }
                 <div>
                   <span className="text-[#5F6368] font-normal font-sans">Money Difference:</span>
                   <p className={`text-base font-bold font-mono mt-1 ${results.difference < 0 ? 'text-red-700' : 'text-green-700'}`}>
-                    {results.difference < 0 ? '-' : '+'}₦{Math.abs(results.difference).toLocaleString()}
+                    {results.difference < 0 ? '-' : '+'}{formatCurrency(Math.abs(results.difference), currency)}
                   </p>
                 </div>
                 <div className="text-right shrink-0">

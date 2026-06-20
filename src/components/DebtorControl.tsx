@@ -5,14 +5,16 @@ import {
 } from 'lucide-react';
 import EenvoqIcon from './EenvoqIcon';
 import { Debtor } from '../types';
+import { formatCurrency } from '../utils/currency';
 
 interface DebtorControlProps {
   debtors: Debtor[];
   onToggleLock: (debtorId: string) => void;
   showConfirm?: (title: string, message: string, onConfirm: () => void, confirmLabel?: string, cancelLabel?: string) => void;
+  currency: string;
 }
 
-export default function DebtorControl({ debtors, onToggleLock, showConfirm }: DebtorControlProps) {
+export default function DebtorControl({ debtors, onToggleLock, showConfirm, currency }: DebtorControlProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterRisk, setFilterRisk] = useState<'all' | 'high' | 'locked'>('all');
   const [selectedDebtor, setSelectedDebtor] = useState<Debtor | null>(debtors[0] || null);
@@ -31,7 +33,7 @@ export default function DebtorControl({ debtors, onToggleLock, showConfirm }: De
 
   const handleSimulateDispatchReminder = (debtor: Debtor) => {
     const title = "Reminder Routed";
-    const msg = `[SMS Dispatch Simulation]: Overdue balance notification routed to debtor customer "${debtor.name}".\n\nMobile: ${debtor.phone}\n\nDear ${debtor.name}, you have a pending payment on your tab of ₦${debtor.amountOwed.toLocaleString()}. Please make a payment soon to keep your account open. Thank you!`;
+    const msg = `[SMS Dispatch Simulation]: Overdue balance notification routed to debtor customer "${debtor.name}".\n\nMobile: ${debtor.phone}\n\nDear ${debtor.name}, you have a pending payment on your tab of ${formatCurrency(debtor.amountOwed, currency)}. Please make a payment soon to keep your account open. Thank you!`;
     
     if (showConfirm) {
       showConfirm(title, msg, () => {}, "Understood", "Close");
@@ -109,11 +111,11 @@ export default function DebtorControl({ debtors, onToggleLock, showConfirm }: De
                       )}
                     </div>
                     <p className="font-bold text-[#1F1F1F] text-xs font-sans truncate">{debtor.name}</p>
-                    <p className="text-[10px] text-[#757575] font-mono mt-1">Mobile: {debtor.phone} | Credit Limit: ₦{customOverdraft.toLocaleString()}</p>
+                    <p className="text-[10px] text-[#757575] font-mono mt-1">Mobile: {debtor.phone} | Credit Limit: {formatCurrency(customOverdraft, currency)}</p>
                   </div>
 
                   <div className="text-right shrink-0">
-                    <span className="text-xs font-mono font-semibold text-[#1F1F1F] block">₦{debtor.amountOwed.toLocaleString()}</span>
+                    <span className="text-xs font-mono font-semibold text-[#1F1F1F] block">{formatCurrency(debtor.amountOwed, currency)}</span>
                     <span className={`text-[9px] font-semibold ${
                       debtor.riskRating === 'high' ? 'text-red-700 bg-red-50 border border-red-200 px-2.5 py-0.5 rounded-full' : 'text-green-600 bg-green-50/30 px-2.5 py-0.5 rounded-full border border-green-100'
                     } uppercase block mt-1.5`}>
@@ -127,7 +129,7 @@ export default function DebtorControl({ debtors, onToggleLock, showConfirm }: De
         </div>
 
         {/* Right column: Locks toggle & Automated reminder generator */}
-        <div className="bg-white border-2 border-black rounded-[24px] p-6 self-start space-y-6 flex flex-col shadow-sm" id="debtors-deep-control-panel">
+        <div className="bg-white border border-black rounded-[24px] p-6 self-start space-y-6 flex flex-col shadow-sm" id="debtors-deep-control-panel">
           {selectedDebtor ? (
             <>
               {/* Profile card */}
@@ -181,7 +183,7 @@ export default function DebtorControl({ debtors, onToggleLock, showConfirm }: De
                   <span>Ready-made Friendly Text Reminder</span>
                 </div>
                 <div className="bg-[#FCFAF7]/80 p-4 rounded-xl border border-[#bae6fd] text-[11px] font-sans leading-relaxed text-[#0284c7] font-semibold">
-                  "Hello {selectedDebtor.name}, you have a pending payment of ₦{selectedDebtor.amountOwed.toLocaleString()} on your store tab. Please make a payment soon to keep your account open. Thank you!"
+                  "Hello {selectedDebtor.name}, you have a pending payment of {formatCurrency(selectedDebtor.amountOwed, currency)} on your store tab. Please make a payment soon to keep your account open. Thank you!"
                 </div>
 
                 <button
@@ -201,7 +203,7 @@ export default function DebtorControl({ debtors, onToggleLock, showConfirm }: De
                   {selectedDebtor.paymentHistory.map((ph, idx) => (
                     <div key={idx} className="flex justify-between items-center bg-white p-3 border border-[#E3E3E3] rounded-xl text-xs font-mono">
                       <span className="text-[#5F6368] font-sans">Date: {ph.date}</span>
-                      <span className="text-green-700 font-semibold font-sans">₦{ph.amount.toLocaleString()} Paid</span>
+                      <span className="text-green-700 font-semibold font-sans">{formatCurrency(ph.amount, currency)} Paid</span>
                     </div>
                   ))}
                   {selectedDebtor.paymentHistory.length === 0 && (

@@ -5,14 +5,19 @@ import {
 } from 'lucide-react';
 import EenvoqIcon from './EenvoqIcon';
 import { UserSession } from '../types';
+import { formatCurrency } from '../utils/currency';
+import LegalPolicies from './LegalPolicies';
 
 interface SettingsProps {
   user: UserSession;
   onUpdateUser: (updated: UserSession) => void;
   showConfirm?: (title: string, message: string, onConfirm: () => void, confirmLabel?: string, cancelLabel?: string) => void;
+  currency: string;
+  onChangeCurrency: (c: string) => void;
 }
 
-export default function Settings({ user, onUpdateUser, showConfirm }: SettingsProps) {
+export default function Settings({ user, onUpdateUser, showConfirm, currency, onChangeCurrency }: SettingsProps) {
+  const [activeLegalTab, setActiveLegalTab] = useState<'privacy' | 'terms' | 'cookie' | null>(null);
   const [storeName, setStoreName] = useState(user.storeName);
   const [name, setName] = useState(user.name);
   const [email, setEmail] = useState(user.email);
@@ -114,6 +119,22 @@ export default function Settings({ user, onUpdateUser, showConfirm }: SettingsPr
               />
             </div>
 
+            <div>
+              <label className="block mb-1.5 text-xs text-sky-850 font-sans font-bold">Business Currency Preference</label>
+              <select
+                value={currency}
+                onChange={e => onChangeCurrency(e.target.value)}
+                className="w-full bg-white text-[#1F1F1F] border border-sky-150 rounded-full py-2.5 px-4 text-xs focus:outline-none focus:border-sky-500 font-sans font-bold shadow-sm focus:ring-2 focus:ring-sky-100 cursor-pointer"
+              >
+                <option value="USD">USD ($) - Primary Default</option>
+                <option value="NGN">Naira (₦)</option>
+                <option value="GHS">Ghana Cedis (GH₵)</option>
+                <option value="KES">Kenyan Shilling (KSh)</option>
+                <option value="GBP">Pounds (£)</option>
+                <option value="EUR">Euros (€)</option>
+              </select>
+            </div>
+
             <button
               type="submit"
               className="bg-[#1e40af] hover:bg-[#1a368f] focus:ring-2 focus:ring-[#1e40af]/20 focus:outline-none text-white font-bold py-3.5 px-6 rounded-full transition text-xs font-sans flex items-center justify-center gap-2 cursor-pointer shadow-sm"
@@ -146,7 +167,7 @@ export default function Settings({ user, onUpdateUser, showConfirm }: SettingsPr
           </div>
 
           {/* Integration triggers */}
-          <div className="bg-white border-2 border-black rounded-[24px] p-6 shadow-sm space-y-5 select-none font-sans">
+          <div className="bg-white border border-black rounded-[24px] p-6 shadow-sm space-y-5 select-none font-sans">
             <div className="flex items-center gap-2 border-b border-[#E3E3E3] pb-3">
               <Phone className="w-4.5 h-4.5 text-[#1F1F1F] stroke-[1.5]" />
               <h4 className="font-sans font-bold text-[#1F1F1F] text-xs">Simulations & Triggers</h4>
@@ -186,6 +207,45 @@ export default function Settings({ user, onUpdateUser, showConfirm }: SettingsPr
             </div>
           </div>
 
+          {/* Legal & Policies compliance card */}
+          <div className="bg-white border border-[#E3E3E3] rounded-[24px] p-6 shadow-sm space-y-4 font-sans select-none">
+            <div className="flex items-center gap-2 border-b border-[#E3E3E3] pb-3">
+              <ShieldCheck className="w-4.5 h-4.5 text-emerald-600 stroke-[1.5]" />
+              <h4 className="font-sans font-bold text-[#1F1F1F] text-xs">Compliance and Legal</h4>
+            </div>
+            
+            <p className="text-[10px] text-[#757575] leading-relaxed font-sans font-medium">
+              Review our officially active compliance schedules, privacy guidelines, and user terms of service.
+            </p>
+
+            <div className="flex flex-col gap-2 font-bold text-[#1F1F1F]">
+              <button 
+                type="button" 
+                onClick={() => setActiveLegalTab('terms')}
+                className="w-full text-left p-3 bg-[#FCFAF7] border border-[#E3E3E3] hover:border-[#1F1F1F] rounded-xl transition text-[11px] font-sans flex items-center justify-between cursor-pointer"
+              >
+                <span>Terms and Conditions</span>
+                <span className="text-[10px] text-gray-400 font-mono">View &rarr;</span>
+              </button>
+              <button 
+                type="button" 
+                onClick={() => setActiveLegalTab('privacy')}
+                className="w-full text-left p-3 bg-[#FCFAF7] border border-[#E3E3E3] hover:border-[#1F1F1F] rounded-xl transition text-[11px] font-sans flex items-center justify-between cursor-pointer"
+              >
+                <span>Privacy Policy</span>
+                <span className="text-[10px] text-gray-400 font-mono">View &rarr;</span>
+              </button>
+              <button 
+                type="button" 
+                onClick={() => setActiveLegalTab('cookie')}
+                className="w-full text-left p-3 bg-[#FCFAF7] border border-[#E3E3E3] hover:border-[#1F1F1F] rounded-xl transition text-[11px] font-sans flex items-center justify-between cursor-pointer"
+              >
+                <span>Cookie Policy</span>
+                <span className="text-[10px] text-gray-400 font-mono">View &rarr;</span>
+              </button>
+            </div>
+          </div>
+
           {/* Billing subscription card */}
           <div className="bg-[#f0f9ff] border border-[#bae6fd] rounded-[24px] p-6 shadow-sm flex flex-col justify-between font-sans relative overflow-hidden text-[#0284c7]">
             
@@ -197,7 +257,7 @@ export default function Settings({ user, onUpdateUser, showConfirm }: SettingsPr
 
               <div>
                 <h4 className="font-bold text-[#0284c7] text-[11px] uppercase">Service Tier Status</h4>
-                <p className="text-xl font-bold font-mono mt-1 text-[#0284c7]">₦45,000 <span className="text-xs font-sans font-semibold text-[#0284c7]">/ mo</span></p>
+                <p className="text-xl font-bold font-mono mt-1 text-[#0284c7]">{formatCurrency(45000, currency)} <span className="text-xs font-sans font-semibold text-[#0284c7]">/ mo</span></p>
                 <p className="text-[10px] text-[#0284c7] mt-1 font-semibold font-sans">Next automatic bill run: July 1st, 2026</p>
               </div>
             </div>
@@ -223,6 +283,10 @@ export default function Settings({ user, onUpdateUser, showConfirm }: SettingsPr
         </div>
 
       </div>
+
+      {activeLegalTab && (
+        <LegalPolicies activeTab={activeLegalTab} onClose={() => setActiveLegalTab(null)} />
+      )}
 
     </div>
   );
