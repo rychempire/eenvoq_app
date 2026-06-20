@@ -428,11 +428,6 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
                     {...scrollRevealProps}
                     className="bg-white/10 p-[1.5px] shadow-2xl rounded-[16px] md:rounded-[32px] border border-white/20 w-full relative overflow-visible group"
                   >
-                    {/* Overlapping camera alignment bracket corners outside/on top of the frame */}
-                    <div className="absolute -top-1.5 -left-1.5 w-5 h-5 border-t-2 border-l-2 border-white/90 pointer-events-none z-20" />
-                    <div className="absolute -top-1.5 -right-1.5 w-5 h-5 border-t-2 border-r-2 border-white/90 pointer-events-none z-20" />
-                    <div className="absolute -bottom-1.5 -left-1.5 w-5 h-5 border-b-2 border-l-2 border-white/90 pointer-events-none z-20" />
-                    <div className="absolute -bottom-1.5 -right-1.5 w-5 h-5 border-b-2 border-r-2 border-white/90 pointer-events-none z-20" />
 
                     {/* Status and telemetry indicator pill layered on the top edge code bar */}
                     <div className="absolute -top-2.5 left-8 px-2 py-0.5 rounded-full border border-white/20 bg-neutral-950 text-[8px] font-mono text-sky-300 select-none z-20 flex items-center gap-1.5 shadow-sm">
@@ -449,14 +444,14 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
                     <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-white/5 to-transparent pointer-events-none select-none z-10 rounded-[14px] md:rounded-[28px]" />
                     
                     {/* Full Image with a micro thin border to isolate the asset within the parent frame */}
-<div className="w-11/12 sm:w-3/4 md:w-2/3 lg:w-1/2 mx-auto overflow-hidden bg-neutral-900 rounded-[14px] md:rounded-[30px] border border-white/5 shadow-inner">
-  <img 
-    src="https://i.ibb.co/TBqgcF74/Screenshot-20260619-130027-1.jpg" 
-    alt="Eenvoq App Overview" 
-    className="w-full h-auto object-cover select-none transform group-hover:scale-[1.01] transition duration-700"
-    referrerPolicy="no-referrer"
-  />
-</div>
+                    <div className="w-full overflow-hidden bg-neutral-900 rounded-[14px] md:rounded-[30px] border border-white/5 shadow-inner">
+                      <img 
+                        src="https://i.ibb.co/TBqgcF74/Screenshot-20260619-130027-1.jpg" 
+                        alt="Eenvoq App Overview" 
+                        className="w-full h-auto object-cover select-none transform group-hover:scale-[1.01] transition duration-700"
+                        referrerPolicy="no-referrer"
+                      />
+                    </div>
                   </motion.div>
                 </div>
 
