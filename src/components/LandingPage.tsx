@@ -369,95 +369,96 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
         {activeSubPage === 'main' ? (
           <>
             {/* ==========================================
-                COMBINED HERO & VISUAL PREVIEW SECTION 1 & 2
-                ========================================== */}
-            <div className="w-full bg-[#1e40af] pb-16 pt-12 md:pt-16 md:pb-24 overflow-visible relative" id="landing-hero-section">
-              <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20 relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8 items-center">
-                
-                {/* Hero Content (Left Column on Desktop, Center on Mobile) */}
-                <div className="flex flex-col items-center text-center lg:items-start lg:text-left space-y-5 lg:space-y-6">
-                  <div className="inline-flex items-center gap-2 bg-white/10 border border-sky-400/30 px-3 py-1 rounded-full text-[10px] font-bold text-sky-300 uppercase tracking-wider animate-pulse-once">
-                    <Sparkles className="w-3.5 h-3.5 stroke-[2] text-sky-400" />
-                    <span>Autonomous Revenue Protection</span>
-                  </div>
-
-                  <h1 className="text-[32px] sm:text-[44px] font-sans font-black text-white leading-tight tracking-tight">
-                    The Powerful AI Assistant That Tracks Your <span className="text-sky-300">Sales & Revenue</span>
-                  </h1>
-
-                  <p className="text-sm md:text-base text-white/90 leading-relaxed font-sans font-medium max-w-2xl">
-                    Eenvoq keeps you updated on your finances, <span className="text-sky-300">reduces leaky income</span>, and analyses <span className="text-sky-300">sales, subscription, and tuition streams</span> for your business, school, and organization.
-                  </p>
-
-                  <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2 w-full max-w-xl animate-fade-in">
-                    <button
-                      onClick={onEnterApp}
-                      className="bg-sky-400 hover:bg-sky-300 text-[#1e40af] font-sans font-bold py-2.5 w-60 rounded-full text-xs uppercase tracking-wider transition-all duration-150 active:scale-95 shadow-md hover:shadow-lg hover:shadow-sky-400/20 cursor-pointer border border-transparent whitespace-nowrap flex items-center justify-center gap-2 focus:ring-2 focus:ring-sky-300"
-                    >
-                      <span>Start Free Trial</span>
-                      <ArrowRight className="w-3.5 h-3.5 text-[#1e40af]" />
-                    </button>
-                    <button
-                      onClick={onEnterApp}
-                      className="bg-[#1e40af] hover:bg-[#1a368f] text-white font-sans font-bold py-2.5 w-60 rounded-full text-xs uppercase tracking-wider transition-all duration-150 active:scale-95 border border-white hover:border-sky-300 cursor-pointer flex items-center justify-center gap-2 shadow-sm focus:ring-2 focus:ring-white/20 whitespace-nowrap"
-                    >
-                      <PlayCircle className="w-4 h-4 text-white" />
-                      <span>Book Demo</span>
-                    </button>
-                  </div>
-
-                  <p className="text-[10px] text-sky-200/90 font-bold tracking-wide uppercase select-none pt-0.5">
-                    ✓ No credit card required
-                  </p>
-                </div>
-
-              {/* Hero Visual Preview (Right Column on Desktop, Center on Mobile) */}
-{/* CHANGED: added max-widths and mx-auto to scale down the entire container together */}
-<div className="relative w-full max-w-sm sm:max-w-md md:max-w-xl lg:max-w-xl mx-auto overflow-visible" id="product-preview-mockup">
-  {/* Abstract radial dot matrix background grid centered under the frame */}
-  <div className="absolute -inset-10 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.08)_1px,transparent_1px)] bg-[size:16px_16px] pointer-events-none -z-10 opacity-80" />
-  
-  {/* Atmospheric glowing neon background aura under the frame */}
-  <div className="absolute inset-x-12 top-10 bottom-10 bg-sky-400/20 rounded-full filter blur-[70px] pointer-events-none -z-10 mix-blend-screen animate-pulse" style={{ animationDuration: '6s' }} />
-  <div className="absolute -inset-y-3 -inset-x-2 bg-gradient-to-r from-sky-300/10 to-indigo-500/10 rounded-[44px] filter blur-xl pointer-events-none -z-10" />
-
-  {/* Structural vertical Swiss line accents extending from the top and bottom of the frame */}
-  <div className="absolute left-1/2 -translate-x-1/2 -top-4 w-[1px] h-6 bg-gradient-to-t from-white/30 to-transparent pointer-events-none z-0" />
-  <div className="absolute left-1/2 -translate-x-1/2 -bottom-4 w-[1px] h-6 bg-gradient-to-b from-white/30 to-transparent pointer-events-none z-0" />
-
-  <motion.div 
-    {...scrollRevealProps}
-    className="bg-white/10 p-[1.5px] shadow-2xl rounded-[16px] md:rounded-[32px] border border-white/20 w-full relative overflow-visible group"
-  >
-
-    {/* Status and telemetry indicator pill layered on the top edge code bar */}
-    <div className="absolute -top-2.5 left-8 px-2 py-0.5 rounded-full border border-white/20 bg-neutral-950 text-[8px] font-mono text-sky-300 select-none z-20 flex items-center gap-1.5 shadow-sm">
-      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-      SECURE_REVENUE_RECONCILIATION
-    </div>
-
-    {/* Dimension telemetry indicator layered on the bottom edge code bar */}
-    <div className="absolute -bottom-2.5 right-8 px-2 py-0.5 rounded-full border border-white/20 bg-neutral-950 text-[8px] font-mono text-white/70 select-none z-20 shadow-sm">
-      ALL_YOUR_SALES_IN_ONE_TRACKER
-    </div>
-
-    {/* Subtle visual lens reflection */}
-    <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-white/5 to-transparent pointer-events-none select-none z-10 rounded-[14px] md:rounded-[28px]" />
+    COMBINED HERO & VISUAL PREVIEW SECTION 1 & 2
+    ========================================== */}
+<div className="w-full bg-[#1e40af] pb-16 pt-12 md:pt-16 md:pb-24 overflow-visible relative" id="landing-hero-section">
+  <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20 relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8 items-center">
     
-    {/* Full Image with a micro thin border to isolate the asset within the parent frame */}
-    <div className="w-full overflow-hidden bg-neutral-900 rounded-[14px] md:rounded-[30px] border border-white/5 shadow-inner">
-      <img 
-        src="https://i.ibb.co/TBqgcF74/Screenshot-20260619-130027-1.jpg" 
-        alt="Eenvoq App Overview" 
-        className="w-full h-auto object-cover select-none transform group-hover:scale-[1.01] transition duration-700"
-        referrerPolicy="no-referrer"
-      />
-    </div>
-  </motion.div>
-</div>
+    {/* Hero Content (Left Column on Desktop, Center on Mobile) */}
+    <div className="flex flex-col items-center text-center lg:items-start lg:text-left space-y-5 lg:space-y-6">
+      <div className="inline-flex items-center gap-2 bg-white/10 border border-sky-400/30 px-3 py-1 rounded-full text-[10px] font-bold text-sky-300 uppercase tracking-wider animate-pulse-once">
+        <Sparkles className="w-3.5 h-3.5 stroke-[2] text-sky-400" />
+        <span>Autonomous Revenue Protection</span>
+      </div>
 
-              </div>
-            </div>
+      <h1 className="text-[32px] sm:text-[44px] font-sans font-black text-white leading-tight tracking-tight">
+        The Powerful AI Assistant That Tracks Your <span className="text-sky-300">Sales & Revenue</span>
+      </h1>
+
+      <p className="text-sm md:text-base text-white/90 leading-relaxed font-sans font-medium max-w-2xl">
+        Eenvoq keeps you updated on your finances, <span className="text-sky-300">reduces leaky income</span>, and analyses <span className="text-sky-300">sales, subscription, and tuition streams</span> for your business, school, and organization.
+      </p>
+
+      <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2 w-full max-w-xl animate-fade-in">
+        <button
+          onClick={onEnterApp}
+          className="bg-sky-400 hover:bg-sky-300 text-[#1e40af] font-sans font-bold py-2.5 w-60 rounded-full text-xs uppercase tracking-wider transition-all duration-150 active:scale-95 shadow-md hover:shadow-lg hover:shadow-sky-400/20 cursor-pointer border border-transparent whitespace-nowrap flex items-center justify-center gap-2 focus:ring-2 focus:ring-sky-300"
+        >
+          <span>Start Free Trial</span>
+          <ArrowRight className="w-3.5 h-3.5 text-[#1e40af]" />
+        </button>
+        <button
+          onClick={onEnterApp}
+          className="bg-[#1e40af] hover:bg-[#1a368f] text-white font-sans font-bold py-2.5 w-60 rounded-full text-xs uppercase tracking-wider transition-all duration-150 active:scale-95 border border-white hover:border-sky-300 cursor-pointer flex items-center justify-center gap-2 shadow-sm focus:ring-2 focus:ring-white/20 whitespace-nowrap"
+        >
+          <PlayCircle className="w-4 h-4 text-white" />
+          <span>Book Demo</span>
+        </button>
+      </div>
+
+      <p className="text-[10px] text-sky-200/90 font-bold tracking-wide uppercase select-none pt-0.5">
+        ✓ No credit card required
+      </p>
+    </div>
+
+    {/* Hero Visual Preview (Right Column on Desktop, Center on Mobile) */}
+    {/* Added 'flex justify-center' below to keep the scaled mockup centered in its grid cell */}
+    <div className="relative w-full overflow-visible flex justify-center" id="product-preview-mockup">
+      {/* Abstract radial dot matrix background grid centered under the frame */}
+      <div className="absolute -inset-10 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.08)_1px,transparent_1px)] bg-[size:16px_16px] pointer-events-none -z-10 opacity-80" />
+      
+      {/* Atmospheric glowing neon background aura under the frame */}
+      <div className="absolute inset-x-12 top-10 bottom-10 bg-sky-400/20 rounded-full filter blur-[70px] pointer-events-none -z-10 mix-blend-screen animate-pulse" style={{ animationDuration: '6s' }} />
+      <div className="absolute -inset-y-3 -inset-x-2 bg-gradient-to-r from-sky-300/10 to-indigo-500/10 rounded-[44px] filter blur-xl pointer-events-none -z-10" />
+
+      {/* Structural vertical Swiss line accents extending from the top and bottom of the frame */}
+      <div className="absolute left-1/2 -translate-x-1/2 -top-4 w-[1px] h-6 bg-gradient-to-t from-white/30 to-transparent pointer-events-none z-0" />
+      <div className="absolute left-1/2 -translate-x-1/2 -bottom-4 w-[1px] h-6 bg-gradient-to-b from-white/30 to-transparent pointer-events-none z-0" />
+
+      {/* MODIFIED: Reduced width on all device viewports cleanly using responsive width fractions */}
+      <motion.div 
+        {...scrollRevealProps}
+        className="bg-white/10 p-[1.5px] shadow-2xl rounded-[16px] md:rounded-[32px] border border-white/20 w-11/12 sm:w-5/6 md:w-3/4 lg:w-11/12 xl:w-5/6 relative overflow-visible group"
+      >
+
+        {/* Status and telemetry indicator pill layered on the top edge code bar */}
+        <div className="absolute -top-2.5 left-8 px-2 py-0.5 rounded-full border border-white/20 bg-neutral-950 text-[8px] font-mono text-sky-300 select-none z-20 flex items-center gap-1.5 shadow-sm">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+          SECURE_REVENUE_RECONCILIATION
+        </div>
+
+        {/* Dimension telemetry indicator layered on the bottom edge code bar */}
+        <div className="absolute -bottom-2.5 right-8 px-2 py-0.5 rounded-full border border-white/20 bg-neutral-950 text-[8px] font-mono text-white/70 select-none z-20 shadow-sm">
+          ALL_YOUR_SALES_IN_ONE_TRACKER
+        </div>
+
+        {/* Subtle visual lens reflection */}
+        <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-white/5 to-transparent pointer-events-none select-none z-10 rounded-[14px] md:rounded-[28px]" />
+        
+        {/* Full Image with a micro thin border to isolate the asset within the parent frame */}
+        <div className="w-full overflow-hidden bg-neutral-900 rounded-[14px] md:rounded-[30px] border border-white/5 shadow-inner">
+          <img 
+            src="https://i.ibb.co/TBqgcF74/Screenshot-20260619-130027-1.jpg" 
+            alt="Eenvoq App Overview" 
+            className="w-full h-auto object-cover select-none transform group-hover:scale-[1.01] transition duration-700"
+            referrerPolicy="no-referrer"
+          />
+        </div>
+      </motion.div>
+    </div>
+
+  </div>
+</div>
 
 
         {/* ==========================================
