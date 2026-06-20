@@ -3,7 +3,7 @@ import { Receipt, InventoryItem, Debtor, TruthAudit, Alert } from '../types';
 import EenvoqIcon from './EenvoqIcon';
 import { 
   ArrowUpRight, AlertCircle, Sparkles, ChevronRight, ArrowLeft, X, Check, Plus, 
-  Search, TrendingUp, ShieldAlert, Users, ShoppingCart, Activity, CheckCircle2,
+  Search, TrendingUp, TrendingDown, ShieldAlert, Users, ShoppingCart, Activity, CheckCircle2,
   Coins, Filter, ArrowRight, CircleDollarSign, BarChart2, DollarSign, Bot, AlertTriangle,
   Package, Star
 } from 'lucide-react';
