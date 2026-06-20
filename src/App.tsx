@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { 
   Menu, X, Sparkles, BellRing, Settings2, LogOut, Shield, SidebarClose, Activity,
-  LayoutDashboard, ShoppingCart, Users
+  LayoutDashboard, ShoppingCart, Users, CircleDollarSign, Bot
 } from 'lucide-react';
 import { 
   UserSession, Receipt, InventoryItem, Debtor, TruthAudit, Alert, ChatMessage, RetentionCampaign, TeamMember 
@@ -628,6 +628,7 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
             clearChat={() => setChatLogs([])}
             prefilledPrompt={prefilledPrompt}
             clearPrefilledPrompt={() => setPrefilledPrompt('')}
+            currency={currency}
           />
         );
       case 'receipts':
@@ -644,6 +645,11 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
             onChangeActiveOperator={setActiveOperatorId}
             showConfirm={showConfirm} 
             currency={currency}
+            inventory={inventory}
+            onUpdateInventory={setInventory}
+            debtors={debtors}
+            onUpdateDebtors={setDebtors}
+            onAddAudit={handleAddAudit}
           />
         );
       case 'truthcheck':
@@ -793,79 +799,68 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
           </div>
         </main>
 
-        {/* Mobile Floating Pill Premium Bottom Navigation */}
-        {!mobileMenuOpen && (
-          <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[92%] sm:w-[88%] max-w-[420px] md:hidden z-40" id="mobile-floating-pill-nav">
-            <div className="bg-white/85 backdrop-blur-xl border border-neutral-200/80 rounded-full h-[76px] px-2 flex items-center justify-between shadow-[0_12px_40px_rgba(0,0,0,0.12)]">
-              
-              {/* Tab: Home */}
-              <button 
-                onClick={() => setActiveSection('dashboard')}
-                className={`flex-1 flex flex-col items-center justify-center h-full rounded-full transition-all duration-300 cursor-pointer ${
-                  activeSection === 'dashboard' ? 'text-[#1e40af] scale-105 font-bold' : 'text-[#757575] hover:text-black font-semibold'
-                }`}
-              >
-                <LayoutDashboard className={`w-[22px] h-[22px] stroke-[1.5] transition-all duration-150 ${activeSection === 'dashboard' ? 'text-[#1e40af] stroke-[2]' : 'text-[#757575]'}`} />
-                <span className="text-[9px] font-sans tracking-tight mt-1">Home</span>
-                {activeSection === 'dashboard' && (
-                  <span className="w-1 h-1 rounded-full bg-[#1e40af] mt-0.5 animate-pulse" />
-                )}
-              </button>
+        {/* Global Mobile Bottom Navigation Bar styled after Home Dashboard */}
+        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-neutral-150 py-3 shadow-xl z-40 md:hidden select-none animate-fade-in" id="global-mobile-bottom-nav">
+          <div className="max-w-7xl mx-auto px-4 flex items-center justify-around">
+            
+            <button 
+              type="button" 
+              onClick={() => {
+                setActiveSection('dashboard');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className={`flex flex-col items-center gap-1 bg-transparent border-0 cursor-pointer ${
+                activeSection === 'dashboard' ? 'text-indigo-705 text-indigo-700 font-bold' : 'text-neutral-400 hover:text-neutral-700'
+              }`}
+            >
+              <Activity className="w-5 h-5" />
+              <span className="text-[10px] font-black tracking-tight leading-none uppercase">Home</span>
+            </button>
 
-              {/* Tab: Inventory */}
-              <button 
-                onClick={() => setActiveSection('inventory')}
-                className={`flex-1 flex flex-col items-center justify-center h-full rounded-full transition-all duration-300 cursor-pointer ${
-                  activeSection === 'inventory' ? 'text-[#1e40af] scale-105 font-bold' : 'text-[#757575] hover:text-black font-semibold'
-                }`}
-              >
-                <ShoppingCart className={`w-[22px] h-[22px] stroke-[1.5] transition-all duration-150 ${activeSection === 'inventory' ? 'text-[#1e40af] stroke-[2]' : 'text-[#757575]'}`} />
-                <span className="text-[9px] font-sans tracking-tight mt-1">Inventory</span>
-                {activeSection === 'inventory' && (
-                  <span className="w-1 h-1 rounded-full bg-[#1e40af] mt-0.5 animate-pulse" />
-                )}
-              </button>
+            <button 
+              type="button" 
+              onClick={() => setActiveSection('receipts')}
+              className={`flex flex-col items-center gap-1 bg-transparent border-0 cursor-pointer ${
+                activeSection === 'receipts' ? 'text-indigo-750 text-indigo-700 font-bold' : 'text-neutral-400 hover:text-neutral-700'
+              }`}
+            >
+              <CircleDollarSign className="w-5 h-5" />
+              <span className="text-[10px] font-black tracking-tight leading-none uppercase">Sales</span>
+            </button>
 
-              {/* Tab: Eenvoq AI */}
-              <button 
-                onClick={() => setActiveSection('assistant')}
-                className={`flex-1 flex flex-col items-center justify-center h-full rounded-full transition-all duration-300 cursor-pointer ${
-                  activeSection === 'assistant' ? 'text-[#1e40af] scale-105 font-bold' : 'text-[#757575] hover:text-black font-semibold'
-                }`}
-              >
-                <EenvoqIcon className={`w-[22px] h-[22px] stroke-[1.5] transition-all duration-150 ${activeSection === 'assistant' ? 'text-[#1e40af] stroke-[2]' : 'text-[#757575]'}`} />
-                <span className="text-[9px] font-sans tracking-tight mt-1">Eenvoq AI</span>
-                {activeSection === 'assistant' && (
-                  <span className="w-1 h-1 rounded-full bg-[#1e40af] mt-0.5 animate-pulse" />
-                )}
-              </button>
+            <button 
+              type="button" 
+              onClick={() => setActiveSection('inventory')}
+              className={`flex flex-col items-center gap-1 bg-transparent border-0 cursor-pointer ${
+                activeSection === 'inventory' ? 'text-indigo-750 text-indigo-700 font-bold' : 'text-neutral-400 hover:text-neutral-700'
+              }`}
+            >
+              <ShoppingCart className="w-5 h-5" />
+              <span className="text-[10px] font-black tracking-tight leading-none uppercase">Inventory</span>
+            </button>
 
-              {/* Tab: Customers */}
-              <button 
-                onClick={() => setActiveSection('retention')}
-                className={`flex-1 flex flex-col items-center justify-center h-full rounded-full transition-all duration-300 cursor-pointer ${
-                  activeSection === 'retention' ? 'text-[#1e40af] scale-105 font-bold' : 'text-[#757575] hover:text-black font-semibold'
-                }`}
-              >
-                <Users className={`w-[22px] h-[22px] stroke-[1.5] transition-all duration-150 ${activeSection === 'retention' ? 'text-[#1e40af] stroke-[2]' : 'text-[#757575]'}`} />
-                <span className="text-[9px] font-sans tracking-tight mt-1">Customers</span>
-                {activeSection === 'retention' && (
-                  <span className="w-1 h-1 rounded-full bg-[#1e40af] mt-0.5 animate-pulse" />
-                )}
-              </button>
+            <button 
+              type="button" 
+              onClick={() => setActiveSection('assistant')}
+              className={`flex flex-col items-center gap-1 bg-transparent border-0 cursor-pointer ${
+                activeSection === 'assistant' ? 'text-indigo-750 text-indigo-700 font-bold' : 'text-neutral-400 hover:text-neutral-700'
+              }`}
+            >
+              <Bot className="w-5 h-5 animate-pulse" />
+              <span className="text-[10px] font-black tracking-tight leading-none uppercase">Eenvoq AI</span>
+            </button>
 
-              {/* Tab: Menu drawer */}
-              <button 
-                onClick={() => setMobileMenuOpen(true)}
-                className="flex-1 flex flex-col items-center justify-center h-full rounded-full text-[#757575] hover:text-black font-semibold transition-all cursor-pointer"
-              >
-                <Menu className="w-[22px] h-[22px] stroke-[1.5]" />
-                <span className="text-[9px] font-sans tracking-tight mt-1">More</span>
-              </button>
+            <button 
+              type="button" 
+              onClick={() => setMobileMenuOpen(true)}
+              className="flex flex-col items-center gap-1 bg-transparent border-0 cursor-pointer text-neutral-400 hover:text-neutral-700"
+            >
+              <Menu className="w-5 h-5" />
+              <span className="text-[10px] font-black tracking-tight leading-none uppercase">More</span>
+            </button>
 
-            </div>
           </div>
-        )}
+        </div>
       </div>
 
       {/* Global custom Confirmation/Alert Modal */}

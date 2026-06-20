@@ -725,60 +725,8 @@ export default function Dashboard({
       </div>
 
       {/* ===============================================
-          BOTTOM BAR NAVIGATION
+          BOTTOM BAR NAVIGATION MOVED TO GLOBAL APP
           =============================================== */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-neutral-150 py-3 shadow-xl z-40 select-none" id="dashboard-bottom-nav">
-        <div className="max-w-7xl mx-auto px-4 flex items-center justify-around">
-          
-          <button 
-            type="button" 
-            onClick={() => setActiveSection('dashboard')}
-            className={`flex flex-col items-center gap-1 focus:outline-none bg-transparent border-0 cursor-pointer ${
-              trendType === 'revenue' ? 'text-[#1e40af]' : 'text-neutral-400 hover:text-neutral-700'
-            }`}
-          >
-            <Activity className="w-5 h-5" />
-            <span className="text-[10px] font-black tracking-tight leading-none uppercase">Home</span>
-          </button>
-
-          <button 
-            type="button" 
-            onClick={() => setActiveSection('receipts')}
-            className="flex flex-col items-center gap-1 focus:outline-none bg-transparent border-0 cursor-pointer text-neutral-400 hover:text-neutral-700"
-          >
-            <CircleDollarSign className="w-5 h-5" />
-            <span className="text-[10px] font-black tracking-tight leading-none uppercase">Sales</span>
-          </button>
-
-          <button 
-            type="button" 
-            onClick={() => setActiveSection('inventory')}
-            className="flex flex-col items-center gap-1 focus:outline-none bg-transparent border-0 cursor-pointer text-neutral-400 hover:text-neutral-700"
-          >
-            <ShoppingCart className="w-5 h-5" />
-            <span className="text-[10px] font-black tracking-tight leading-none uppercase">Inventory</span>
-          </button>
-
-          <button 
-            type="button" 
-            onClick={() => setActiveSection('assistant')}
-            className="flex flex-col items-center gap-1 focus:outline-none bg-transparent border-0 cursor-pointer text-neutral-400 hover:text-neutral-700"
-          >
-            <Bot className="w-5 h-5 animate-pulse" />
-            <span className="text-[10px] font-black tracking-tight leading-none uppercase">Eenvoq AI</span>
-          </button>
-
-          <button 
-            type="button" 
-            onClick={() => setShowMoreMenu(true)}
-            className="flex flex-col items-center gap-1 focus:outline-none bg-transparent border-0 cursor-pointer text-neutral-400 hover:text-neutral-700"
-          >
-            <Filter className="w-5 h-5" />
-            <span className="text-[10px] font-black tracking-tight leading-none uppercase">More</span>
-          </button>
-
-        </div>
-      </div>
 
       {/* PERSISTENT SLIDE UP BOTTOM SHEET FOR 'MORE' BUTTON */}
       {showMoreMenu && (
