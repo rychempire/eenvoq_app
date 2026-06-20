@@ -612,6 +612,7 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
             showConfirm={showConfirm}
             user={userSession || undefined}
             currency={currency}
+            setCurrency={setCurrency}
           />
         );
       case 'assistant':

@@ -16,6 +16,8 @@ interface LandingPageProps {
 
 export default function LandingPage({ onEnterApp }: LandingPageProps) {
   const [activeLegalTab, setActiveLegalTab] = useState<'privacy' | 'terms' | 'cookie' | null>(null);
+  const [activeSubPage, setActiveSubPage] = useState<'main' | 'blog' | 'terms' | 'privacy' | 'cookie'>('main');
+  const [expandedBlogPost, setExpandedBlogPost] = useState<number | null>(null);
   // Mobile navigation state
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -266,12 +268,11 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
 
   return (
     <div className="bg-white min-h-screen font-sans text-neutral-900 flex flex-col items-center overflow-x-hidden relative" id="eenvoq-landing-container">
-      
-      {/* ==========================================
+          {/* ==========================================
           SECTION 0: NAVIGATION HEADER (Aligned with Hero)
           ========================================== */}
-      <nav className="fixed top-0 left-0 right-0 h-16 bg-[#1e40af] z-50 flex items-center justify-between px-6 md:px-12 lg:px-20 border-b border-sky-400/20 w-full" id="landing-navbar">
-<div className="flex items-center gap-1 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+       <nav className="fixed top-0 left-0 right-0 h-16 bg-[#1e40af] z-50 flex items-center justify-between px-6 md:px-12 lg:px-20 border-b border-sky-400/20 w-full" id="landing-navbar">
+<div className="flex items-center gap-1 cursor-pointer" onClick={() => { setActiveSubPage('main'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
   {/* Logo Image with background removed via Cloudinary and matching dashboard size */}
   <img 
     src="https://res.cloudinary.com/dee01jm0p/image/upload/e_bgremoval/f_auto,q_auto/1001135527_ij6c4q" 
@@ -282,9 +283,22 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
 
         {/* Desktop Navbar Links */}
         <div className="hidden lg:flex items-center gap-8 text-xs font-semibold text-white tracking-wide uppercase">
-          <a href="#features-showcase" className="hover:text-sky-300 transition-colors">Features</a>
-          <a href="#integrations" className="hover:text-sky-300 transition-colors">Integrations</a>
-          <a href="#pricing-tiers" className="hover:text-sky-300 transition-colors">Pricing</a>
+          <button 
+            type="button" 
+            onClick={() => { setActiveSubPage('main'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} 
+            className={`transition-colors uppercase bg-transparent border-0 font-bold text-xs tracking-wide cursor-pointer focus:outline-none ${activeSubPage === 'main' ? 'text-sky-300' : 'text-white hover:text-sky-300'}`}
+          >
+            Home
+          </button>
+          <a href="#features-showcase" onClick={() => setActiveSubPage('main')} className="hover:text-sky-300 transition-colors">Features</a>
+          <a href="#pricing-tiers" onClick={() => setActiveSubPage('main')} className="hover:text-sky-300 transition-colors">Pricing</a>
+          <button 
+            type="button" 
+            onClick={() => { setActiveSubPage('blog'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} 
+            className={`transition-colors uppercase bg-transparent border-0 font-bold text-xs tracking-wide cursor-pointer focus:outline-none ${activeSubPage === 'blog' ? 'text-sky-300' : 'text-white hover:text-sky-300'}`}
+          >
+            Blog
+          </button>
         </div>
 
         <div className="hidden lg:flex items-center gap-6">
@@ -326,11 +340,23 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
             transition={{ duration: 0.3 }}
             className="fixed top-16 left-0 right-0 bg-[#1e40af] border-b border-sky-400/25 z-40 lg:hidden shadow-lg overflow-hidden flex flex-col p-6 space-y-4"
           >
-            
-            <a href="#features-showcase" onClick={() => setMobileMenuOpen(false)} className="text-sm font-semibold text-white hover:text-sky-300 py-2 border-b border-sky-400/10">Features</a>
-            <a href="#integrations" onClick={() => setMobileMenuOpen(false)} className="text-sm font-semibold text-white hover:text-sky-300 py-2 border-b border-sky-400/10">Integrations</a>
-            <a href="#pricing-tiers" onClick={() => setMobileMenuOpen(false)} className="text-sm font-semibold text-white hover:text-sky-300 py-2 border-b border-sky-400/10">Pricing</a>
-              <div className="pt-4 flex flex-col gap-3">
+            <button 
+              type="button" 
+              onClick={() => { setMobileMenuOpen(false); setActiveSubPage('main'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} 
+              className="text-left text-sm font-semibold text-white hover:text-sky-300 py-2 border-b border-sky-400/10 bg-transparent border-0 cursor-pointer w-full"
+            >
+              Home
+            </button>
+            <a href="#features-showcase" onClick={() => { setMobileMenuOpen(false); setActiveSubPage('main'); }} className="text-sm font-semibold text-white hover:text-sky-300 py-2 border-b border-sky-400/10">Features</a>
+            <a href="#pricing-tiers" onClick={() => { setMobileMenuOpen(false); setActiveSubPage('main'); }} className="text-sm font-semibold text-white hover:text-sky-300 py-2 border-b border-sky-400/10">Pricing</a>
+            <button 
+              type="button" 
+              onClick={() => { setMobileMenuOpen(false); setActiveSubPage('blog'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} 
+              className="text-left text-sm font-semibold text-white hover:text-sky-300 py-2 border-b border-sky-400/10 bg-transparent border-0 cursor-pointer w-full"
+            >
+              Blog Page
+            </button>
+            <div className="pt-4 flex flex-col gap-3">
               <button onClick={() => { setMobileMenuOpen(false); onEnterApp(); }} className="w-full text-center py-3 font-bold text-sky-300 rounded-full border border-sky-400/30 hover:bg-white/5 text-xs uppercase tracking-wide">Log In</button>
               <button onClick={() => { setMobileMenuOpen(false); onEnterApp(); }} className="w-full text-center py-3 font-bold bg-sky-400 hover:bg-sky-300 text-[#1e40af] rounded-full text-xs uppercase tracking-wide">Start Free Trial</button>
             </div>
@@ -340,11 +366,12 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
 
       {/* Main content body containing exactly 14 sequential sections */}
       <div className="w-full pt-16 pb-0 flex flex-col items-center">
-
-        {/* ==========================================
-            SECTION 1: THE HERO SECION (Above the fold)
-            ========================================== */}
-        <div className="w-full bg-[#1e40af]" id="landing-hero-section">
+        {activeSubPage === 'main' ? (
+          <>
+            {/* ==========================================
+                SECTION 1: THE HERO SECION (Above the fold)
+                ========================================== */}
+            <div className="w-full bg-[#1e40af]" id="landing-hero-section">
           <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20 pb-10 pt-12 md:pt-16 flex flex-col items-center text-center space-y-4">
             <div className="flex items-center gap-2 bg-white/10 border border-sky-400/30 px-3 py-1 rounded-full text-[10px] font-bold text-sky-300 uppercase tracking-wider animate-pulse-once">
               <Sparkles className="w-3.5 h-3.5 stroke-[2] text-sky-400" />
@@ -389,17 +416,52 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
         {/* ==========================================
             SECTION 2: THE HERO VISUAL (Product Preview)
             ========================================== */}
-        <div className="w-full bg-[#1e40af] pb-16" id="product-preview-mockup">
-          <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20">
+        <div className="w-full bg-[#1e40af] pb-16 relative overflow-visible" id="product-preview-mockup">
+          <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20 relative overflow-visible">
+            
+            {/* =======================================================
+                ABSTRACT SYSTEM DESIGN UNDER/BEHIND THE FRAME (-z-10 / z-0)
+                ======================================================= */}
+            {/* Abstract radial dot matrix background grid centered under the frame */}
+            <div className="absolute -inset-10 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.08)_1px,transparent_1px)] bg-[size:16px_16px] pointer-events-none -z-10 opacity-80" />
+            
+            {/* Atmospheric glowing neon background aura under the frame */}
+            <div className="absolute inset-x-12 top-10 bottom-10 bg-sky-400/20 rounded-full filter blur-[70px] pointer-events-none -z-10 mix-blend-screen animate-pulse" style={{ animationDuration: '6s' }} />
+            <div className="absolute -inset-y-3 -inset-x-2 bg-gradient-to-r from-sky-300/10 to-indigo-500/10 rounded-[44px] filter blur-xl pointer-events-none -z-10" />
+
+            {/* Structural vertical Swiss line accents extending from the top and bottom of the frame */}
+            <div className="absolute left-1/2 -translate-x-1/2 -top-4 w-[1px] h-6 bg-gradient-to-t from-white/30 to-transparent pointer-events-none z-0" />
+            <div className="absolute left-1/2 -translate-x-1/2 -bottom-4 w-[1px] h-6 bg-gradient-to-b from-white/30 to-transparent pointer-events-none z-0" />
+
             <motion.div 
               {...scrollRevealProps}
-              className="bg-neutral-950 p-2 md:p-3 shadow-2xl rounded-[24px] md:rounded-[40px] border border-white/10 ring-1 ring-sky-300/15 max-w-5xl mx-auto relative overflow-hidden group"
+              className="bg-white/10 p-[1.5px] shadow-2xl rounded-[16px] md:rounded-[32px] border border-white/20 max-w-5xl mx-auto relative overflow-visible group"
             >
+              {/* =======================================================
+                  ABSTRACT TARGET DESIGN ON TOP OF THE FRAME (z-20)
+                  ======================================================= */}
+              {/* Overlapping camera alignment bracket corners outside/on top of the frame */}
+              <div className="absolute -top-1.5 -left-1.5 w-5 h-5 border-t-2 border-l-2 border-white/90 pointer-events-none z-20" />
+              <div className="absolute -top-1.5 -right-1.5 w-5 h-5 border-t-2 border-r-2 border-white/90 pointer-events-none z-20" />
+              <div className="absolute -bottom-1.5 -left-1.5 w-5 h-5 border-b-2 border-l-2 border-white/90 pointer-events-none z-20" />
+              <div className="absolute -bottom-1.5 -right-1.5 w-5 h-5 border-b-2 border-r-2 border-white/90 pointer-events-none z-20" />
+
+              {/* Status and telemetry indicator pill layered on the top edge code bar */}
+              <div className="absolute -top-2.5 left-8 px-2 py-0.5 rounded-full border border-white/20 bg-neutral-950 text-[8px] font-mono text-sky-300 select-none z-20 flex items-center gap-1.5 shadow-sm">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                SECURE_SYSTEM_RECONCILIATION_PORT_3000
+              </div>
+
+              {/* Dimension telemetry indicator layered on the bottom edge code bar */}
+              <div className="absolute -bottom-2.5 right-8 px-2 py-0.5 rounded-full border border-white/20 bg-neutral-950 text-[8px] font-mono text-white/70 select-none z-20 shadow-sm">
+                BOUND_RENDER: 1920x1080_LOSSLESS
+              </div>
+
               {/* Subtle visual lens reflection */}
-              <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-white/5 to-transparent pointer-events-none select-none z-10" />
+              <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-white/5 to-transparent pointer-events-none select-none z-10 rounded-[14px] md:rounded-[28px]" />
               
-              {/* Full Image */}
-              <div className="w-full overflow-hidden bg-neutral-900 rounded-[14px] md:rounded-[28px] border border-neutral-900 shadow-inner">
+              {/* Full Image with a micro thin border to isolate the asset within the parent frame */}
+              <div className="w-full overflow-hidden bg-neutral-900 rounded-[15px] md:rounded-[31px] border border-white/5 shadow-inner">
                 <img 
                   src="https://i.ibb.co/TBqgcF74/Screenshot-20260619-130027-1.jpg" 
                   alt="Eenvoq App Overview" 
@@ -1643,6 +1705,240 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
           </motion.div>
         </div>
 
+          </>
+        ) : activeSubPage === 'blog' ? (
+          <div className="w-full max-w-4xl px-6 py-20 mx-auto font-sans text-left min-h-[65vh] flex flex-col justify-start animate-fade-in" id="standalone-blog-view">
+            <div className="mb-8 flex items-center gap-2">
+              <button 
+                type="button"
+                onClick={() => { setActiveSubPage('main'); window.scrollTo({ top: 0 }); }} 
+                className="flex items-center gap-1.5 text-xs font-bold text-sky-600 hover:text-sky-800 bg-transparent border-0 cursor-pointer focus:outline-none"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                <span>Back to Home</span>
+              </button>
+            </div>
+            
+            <div className="space-y-3 mb-10">
+              <span className="bg-sky-100 text-sky-850 text-[10px] uppercase font-bold tracking-widest px-3 py-1 rounded-full inline-block font-mono">
+                Featured Guides
+              </span>
+              <h1 className="text-[36px] sm:text-[44px] font-sans font-black text-black leading-tight tracking-tight">
+                Business & Money Tips
+              </h1>
+              <p className="text-sm text-neutral-500 max-w-xl font-medium leading-relaxed">
+                Simple, easy guides written in plain English to help you run a safe, successful business.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {[
+                {
+                  id: 1,
+                  title: "How to Stop Losing Money at the Cash Register",
+                  date: "June 20, 2026",
+                  p1: "Many small shops lose a bit of money every day. It could be a wrong entry, a missed receipt, or giving back the wrong change. In this simple guide, we show you three easy things you can do tonight to keep every coin safe.",
+                  p2: "First, write down every single sale immediately. Never rely on your head or simple memory. Second, double-check your daily bank transfers manually. Third, lock down your cash register entries at night so they cannot be edited or erased later."
+                },
+                {
+                  id: 2,
+                  title: "Understanding Bank Alerts: Safe vs Fake Screen Tricks",
+                  date: "June 18, 2026",
+                  p1: "With more customers paying by mobile transfer, fake bank alert scams are on the rise. Fraudsters use computer apps to generate a screen that looks like a real bank message.",
+                  p2: "To stay completely safe, never let a customer walk away just by showing you a screenshot on their phone. Always wait for the real notification to show up in your bank app, or use secure matching codes."
+                },
+                {
+                  id: 3,
+                  title: "Why Simple Bookkeeping Saves Your Business",
+                  date: "June 15, 2026",
+                  p1: "You do not need to be a math or accounting genius to run a happy business. Bookkeeping simply means writing down what came in and what went out of your store.",
+                  p2: "When you keep your bookkeeping simple and regular, you always know if you are making a profit, how much stock you need to buy next week, and you can sleep peacefully at night."
+                }
+              ].map((post) => (
+                <div 
+                  key={post.id} 
+                  className="bg-neutral-50/70 border border-neutral-100 rounded-[24px] p-6 flex flex-col h-full hover:border-sky-300 hover:shadow-sm transition duration-300 cursor-pointer text-left"
+                  onClick={() => setExpandedBlogPost(expandedBlogPost === post.id ? null : post.id)}
+                >
+                  <span className="text-[10px] font-bold text-neutral-400 block mb-2">{post.date}</span>
+                  <h3 className="text-lg font-bold text-neutral-900 leading-snug mb-3 hover:text-sky-600 transition">
+                    {post.title}
+                  </h3>
+                  <p className="text-xs text-neutral-500 leading-relaxed font-sans mb-4 shrink-0">
+                    {post.p1}
+                  </p>
+                  
+                  {expandedBlogPost === post.id && (
+                    <div className="text-xs text-neutral-600 leading-relaxed font-sans mt-3 pt-3 border-t border-neutral-200/60 transition-all">
+                      {post.p2}
+                    </div>
+                  )}
+                  
+                  <div className="mt-auto pt-4 flex items-center justify-between text-xs font-bold text-sky-600">
+                    <span>{expandedBlogPost === post.id ? "Close article" : "Read full guide →"}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-16 p-8 bg-sky-50 rounded-[32px] border border-sky-100 flex flex-col md:flex-row items-center justify-between gap-6">
+              <div className="space-y-1.5 md:max-w-md">
+                <h4 className="text-md font-bold text-[#1e40af]">Want to protect your business revenue?</h4>
+                <p className="text-xs text-neutral-500 font-medium font-sans">Try our 100% automated cash matching tracker. No technical experience required.</p>
+              </div>
+              <button 
+                type="button"
+                onClick={onEnterApp}
+                className="bg-[#1e40af] hover:bg-[#1a368f] text-white font-bold px-6 py-3 rounded-full text-xs uppercase tracking-wider transition shrink-0 cursor-pointer"
+              >
+                Get Started Free
+              </button>
+            </div>
+          </div>
+        ) : activeSubPage === 'terms' ? (
+          <div className="w-full max-w-3xl px-6 py-20 mx-auto font-sans text-left min-h-[65vh]" id="standalone-terms-view">
+            <div className="mb-8 flex items-center gap-2">
+              <button 
+                type="button"
+                onClick={() => { setActiveSubPage('main'); window.scrollTo({ top: 0 }); }} 
+                className="flex items-center gap-1.5 text-xs font-bold text-neutral-500 hover:text-black bg-transparent border-0 cursor-pointer focus:outline-none"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                <span>Back to Home</span>
+              </button>
+            </div>
+            
+            <div className="space-y-3 mb-8">
+              <span className="text-sky-800 text-[10px] font-bold uppercase tracking-widest bg-sky-55 border border-sky-100 px-3 py-1 rounded-full inline-block font-mono">
+                Simple Terms & Conditions
+              </span>
+              <h1 className="text-3xl font-black text-neutral-900 tracking-tight">
+                Our Simple Rules Of Service
+              </h1>
+              <p className="text-xs text-neutral-400 font-mono font-bold uppercase">Effective Date: June 20, 2026</p>
+            </div>
+
+            <div className="space-y-6 text-xs text-neutral-600 leading-relaxed font-sans">
+              <p>
+                Welcome to <strong>Eenvoq</strong>. We create simple tools to help businesses, shops, and schools keep their money records secure. By using our website and application, you agree to these easy and plain rules.
+              </p>
+              
+              <h3 className="font-extrabold text-neutral-900 text-sm">1. Secure Logins & PINs</h3>
+              <p>
+                You are responsible for keeping your register passwords and cashier PINs private. If you delegate entry codes to your staff or teammates, make sure they understand not to write them down where others can see them.
+              </p>
+
+              <h3 className="font-extrabold text-[#111111] text-sm">2. Free Trial & Simple Billing</h3>
+              <p>
+                We offer a totally free 14-day trial block. We do not ask for any credit card or lock you into contracts. You can close or delete your account at any second. If you choose to continue after your trial, we charge an honest, simple periodic subscription.
+              </p>
+
+              <h3 className="font-extrabold text-neutral-900 text-sm">3. Accountability Disclaimer</h3>
+              <p>
+                We build very smart systems to spot cash bookkeeping errors, receipt duplicates, and missing registers entries. However, we do not inspect your registers physically or act as police. You remain the overall captain of your store's physical vault safety.
+              </p>
+            </div>
+          </div>
+        ) : activeSubPage === 'privacy' ? (
+          <div className="w-full max-w-3xl px-6 py-20 mx-auto font-sans text-left min-h-[65vh]" id="standalone-privacy-view">
+            <div className="mb-8 flex items-center gap-2">
+              <button 
+                type="button"
+                onClick={() => { setActiveSubPage('main'); window.scrollTo({ top: 0 }); }} 
+                className="flex items-center gap-1.5 text-xs font-bold text-neutral-500 hover:text-black bg-transparent border-0 cursor-pointer focus:outline-none"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                <span>Back to Home</span>
+              </button>
+            </div>
+            
+            <div className="space-y-3 mb-8">
+              <span className="text-emerald-800 text-[10px] font-bold uppercase tracking-widest bg-emerald-50 border border-emerald-100 px-3 py-1 rounded-full inline-block font-mono">
+                Simple Privacy Policy
+              </span>
+              <h1 className="text-3xl font-black text-neutral-900 tracking-tight">
+                How We Keep Your Stuff Safe
+              </h1>
+              <p className="text-xs text-neutral-400 font-mono font-bold uppercase">Effective Date: June 20, 2026</p>
+            </div>
+
+            <div className="space-y-6 text-xs text-neutral-600 leading-relaxed font-sans">
+              <p>
+                At <strong>Eenvoq</strong>, we believe your financial numbers belong to you. We protect your privacy very carefully using simple, safe rules.
+              </p>
+
+              <h3 className="font-extrabold text-neutral-900 text-sm">1. What We Collect</h3>
+              <p>
+                To help you track your sales registers, we securely store:
+              </p>
+              <ul className="list-disc pl-5 mt-2 space-y-1">
+                <li>Your name and business email address.</li>
+                <li>Your register logs, daily sales sums, and card receipts values.</li>
+                <li>The login names of cashiers you add to your team list.</li>
+              </ul>
+
+              <h3 className="font-extrabold text-neutral-900 text-sm">2. We Never Share Your Records</h3>
+              <p>
+                We do not sell, rent, or lease your commercial transactions, stock counts, or emails to any advertising companies. Your sales records are private, and visible only to you and the supervisors you choose to authorize.
+              </p>
+
+              <h3 className="font-extrabold text-neutral-900 text-sm">3. Strong Security Safeguards</h3>
+              <p>
+                Everything is locked using modern sandboxed containers and secure database entryways. Cashiers are strictly restricted so they can never erase history or access administrative accounting secrets.
+              </p>
+            </div>
+          </div>
+        ) : (
+          <div className="w-full max-w-3xl px-6 py-20 mx-auto font-sans text-left min-h-[65vh]" id="standalone-cookie-view">
+            <div className="mb-8 flex items-center gap-2">
+              <button 
+                type="button"
+                onClick={() => { setActiveSubPage('main'); window.scrollTo({ top: 0 }); }} 
+                className="flex items-center gap-1.5 text-xs font-bold text-neutral-500 hover:text-black bg-transparent border-0 cursor-pointer focus:outline-none"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                <span>Back to Home</span>
+              </button>
+            </div>
+            
+            <div className="space-y-3 mb-8">
+              <span className="text-amber-800 text-[10px] font-bold uppercase tracking-widest bg-amber-50 border border-amber-100 px-3 py-1 rounded-full inline-block font-mono">
+                Simple Cookie Policy
+              </span>
+              <h1 className="text-3xl font-black text-neutral-900 tracking-tight">
+                Our Simple Browser Memory Rules
+              </h1>
+              <p className="text-xs text-neutral-400 font-mono font-bold uppercase">Effective Date: June 20, 2026</p>
+            </div>
+
+            <div className="space-y-6 text-xs text-neutral-600 leading-relaxed font-sans">
+              <p>
+                We use browser cookies and local memory to give you a fast, smooth, and reliable bookkeeping experience.
+              </p>
+
+              <h3 className="font-extrabold text-neutral-900 text-sm">1. No Ad Tracking Pixels</h3>
+              <p>
+                We do not put pesky advertising tracking chips or sales codes in your browser to follow you around the internet.
+              </p>
+
+              <h3 className="font-extrabold text-neutral-900 text-sm">2. Remember Choices Easily</h3>
+              <p>
+                We use small local cookies purely to:
+              </p>
+              <ul className="list-disc pl-5 mt-2 space-y-1">
+                <li>Remember if your store prefers using Dollars ($) or Naira (₦).</li>
+                <li>Keep the cashier or team operator logged into their direct terminal tab.</li>
+                <li>Cache receipts temporarily so you don't lose data if internet disconnects briefly.</li>
+              </ul>
+
+              <h3 className="font-extrabold text-neutral-900 text-sm">3. Clearing Browser Memory</h3>
+              <p>
+                You can wipe cookies and storage using browser options anytime. Note that doing so will reset your custom currency choices and log operators out of their current checkout station.
+              </p>
+            </div>
+          </div>
+        )}
+
       </div>
 
       {/* ==========================================
@@ -1652,35 +1948,35 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
         <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20 grid grid-cols-1 md:grid-cols-5 gap-8 text-left">
           
           {/* Column 1: Logo & Mission */}
-<div className="md:col-span-2 space-y-4">
-  {/* Logo Row */}
-  <div className="flex items-center gap-1 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-    <img 
-      src="https://res.cloudinary.com/dee01jm0p/image/upload/e_bgremoval/f_auto,q_auto/1001135527_ij6c4q" 
-      alt="Eenvoq logo" 
-      className="h-8 w-auto object-contain select-none translate-y-1 [filter:drop-shadow(1px_0_0_#000)_drop-shadow(-1px_0_0_#000)_drop-shadow(0_1px_0_0_#000)_drop-shadow(0_-1px_0_0_#000)]" 
-    />
-  </div>
+          <div className="md:col-span-2 space-y-4">
+            {/* Logo Row */}
+            <div className="flex items-center gap-1 cursor-pointer" onClick={() => { setActiveSubPage('main'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
+              <img 
+                src="https://res.cloudinary.com/dee01jm0p/image/upload/e_bgremoval/f_auto,q_auto/1001135527_ij6c4q" 
+                alt="Eenvoq logo" 
+                className="h-8 w-auto object-contain select-none translate-y-1 [filter:drop-shadow(1px_0_0_#000)_drop-shadow(-1px_0_0_#000)_drop-shadow(0_1px_0_0_#000)_drop-shadow(0_-1px_0_0_#000)]" 
+              />
+            </div>
 
-  {/* Description Paragraph */}
-  <p className="text-xs text-neutral-400 max-w-xs leading-relaxed font-medium font-sans">
-    Autonomous Financial Guardian protecting small businesses, colleges, and various organizations from record manipulation and cash deficits.
-  </p>
+            {/* Description Paragraph */}
+            <p className="text-xs text-neutral-400 max-w-xs leading-relaxed font-medium font-sans">
+              Your friendly financial bookkeeping helper protecting small shops, schools, and organizations from deficits.
+            </p>
 
-  {/* Version Tag */}
-  <div className="text-[10px] font-mono text-neutral-300 font-bold select-none">
-    v2.5.0-CROButter
-  </div>
-</div>
+            {/* Version Tag */}
+            <div className="text-[10px] font-mono text-neutral-300 font-bold select-none">
+              v2.5.0-CROButter
+            </div>
+          </div>
 
-          {/* Column 2: Features */}
+          {/* Column 2: Quick Links */}
           <div className="space-y-3 font-sans">
-            <h4 className="text-xs font-black uppercase text-neutral-900 tracking-wider">Features</h4>
+            <h4 className="text-xs font-black uppercase text-neutral-900 tracking-wider">Company</h4>
             <ul className="space-y-2 text-xs text-neutral-500 font-bold">
-              <li><a href="#features-showcase" className="hover:text-sky-600 transition">Forensic Registers</a></li>
-              <li><a href="#features-showcase" className="hover:text-sky-600 transition">Reference alert checks</a></li>
-              <li><a href="#why-eenvoq" className="hover:text-sky-600 transition">Access Controls Sentry</a></li>
-              <li><a href="#features-showcase" className="hover:text-sky-600 transition">Velocity Forecasting</a></li>
+              <li><button onClick={() => { setActiveSubPage('main'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-sky-600 transition bg-transparent border-0 cursor-pointer font-bold px-0 p-0 text-left">About Us</button></li>
+              <li><button onClick={() => { setActiveSubPage('blog'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-sky-600 transition bg-transparent border-0 cursor-pointer font-bold px-0 p-0 text-left">System Blog</button></li>
+              <li><button onClick={() => { setActiveSubPage('terms'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-sky-600 transition bg-transparent border-0 cursor-pointer font-bold px-0 p-0 text-left">Terms of Use</button></li>
+              <li><button onClick={() => { setActiveSubPage('privacy'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-sky-600 transition bg-transparent border-0 cursor-pointer font-bold px-0 p-0 text-left">Privacy Policy</button></li>
             </ul>
           </div>
 
@@ -1688,10 +1984,10 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
           <div className="space-y-3 font-sans">
             <h4 className="text-xs font-black uppercase text-neutral-900 tracking-wider">Solutions</h4>
             <ul className="space-y-2 text-xs text-neutral-500 font-bold">
-              <li><a href="#why-eenvoq" className="hover:text-sky-600 transition">Supermarket Retailers</a></li>
-              <li><a href="#why-eenvoq" className="hover:text-sky-600 transition">Private Educationalists</a></li>
-              <li><a href="#why-eenvoq" className="hover:text-sky-600 transition">Parish Audit Desks</a></li>
-              <li><a href="#why-eenvoq" className="hover:text-sky-600 transition">B2B Wholesales</a></li>
+              <li><button onClick={() => { setActiveSubPage('main'); }} className="hover:text-sky-600 transition bg-transparent border-0 cursor-pointer font-bold px-0 p-0 text-left">Supermarket Retailers</button></li>
+              <li><button onClick={() => { setActiveSubPage('main'); }} className="hover:text-sky-600 transition bg-transparent border-0 cursor-pointer font-bold px-0 p-0 text-left">Private Educationalists</button></li>
+              <li><button onClick={() => { setActiveSubPage('main'); }} className="hover:text-sky-600 transition bg-transparent border-0 cursor-pointer font-bold px-0 p-0 text-left">Parish Audit Desks</button></li>
+              <li><button onClick={() => { setActiveSubPage('main'); }} className="hover:text-sky-600 transition bg-transparent border-0 cursor-pointer font-bold px-0 p-0 text-left">B2B Wholesales</button></li>
             </ul>
           </div>
 
@@ -1708,6 +2004,7 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
                 className="bg-neutral-50 text-xs border border-sky-100 px-3 py-2.5 rounded-full flex-1 focus:outline-none focus:border-sky-900 text-neutral-800"
               />
               <button 
+                type="button" 
                 onClick={() => console.log("Subscribed")}
                 className="bg-[#1e40af] text-white font-bold text-xs py-2 px-4 rounded-full hover:bg-[#1a368f] transition shadow-xs"
               >
@@ -1724,9 +2021,10 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
             &copy; 2026 Eenvoq. Safeguarding Retail & Organizational Ecosystem Income. All rights reserved.
           </p>
           <div className="flex gap-6 mt-4 md:mt-0 font-sans">
-            <span onClick={() => setActiveLegalTab('cookie')} className="hover:text-sky-600 transition cursor-pointer">Cookie Policy</span>
-            <span onClick={() => setActiveLegalTab('privacy')} className="hover:text-sky-600 transition cursor-pointer">Privacy Policy</span>
-            <span onClick={() => setActiveLegalTab('terms')} className="hover:text-sky-600 transition cursor-pointer">Terms of Service</span>
+            <span onClick={() => { setActiveSubPage('cookie'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-sky-600 transition cursor-pointer">Cookie Policy</span>
+            <span onClick={() => { setActiveSubPage('privacy'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-sky-600 transition cursor-pointer">Privacy Policy</span>
+            <span onClick={() => { setActiveSubPage('terms'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-sky-600 transition cursor-pointer">Terms of Service</span>
+            <span onClick={() => { setActiveSubPage('blog'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-sky-600 transition cursor-pointer">Blog Page</span>
           </div>
         </div>
       </footer>
