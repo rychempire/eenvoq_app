@@ -810,7 +810,7 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
               className={`flex flex-col items-center gap-1.5 bg-transparent border-0 cursor-pointer ${
-                activeSection === 'dashboard' ? 'text-sky-500 font-medium' : 'text-[#94A3B8] hover:text-[#475569]'
+                activeSection === 'dashboard' ? 'text-sky-500 font-medium' : 'text-[#2D2D2D] hover:text-black font-medium'
               }`}
             >
               <Activity className="w-5 h-5 stroke-[1.5]" />
@@ -821,7 +821,7 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
               type="button" 
               onClick={() => setActiveSection('receipts')}
               className={`flex flex-col items-center gap-1.5 bg-transparent border-0 cursor-pointer ${
-                activeSection === 'receipts' ? 'text-sky-500 font-medium' : 'text-[#94A3B8] hover:text-[#475569]'
+                activeSection === 'receipts' ? 'text-sky-500 font-medium' : 'text-[#2D2D2D] hover:text-black font-medium'
               }`}
             >
               <CircleDollarSign className="w-5 h-5 stroke-[1.5]" />
@@ -832,7 +832,7 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
               type="button" 
               onClick={() => setActiveSection('inventory')}
               className={`flex flex-col items-center gap-1.5 bg-transparent border-0 cursor-pointer ${
-                activeSection === 'inventory' ? 'text-sky-500 font-medium' : 'text-[#94A3B8] hover:text-[#475569]'
+                activeSection === 'inventory' ? 'text-sky-500 font-medium' : 'text-[#2D2D2D] hover:text-black font-medium'
               }`}
             >
               <ShoppingCart className="w-5 h-5 stroke-[1.5]" />
@@ -843,7 +843,7 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
               type="button" 
               onClick={() => setActiveSection('assistant')}
               className={`flex flex-col items-center gap-1.5 bg-transparent border-0 cursor-pointer ${
-                activeSection === 'assistant' ? 'text-sky-500 font-medium' : 'text-[#94A3B8] hover:text-[#475569]'
+                activeSection === 'assistant' ? 'text-sky-500 font-medium' : 'text-[#2D2D2D] hover:text-black font-medium'
               }`}
             >
               <Bot className="w-5 h-5 stroke-[1.5]" />
@@ -853,7 +853,7 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
             <button 
               type="button" 
               onClick={() => setMobileMenuOpen(true)}
-              className="flex flex-col items-center gap-1.5 bg-transparent border-0 cursor-pointer text-[#94A3B8] hover:text-[#475569]"
+              className="flex flex-col items-center gap-1.5 bg-transparent border-0 cursor-pointer text-[#2D2D2D] hover:text-black font-medium"
             >
               <Menu className="w-5 h-5 stroke-[1.5]" />
               <span className="text-[10px] tracking-tight leading-none uppercase font-medium">More</span>

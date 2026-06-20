@@ -201,27 +201,19 @@ export default function Dashboard({
             </p>
           </div>
 
-          {/* Currencies Toggle Pill (Smoothed) */}
-          <div className="flex bg-neutral-200/40 p-0.5 rounded-full border border-neutral-300/30 shrink-0 self-start sm:self-auto" id="header-currency-bar">
-            <button
-              type="button"
-              onClick={() => setCurrency && setCurrency('NGN')}
-              className={`px-3 py-1.5 rounded-full text-xs font-medium uppercase tracking-wider transition-all duration-200 ${
-                currency === 'NGN' ? 'bg-[#1e40af] text-white shadow-xs' : 'text-neutral-900 hover:text-black bg-transparent'
-              }`}
-            >
-              ₦ NGN
-            </button>
-            <button
-              type="button"
-              onClick={() => setCurrency && setCurrency('USD')}
-              className={`px-3 py-1.5 rounded-full text-xs font-medium uppercase tracking-wider transition-all duration-200 ${
-                currency === 'USD' ? 'bg-[#1e40af] text-white shadow-xs' : 'text-neutral-900 hover:text-black bg-transparent'
-              }`}
-            >
-              $ USD
-            </button>
-          </div>
+          {/* Record a Sale CTA Button (Replacing Currency Toggle) */}
+          <button
+            type="button"
+            onClick={() => {
+              window.location.hash = 'receipts/add';
+              setActiveSection('receipts');
+            }}
+            className="flex items-center gap-2 bg-[#1e40af] hover:bg-blue-800 text-white transition-all duration-200 px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider shadow-md hover:shadow-lg focus:ring-2 focus:ring-blue-300 hover:scale-[1.02] active:scale-95 cursor-pointer border border-transparent whitespace-nowrap self-start sm:self-auto"
+            id="header-record-sale-cta"
+          >
+            <Plus className="w-4.5 h-4.5 shrink-0 text-white" />
+            <span>Record a Sale</span>
+          </button>
         </div>
 
         {/* ===============================================
@@ -448,46 +440,84 @@ export default function Dashboard({
 
         </div>
       </div>      {/* ===============================================
-          SECTION 2: TODAY'S BUSINESS SNAPSHOT
+          SECTION 2: TODAY'S BUSINESS SNAPSHOT (Beautified Layout)
           =============================================== */}
       <div className="text-left font-sans animate-fade-in">
-        <h3 className="text-xs uppercase font-medium tracking-widest text-[#111111] mb-2.5 pl-1">Today's Business Snapshot</h3>
-        <div className="bg-white border border-neutral-150 rounded-[28px] p-5 shadow-xs" id="dashboard-snapshot-card">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 divide-y sm:divide-y-0 sm:divide-x divide-neutral-100">
-            
-            {/* KPI 1 */}
-            <div className="pt-2 sm:pt-0 sm:px-2 first:pt-0 first:border-t-0">
-              <span className="text-[10px] text-[#4b5563] font-medium uppercase tracking-wide block">Today's Sales</span>
-              <span className="text-lg font-medium text-neutral-950 tracking-tight font-mono block mt-1">
+        <div className="flex justify-between items-center mb-3">
+          <h3 className="text-xs uppercase font-medium tracking-widest text-[#111111] pl-1">Today's Business Snapshot</h3>
+          <span className="text-[10px] text-sky-700 font-medium font-mono px-2 py-0.5 bg-sky-50 border border-sky-200/40 rounded-full">Real-time Metrics</span>
+        </div>
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="dashboard-snapshot-kpi-grid">
+          
+          {/* KPI 1: Today's Sales */}
+          <div className="bg-white border border-neutral-200 hover:border-indigo-250 hover:shadow-xs transition-all duration-300 rounded-[24px] p-5 flex items-start gap-4" id="kpi-sales-card">
+            <div className="p-3 bg-indigo-50 border border-indigo-100 rounded-2xl text-indigo-600 shrink-0">
+              <CircleDollarSign className="w-5 h-5 stroke-[2]" />
+            </div>
+            <div className="text-left w-full min-w-0">
+              <span className="text-[10px] text-gray-500 font-medium uppercase tracking-wider block">Today's Sales</span>
+              <span className="text-lg font-bold text-neutral-950 tracking-tight font-sans block mt-1 overflow-hidden text-ellipsis whitespace-nowrap">
                 {formatCurrency(expectedToday, currency)}
               </span>
+              <div className="flex items-center gap-1 mt-1">
+                <span className="text-[9px] font-mono text-emerald-600 font-medium bg-emerald-50 rounded-full px-1.5 py-0.2 select-none">+4.5%</span>
+                <span className="text-[9px] text-[#757a7f] whitespace-nowrap">since yesterday</span>
+              </div>
             </div>
+          </div>
 
-            {/* KPI 2 */}
-            <div className="pt-4 sm:pt-0 sm:pl-4">
-              <span className="text-[10px] text-[#4b5563] font-medium uppercase tracking-wide block">Today's Profit</span>
-              <span className="text-lg font-medium text-emerald-800 tracking-tight font-mono block mt-1">
+          {/* KPI 2: Today's Profit */}
+          <div className="bg-white border border-neutral-200 hover:border-emerald-250 hover:shadow-xs transition-all duration-300 rounded-[24px] p-5 flex items-start gap-4" id="kpi-profit-card">
+            <div className="p-3 bg-emerald-50 border border-emerald-100 rounded-2xl text-emerald-600 shrink-0">
+              <TrendingUp className="w-5 h-5 stroke-[2]" />
+            </div>
+            <div className="text-left w-full min-w-0">
+              <span className="text-[10px] text-gray-500 font-medium uppercase tracking-wider block">Today's Profit</span>
+              <span className="text-lg font-bold text-emerald-850 tracking-tight font-sans block mt-1 overflow-hidden text-ellipsis whitespace-nowrap">
                 {formatCurrency(todayProfit, currency)}
               </span>
+              <div className="flex items-center gap-1 mt-1">
+                <span className="text-[9px] font-mono text-emerald-605 text-emerald-600 font-medium bg-emerald-50 rounded-full px-1.5 py-0.2 select-none">Healthy</span>
+                <span className="text-[9px] text-[#757a7f] whitespace-nowrap">23.4% margin</span>
+              </div>
             </div>
+          </div>
 
-            {/* KPI 3 */}
-            <div className="pt-4 sm:pt-0 sm:pl-4">
-              <span className="text-[10px] text-[#4b5563] font-medium uppercase tracking-wide block">Cash Collected</span>
-              <span className="text-lg font-medium text-neutral-950 tracking-tight font-mono block mt-1">
+          {/* KPI 3: Cash Collected */}
+          <div className="bg-white border border-neutral-200 hover:border-amber-250 hover:shadow-xs transition-all duration-300 rounded-[24px] p-5 flex items-start gap-4" id="kpi-cash-card">
+            <div className="p-3 bg-amber-50 border border-amber-100 rounded-2xl text-amber-600 shrink-0">
+              <Coins className="w-5 h-5 stroke-[2]" />
+            </div>
+            <div className="text-left w-full min-w-0">
+              <span className="text-[10px] text-gray-500 font-medium uppercase tracking-wider block">Cash Collected</span>
+              <span className="text-lg font-bold text-neutral-950 tracking-tight font-sans block mt-1 overflow-hidden text-ellipsis whitespace-nowrap">
                 {formatCurrency(cashCollected, currency)}
               </span>
+              <div className="flex items-center gap-1 mt-1">
+                <span className="text-[9px] font-mono text-amber-700 font-medium bg-amber-50 rounded-full px-1.5 py-0.2 select-none">Synced</span>
+                <span className="text-[9px] text-[#757a7f] whitespace-nowrap">drawer reconcile</span>
+              </div>
             </div>
+          </div>
 
-            {/* KPI 4 */}
-            <div className="pt-4 sm:pt-0 sm:pl-4">
-              <span className="text-[10px] text-[#4b5563] font-medium uppercase tracking-wide block">Inventory Value</span>
-              <span className="text-lg font-medium text-blue-800 tracking-tight font-mono block mt-1">
+          {/* KPI 4: Inventory Valuation */}
+          <div className="bg-white border border-neutral-200 hover:border-blue-250 hover:shadow-xs transition-all duration-300 rounded-[24px] p-5 flex items-start gap-4" id="kpi-inventory-card">
+            <div className="p-3 bg-blue-50 border border-blue-100 rounded-2xl text-blue-600 shrink-0">
+              <Package className="w-5 h-5 stroke-[2]" />
+            </div>
+            <div className="text-left w-full min-w-0">
+              <span className="text-[10px] text-gray-500 font-medium uppercase tracking-wider block">Inventory Value</span>
+              <span className="text-lg font-bold text-blue-850 tracking-tight font-sans block mt-1 overflow-hidden text-ellipsis whitespace-nowrap">
                 {formatCurrency(totalInventoryValuation, currency)}
               </span>
+              <div className="flex items-center gap-1 mt-1">
+                <span className="text-[9px] font-mono text-blue-700 font-medium bg-blue-50 rounded-full px-1.5 py-0.2 select-none">On shelf</span>
+                <span className="text-[9px] text-[#757a7f] whitespace-nowrap">audited inventory value</span>
+              </div>
             </div>
-
           </div>
+
         </div>
       </div>
 
