@@ -413,7 +413,7 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
 
               {/* Hero Visual Preview (Right Column on Desktop, Center on Mobile) */}
 {/* CHANGED: added max-widths and mx-auto to scale down the entire container together */}
-<div className="relative w-full max-w-sm sm:max-w-md md:max-w-xl lg:max-w-2xl mx-auto overflow-visible" id="product-preview-mockup">
+<div className="relative w-full max-w-sm sm:max-w-md md:max-w-xl lg:max-w-xl mx-auto overflow-visible" id="product-preview-mockup">
   {/* Abstract radial dot matrix background grid centered under the frame */}
   <div className="absolute -inset-10 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.08)_1px,transparent_1px)] bg-[size:16px_16px] pointer-events-none -z-10 opacity-80" />
   
