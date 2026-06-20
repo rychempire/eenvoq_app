@@ -4,7 +4,8 @@ import {
   RefreshCcw, ShieldCheck, FileText, ArrowLeft, Play, Pause, 
   Check, X, Search, CheckCircle, AlertTriangle, ArrowUpDown, 
   Trash2, Plus, Sliders, Calendar, MessageSquare, Briefcase, 
-  Layers, CheckSquare, Clock, ArrowRight, UserCheck, HelpCircle, Eye
+  Layers, CheckSquare, Clock, ArrowRight, UserCheck, HelpCircle, Eye,
+  TrendingUp, Package, Coins
 } from 'lucide-react';
 import { ChatMessage, Receipt, InventoryItem, Debtor, TruthAudit, Alert } from '../types';
 import { formatCurrency } from '../utils/currency';
@@ -164,14 +165,14 @@ export default function AIAssistant({
 
     return [
       {
-        icon: '📈',
+        icon: 'trending-up',
         title: 'Daily sales volume trending safe',
         desc: 'Expected daily revenue stands robust. Basket values are up by 4.2% on sweet confectionery indices.',
         priority: 'medium',
         impact: 'Positive revenue acceleration'
       },
       {
-        icon: '📦',
+        icon: 'package',
         title: `${lowStockCount} products nearing critical stock-out`,
         desc: `Urgent restock advised. Your current safe margins will be depleted entirely by next Tuesday.`,
         priority: 'high',
@@ -179,7 +180,7 @@ export default function AIAssistant({
         prompt: `Which products have stock levels below target thresholds?`
       },
       {
-        icon: '⚠',
+        icon: 'alert-triangle',
         title: `${highRiskDebtorsCount} overdue debt limits requiring recovery action`,
         desc: `Asset portfolio shows ${formatCurrency(totalAr, currency)} locked under broad-line overdue terms.`,
         priority: 'high',
@@ -187,7 +188,7 @@ export default function AIAssistant({
         prompt: `Show overdue debtors.`
       },
       {
-        icon: '💰',
+        icon: 'coins',
         title: 'Shift drawer reconciliation consistency improved',
         desc: `Daily audit confidence rating scaled to 94% following standardized terminal sign-offs.`,
         priority: 'low',
@@ -602,8 +603,8 @@ export default function AIAssistant({
                 setTimeout(() => threadEndRef.current?.scrollIntoView({ behavior: 'smooth' }), 50);
               }
             }}
-            className={`flex items-center gap-2 py-3.5 px-4 text-xs font-bold border-b-2 transition-all relative cursor-pointer ${
-              activeTab === t.tab ? 'border-indigo-600 text-indigo-700' : 'border-transparent hover:text-black font-semibold'
+            className={`flex items-center gap-2 py-3.5 px-4 text-xs border-b-2 transition-all relative cursor-pointer ${
+              activeTab === t.tab ? 'border-sky-500 text-sky-600 font-medium' : 'border-transparent text-slate-500 hover:text-black font-normal'
             }`}
           >
             {t.icon}
@@ -611,7 +612,7 @@ export default function AIAssistant({
 
             {/* Red alert badges for notifications */}
             {t.tab === 'tasks' && taskList.filter(tk => tk.status === 'pending').length > 0 && (
-              <span className="absolute top-1.5 right-1 bg-red-650 text-white font-black text-[9px] w-4.5 h-4.5 rounded-full flex items-center justify-center">
+              <span className="absolute top-1.5 right-1 bg-red-600 text-white font-medium text-[9px] w-4.5 h-4.5 rounded-full flex items-center justify-center">
                 {taskList.filter(tk => tk.status === 'pending').length}
               </span>
             )}
@@ -623,12 +624,12 @@ export default function AIAssistant({
       {proactiveNotification && proactiveNotification.show && (
         <div className="bg-amber-50 border-b border-amber-200/60 p-3 px-6 flex items-center justify-between select-none animate-fade-in shrink-0" id="proactive-threat-warning">
           <div className="flex items-center gap-2.5">
-            <div className="p-1 text-amber-700 bg-white border border-amber-200 rounded-lg animate-bounce">
+            <div className="p-1 text-amber-700 bg-white border border-amber-200 rounded-lg">
               <AlertTriangle className="w-4 h-4" />
             </div>
             <div>
-              <p className="text-[11px] font-bold text-amber-900 leading-none">{proactiveNotification.text}</p>
-              <p className="text-[10px] text-amber-800 leading-tight mt-1">{proactiveNotification.subtext}</p>
+              <p className="text-[11px] font-medium text-amber-950 leading-none">{proactiveNotification.text}</p>
+              <p className="text-[10px] text-amber-900 leading-tight mt-1">{proactiveNotification.subtext}</p>
             </div>
           </div>
           <div className="flex items-center gap-2 shrink-0">
@@ -638,7 +639,7 @@ export default function AIAssistant({
                 setProactiveNotification(null);
                 setActiveTab('chat');
               }}
-              className="px-3.5 py-1 text-[10px] font-black uppercase text-white bg-amber-800 rounded-full hover:bg-amber-900 transition cursor-pointer"
+              className="px-3.5 py-1 text-[10px] font-medium uppercase text-white bg-amber-850 bg-amber-800 rounded-full hover:bg-amber-900 transition cursor-pointer"
             >
               Draft Purchase Order
             </button>
@@ -889,59 +890,71 @@ export default function AIAssistant({
           <div className="p-6 max-w-3xl mx-auto space-y-6 animate-fade-in" id="intelligence-insights-desk">
             <div className="flex justify-between items-center border-b border-gray-200 pb-3 select-none">
               <div>
-                <h3 className="text-sm font-bold text-gray-900 font-display">Daily Operational Intelligence AI Feed</h3>
-                <p className="text-[11px] text-gray-500 mt-0.5">Compiled daily reports prioritized by risk & balance sheet sensitivity indexes.</p>
+                <h3 className="text-sm font-medium text-black font-display">Daily Operational Intelligence AI Feed</h3>
+                <p className="text-[11px] text-gray-600 mt-0.5">Compiled daily reports prioritized by risk & balance sheet sensitivity indexes.</p>
               </div>
-              <span className="text-[10px] font-bold px-2.5 py-1 bg-indigo-50 text-indigo-700 rounded-full font-mono">
+              <span className="text-[10px] font-medium px-2.5 py-1 bg-sky-50 text-sky-800 rounded-full font-mono">
                 Updated just now
               </span>
             </div>
 
             <div className="space-y-4">
-              {systemInsights.map((ins, idx) => (
-                <div 
-                  key={idx}
-                  className={`p-5 rounded-2xl border transition-all ${
-                    ins.priority === 'high' 
-                      ? 'bg-[#fffcfc] border-red-100 hover:border-red-300' 
-                      : ins.priority === 'medium'
-                        ? 'bg-[#fcfcff] border-blue-100 hover:border-blue-300'
-                        : 'bg-white border-neutral-200 hover:border-neutral-300'
-                  } flex flex-col md:flex-row md:items-center justify-between gap-4`}
-                >
-                  <div className="flex gap-4">
-                    <span className="text-2xl p-2.5 bg-neutral-50 border border-neutral-100 rounded-xl max-h-12 flex items-center justify-center shrink-0">
-                      {ins.icon}
-                    </span>
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <strong className="text-xs font-bold text-gray-900 font-display">{ins.title}</strong>
-                        <span className={`text-[9px] font-black uppercase px-2 py-0.5 rounded-full font-mono ${
-                          ins.priority === 'high' ? 'bg-red-50 text-red-700' : ins.priority === 'medium' ? 'bg-blue-50 text-blue-700' : 'bg-gray-100 text-gray-700'
-                        }`}>
-                          {ins.priority} Priority
-                        </span>
-                      </div>
-                      <p className="text-[11px] text-gray-500 leading-normal mt-1 font-sans">{ins.desc}</p>
-                      <p className="text-[10px] text-emerald-800 font-mono mt-1 font-bold flex items-center gap-1">
-                        &bull; Expected execution impact: {ins.impact}
-                      </p>
-                    </div>
-                  </div>
+              {systemInsights.map((ins, idx) => {
+                const renderIcon = () => {
+                  switch (ins.icon) {
+                    case 'trending-up': return <TrendingUp className="w-5 h-5 text-indigo-650 text-indigo-600" />;
+                    case 'package': return <Package className="w-5 h-5 text-amber-600" />;
+                    case 'alert-triangle': return <AlertTriangle className="w-5 h-5 text-rose-500" />;
+                    case 'coins': return <Coins className="w-5 h-5 text-emerald-600" />;
+                    default: return <Sparkles className="w-5 h-5 text-sky-500" />;
+                  }
+                };
 
-                  {ins.prompt && (
-                    <button
-                      onClick={() => {
-                        setInputText(ins.prompt!);
-                        setActiveTab('chat');
-                      }}
-                      className="px-4 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold rounded-lg text-xs transition cursor-pointer self-start md:self-auto uppercase tracking-wide shrink-0"
-                    >
-                      Audit Query
-                    </button>
-                  )}
-                </div>
-              ))}
+                return (
+                  <div 
+                    key={idx}
+                    className={`p-5 rounded-2xl border transition-all ${
+                      ins.priority === 'high' 
+                        ? 'bg-[#fffcfc] border-red-100 hover:border-red-300' 
+                        : ins.priority === 'medium'
+                          ? 'bg-[#fcfcff] border-blue-100 hover:border-blue-300'
+                          : 'bg-white border-neutral-200 hover:border-neutral-350'
+                    } flex flex-col md:flex-row md:items-center justify-between gap-4`}
+                  >
+                    <div className="flex gap-4">
+                      <span className="p-2.5 bg-neutral-50 border border-neutral-100 rounded-xl h-11 w-11 flex items-center justify-center shrink-0">
+                        {renderIcon()}
+                      </span>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <strong className="text-xs font-medium text-black font-display">{ins.title}</strong>
+                          <span className={`text-[9px] font-medium uppercase px-2 py-0.5 rounded-full font-mono ${
+                            ins.priority === 'high' ? 'bg-red-50 text-red-700' : ins.priority === 'medium' ? 'bg-sky-50 text-sky-700' : 'bg-gray-100 text-gray-750'
+                          }`}>
+                            {ins.priority} Priority
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-gray-600 leading-normal mt-1 font-sans">{ins.desc}</p>
+                        <p className="text-[10px] text-emerald-800 font-mono mt-1 font-medium flex items-center gap-1">
+                          &bull; Expected execution impact: {ins.impact}
+                        </p>
+                      </div>
+                    </div>
+
+                    {ins.prompt && (
+                      <button
+                        onClick={() => {
+                          setInputText(ins.prompt!);
+                          setActiveTab('chat');
+                        }}
+                        className="px-4 py-2 bg-sky-55 bg-sky-50 hover:bg-sky-100 text-sky-850 font-medium rounded-lg text-xs transition cursor-pointer self-start md:self-auto uppercase tracking-wider shrink-0"
+                      >
+                        Audit Query
+                      </button>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}

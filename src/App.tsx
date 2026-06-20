@@ -799,9 +799,9 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
           </div>
         </main>
 
-        {/* Global Mobile Bottom Navigation Bar styled after Home Dashboard */}
-        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-neutral-150 py-3 shadow-xl z-40 md:hidden select-none animate-fade-in" id="global-mobile-bottom-nav">
-          <div className="max-w-7xl mx-auto px-4 flex items-center justify-around">
+        {/* Global Mobile Bottom Navigation Bar: Screen-wide, Flush base, Premium Sky Blue active styling */}
+        <div className="fixed bottom-0 left-0 right-0 bg-[#F8FAFC] border-t border-slate-200/50 pb-5 pt-3 shadow-xs z-40 md:hidden select-none animate-fade-in" id="global-mobile-bottom-nav">
+          <div className="max-w-7xl mx-auto px-2 flex items-center justify-around">
             
             <button 
               type="button" 
@@ -809,54 +809,54 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
                 setActiveSection('dashboard');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
-              className={`flex flex-col items-center gap-1 bg-transparent border-0 cursor-pointer ${
-                activeSection === 'dashboard' ? 'text-indigo-705 text-indigo-700 font-bold' : 'text-neutral-400 hover:text-neutral-700'
+              className={`flex flex-col items-center gap-1.5 bg-transparent border-0 cursor-pointer ${
+                activeSection === 'dashboard' ? 'text-sky-500 font-medium' : 'text-[#94A3B8] hover:text-[#475569]'
               }`}
             >
-              <Activity className="w-5 h-5" />
-              <span className="text-[10px] font-black tracking-tight leading-none uppercase">Home</span>
+              <Activity className="w-5 h-5 stroke-[1.5]" />
+              <span className="text-[10px] tracking-tight leading-none uppercase font-medium">Home</span>
             </button>
 
             <button 
               type="button" 
               onClick={() => setActiveSection('receipts')}
-              className={`flex flex-col items-center gap-1 bg-transparent border-0 cursor-pointer ${
-                activeSection === 'receipts' ? 'text-indigo-750 text-indigo-700 font-bold' : 'text-neutral-400 hover:text-neutral-700'
+              className={`flex flex-col items-center gap-1.5 bg-transparent border-0 cursor-pointer ${
+                activeSection === 'receipts' ? 'text-sky-500 font-medium' : 'text-[#94A3B8] hover:text-[#475569]'
               }`}
             >
-              <CircleDollarSign className="w-5 h-5" />
-              <span className="text-[10px] font-black tracking-tight leading-none uppercase">Sales</span>
+              <CircleDollarSign className="w-5 h-5 stroke-[1.5]" />
+              <span className="text-[10px] tracking-tight leading-none uppercase font-medium">Sales</span>
             </button>
 
             <button 
               type="button" 
               onClick={() => setActiveSection('inventory')}
-              className={`flex flex-col items-center gap-1 bg-transparent border-0 cursor-pointer ${
-                activeSection === 'inventory' ? 'text-indigo-750 text-indigo-700 font-bold' : 'text-neutral-400 hover:text-neutral-700'
+              className={`flex flex-col items-center gap-1.5 bg-transparent border-0 cursor-pointer ${
+                activeSection === 'inventory' ? 'text-sky-500 font-medium' : 'text-[#94A3B8] hover:text-[#475569]'
               }`}
             >
-              <ShoppingCart className="w-5 h-5" />
-              <span className="text-[10px] font-black tracking-tight leading-none uppercase">Inventory</span>
+              <ShoppingCart className="w-5 h-5 stroke-[1.5]" />
+              <span className="text-[10px] tracking-tight leading-none uppercase font-medium">Inventory</span>
             </button>
 
             <button 
               type="button" 
               onClick={() => setActiveSection('assistant')}
-              className={`flex flex-col items-center gap-1 bg-transparent border-0 cursor-pointer ${
-                activeSection === 'assistant' ? 'text-indigo-750 text-indigo-700 font-bold' : 'text-neutral-400 hover:text-neutral-700'
+              className={`flex flex-col items-center gap-1.5 bg-transparent border-0 cursor-pointer ${
+                activeSection === 'assistant' ? 'text-sky-500 font-medium' : 'text-[#94A3B8] hover:text-[#475569]'
               }`}
             >
-              <Bot className="w-5 h-5 animate-pulse" />
-              <span className="text-[10px] font-black tracking-tight leading-none uppercase">Eenvoq AI</span>
+              <Bot className="w-5 h-5 stroke-[1.5]" />
+              <span className="text-[10px] tracking-tight leading-none uppercase font-medium">Eenvoq AI</span>
             </button>
 
             <button 
               type="button" 
               onClick={() => setMobileMenuOpen(true)}
-              className="flex flex-col items-center gap-1 bg-transparent border-0 cursor-pointer text-neutral-400 hover:text-neutral-700"
+              className="flex flex-col items-center gap-1.5 bg-transparent border-0 cursor-pointer text-[#94A3B8] hover:text-[#475569]"
             >
-              <Menu className="w-5 h-5" />
-              <span className="text-[10px] font-black tracking-tight leading-none uppercase">More</span>
+              <Menu className="w-5 h-5 stroke-[1.5]" />
+              <span className="text-[10px] tracking-tight leading-none uppercase font-medium">More</span>
             </button>
 
           </div>

@@ -4,7 +4,8 @@ import EenvoqIcon from './EenvoqIcon';
 import { 
   ArrowUpRight, AlertCircle, Sparkles, ChevronRight, ArrowLeft, X, Check, Plus, 
   Search, TrendingUp, ShieldAlert, Users, ShoppingCart, Activity, CheckCircle2,
-  Coins, Filter, ArrowRight, CircleDollarSign, BarChart2, DollarSign, Bot, AlertTriangle
+  Coins, Filter, ArrowRight, CircleDollarSign, BarChart2, DollarSign, Bot, AlertTriangle,
+  Package, Star
 } from 'lucide-react';
 import { formatCurrency, CURRENCIES } from '../utils/currency';
 import { 
@@ -179,38 +180,34 @@ export default function Dashboard({
     <div className="space-y-6 pb-24 animate-fade-in font-sans text-neutral-900 select-none" id="eenvoq-mobile-dashboard">
       
       {/* ===============================================
-          TOP BAR: GREETING & CURRENCY SELECTOR
+          MAIN GREETING & SKY BLUE GLOW MESH BACKGROUND
           =============================================== */}
-      <div className="bg-white border border-neutral-100 rounded-[28px] p-6 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4" id="dashboard-navbar-panel">
-        <div className="text-left">
-          <div className="flex items-center gap-2">
-            <h1 className="text-xl sm:text-2xl font-sans font-black text-neutral-900 tracking-tight">
-              {businessName}
-            </h1>
-            <span className="bg-sky-50 text-sky-800 text-[9px] font-bold px-2 py-0.5 rounded-full border border-sky-100 uppercase tracking-wider font-mono">
-              Live Sentry
-            </span>
-          </div>
-          <p className="text-sm font-sans font-bold text-neutral-400 mt-1">
-            Good morning, <span className="text-[#1e40af]">{userName} 👋</span>
-          </p>
-        </div>
-
-        {/* Sales readout & Currency Toggle widget */}
-        <div className="flex flex-row items-center justify-between md:justify-end gap-6 border-t md:border-t-0 pt-4 md:pt-0 border-neutral-100">
-          <div className="text-left md:text-right">
-            <span className="text-[10px] text-neutral-400 font-extrabold uppercase tracking-wider block">Today's Sales Sum</span>
-            <span className="text-lg font-black text-neutral-950 tracking-tight font-sans">
-              {formatCurrency(expectedToday, currency)}
-            </span>
+      <div className="relative overflow-hidden rounded-[32px] p-1 border border-neutral-150/45 bg-white shadow-xs" id="dashboard-mesh-wrapper">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(14,165,233,0.14)_0%,_rgba(14,165,233,0)_75%)] pointer-events-none" />
+        
+        {/* Main Header Greeting Block */}
+        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between p-6 gap-4" id="dashboard-navbar-panel">
+          <div className="text-left">
+            <div className="flex items-center gap-2">
+              <h1 className="text-xl sm:text-2xl font-sans font-medium text-neutral-900 tracking-tight">
+                {businessName}
+              </h1>
+              <span className="bg-sky-50 text-sky-850 text-[9px] font-medium px-2 py-0.5 rounded-full border border-sky-200/40 uppercase tracking-wider font-mono">
+                Live Sentry
+              </span>
+            </div>
+            <p className="text-sm font-sans font-normal text-neutral-900 mt-1.5">
+              Good morning, <span className="text-[#102a43] font-medium">{userName}</span> &bull; <span className="text-neutral-900 font-normal">All systems active, control desk synchronized</span>
+            </p>
           </div>
 
-          <div className="flex bg-neutral-100/80 p-0.5 rounded-full border border-neutral-200/50 shrink-0" id="header-currency-bar">
+          {/* Currencies Toggle Pill (Smoothed) */}
+          <div className="flex bg-neutral-200/40 p-0.5 rounded-full border border-neutral-300/30 shrink-0 self-start sm:self-auto" id="header-currency-bar">
             <button
               type="button"
               onClick={() => setCurrency && setCurrency('NGN')}
-              className={`px-3 py-1.5 rounded-full text-xs font-black uppercase tracking-wider transition ${
-                currency === 'NGN' ? 'bg-[#1e40af] text-white shadow-xs' : 'text-neutral-500 hover:text-neutral-950 bg-transparent'
+              className={`px-3 py-1.5 rounded-full text-xs font-medium uppercase tracking-wider transition-all duration-200 ${
+                currency === 'NGN' ? 'bg-[#1e40af] text-white shadow-xs' : 'text-neutral-900 hover:text-black bg-transparent'
               }`}
             >
               ₦ NGN
@@ -218,37 +215,139 @@ export default function Dashboard({
             <button
               type="button"
               onClick={() => setCurrency && setCurrency('USD')}
-              className={`px-3 py-1.5 rounded-full text-xs font-black uppercase tracking-wider transition ${
-                currency === 'USD' ? 'bg-[#1e40af] text-white shadow-xs' : 'text-neutral-500 hover:text-neutral-950 bg-transparent'
+              className={`px-3 py-1.5 rounded-full text-xs font-medium uppercase tracking-wider transition-all duration-200 ${
+                currency === 'USD' ? 'bg-[#1e40af] text-white shadow-xs' : 'text-neutral-900 hover:text-black bg-transparent'
               }`}
             >
               $ USD
             </button>
           </div>
         </div>
+
+        {/* ===============================================
+            TODAY'S TOTAL BALANCE (THE NEW UNIFIED HERO CARD)
+            =============================================== */}
+        <div className="relative z-10 px-6 pb-6">
+          <div className="relative bg-sky-50/25 backdrop-blur-md border border-sky-100/40 rounded-[32px] p-6 shadow-xs overflow-hidden" id="dashboard-hero-balance-card">
+            
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+              <div className="text-left">
+                <span className="text-[10px] text-neutral-900 font-medium uppercase tracking-wider block">Today's Sales Sum</span>
+                <div className="flex items-baseline gap-1 mt-1.5">
+                  <span className="text-4xl font-medium tracking-tight text-sky-950 font-sans">
+                    {expectedToday.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  </span>
+                  <sup className="text-xs uppercase font-medium align-super text-sky-600 ml-1">
+                    {currencySymbol}
+                  </sup>
+                </div>
+              </div>
+
+              {/* vs Yesterday percentage indicator */}
+              <div className="bg-emerald-50/70 border border-emerald-200/60 px-3.5 py-1.5 rounded-full flex items-center gap-1.5 text-left">
+                <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse" />
+                <span className="text-xs font-medium text-emerald-800 font-mono">+12.4% vs yesterday</span>
+              </div>
+            </div>
+
+            {/* Decorative Vector Gauge Arch intersecting bottom-right corner of hero card */}
+            <div className="absolute right-6 bottom-[-16px] w-24 h-11 z-20 pointer-events-none hidden sm:block">
+              <svg viewBox="0 0 100 50" className="w-full h-full">
+                <path 
+                  d="M 10 50 A 40 40 0 0 1 90 50" 
+                  fill="none" 
+                  stroke="#E2E8F0" 
+                  strokeWidth="6" 
+                  strokeLinecap="round" 
+                />
+                <path 
+                  d="M 10 50 A 40 40 0 0 1 90 50" 
+                  fill="none" 
+                  stroke="url(#balance-gauge-grad)" 
+                  strokeWidth="6" 
+                  strokeDasharray="125" 
+                  strokeDashoffset="45" 
+                  strokeLinecap="round" 
+                />
+                <defs>
+                  <linearGradient id="balance-gauge-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#F59E0B" /> {/* amber gold */}
+                    <stop offset="100%" stopColor="#0284C7" /> {/* rich ocean blue */}
+                  </linearGradient>
+                </defs>
+              </svg>
+            </div>
+
+          </div>
+        </div>
       </div>
 
-      {/* METRIC BADGES (SMALL INDICATORS) */}
-      <div className="grid grid-cols-2 gap-4" id="small-dashboard-indicators">
-        <div className="bg-neutral-50/70 border border-neutral-150 rounded-[20px] p-4 flex items-center gap-3">
-          <div className="w-9 h-9 rounded-full bg-sky-50 flex items-center justify-center shrink-0">
-            <Activity className="w-4 h-4 text-sky-600" />
+      {/* ===============================================
+          3. SPLIT METRICS CARDS (TRANSACTIONS & CUSTOMERS)
+          =============================================== */}
+      <div className="grid grid-cols-2 gap-4 relative select-none" id="dashboard-split-metrics-grid">
+        
+        {/* Left-Hand Column (Transactions) */}
+        <div className="bg-sky-50/25 backdrop-blur-md border border-sky-100/40 rounded-[32px] p-5 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-3 text-left">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-sky-100/80 flex items-center justify-center text-sky-600 shrink-0">
+              <Activity className="w-5 h-5 stroke-[1.5]" />
+            </div>
+            <div className="text-left">
+              <p className="text-[10px] font-medium text-neutral-900 uppercase tracking-widest leading-none">Transactions</p>
+              <p className="text-2xl font-normal text-sky-950 font-mono mt-1">{totalTransactions}</p>
+            </div>
           </div>
-          <div className="text-left">
-            <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest">Transactions</p>
-            <p className="text-md font-extrabold text-neutral-900 leading-none mt-0.5 font-mono">{totalTransactions}</p>
+          <div className="text-[10px] text-emerald-800 font-mono font-medium md:text-right mt-1 md:mt-0">
+            Up 20% from yesterday
           </div>
         </div>
 
-        <div className="bg-neutral-50/70 border border-neutral-150 rounded-[20px] p-4 flex items-center gap-3">
-          <div className="w-9 h-9 rounded-full bg-emerald-50 flex items-center justify-center shrink-0">
-            <Users className="w-4 h-4 text-emerald-600" />
+        {/* Right-Hand Column (Customers) */}
+        <div className="relative bg-sky-50/25 backdrop-blur-md border border-sky-100/40 rounded-[32px] p-5 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-3 text-left">
+          
+          {/* Decorative Gauge arch intersecting bottom of Balance card and top/right edge of Customers card for mobile */}
+          <div className="absolute right-6 top-[-16px] w-24 h-11 z-20 pointer-events-none sm:hidden">
+            <svg viewBox="0 0 100 50" className="w-full h-full">
+              <path 
+                d="M 10 50 A 40 40 0 0 1 90 50" 
+                fill="none" 
+                stroke="#E2E8F0" 
+                strokeWidth="6" 
+                strokeLinecap="round" 
+              />
+              <path 
+                d="M 10 50 A 40 40 0 0 1 90 50" 
+                fill="none" 
+                stroke="url(#balance-gauge-grad-mob)" 
+                strokeWidth="6" 
+                strokeDasharray="125" 
+                strokeDashoffset="45" 
+                strokeLinecap="round" 
+              />
+              <defs>
+                <linearGradient id="balance-gauge-grad-mob" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#F59E0B" /> {/* amber gold */}
+                  <stop offset="100%" stopColor="#0284C7" /> {/* rich ocean blue */}
+                </linearGradient>
+              </defs>
+            </svg>
           </div>
-          <div className="text-left">
-            <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest">Customers</p>
-            <p className="text-md font-extrabold text-neutral-900 leading-none mt-0.5 font-mono">{totalCustomers}</p>
+
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-[#bfdbfe]/40 flex items-center justify-center text-blue-600 shrink-0">
+              <Users className="w-5 h-5 stroke-[1.5]" />
+            </div>
+            <div className="text-left">
+              <p className="text-[10px] font-medium text-neutral-900 uppercase tracking-widest leading-none">Customers</p>
+              <p className="text-2xl font-normal text-sky-950 font-mono mt-1">{totalCustomers}</p>
+            </div>
+          </div>
+          <div className="text-[10px] text-sky-800 font-mono font-medium md:text-right mt-1 md:mt-0">
+            2 New leads added
           </div>
         </div>
+
       </div>
 
       {/* ===============================================
@@ -318,16 +417,16 @@ export default function Dashboard({
 
           {/* AI Insights bullet points inside Hero area */}
           <div className="border-t border-white/10 pt-4 text-left">
-            <h3 className="text-xs uppercase font-extrabold text-sky-400 tracking-wider mb-3 flex items-center gap-1.5">
+            <h3 className="text-xs uppercase font-medium text-sky-400 tracking-wider mb-3 flex items-center gap-1.5">
               <Sparkles className="w-3.5 h-3.5" />
               <span>AI Insights</span>
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {[
-                { text: "Revenue is 18% lower than yesterday", alert: "⚠", path: "Why is today's revenue lower than yesterday?" },
-                { text: "3 products will run out in 4 days", alert: "📦", action: () => setActiveSection('inventory') },
-                { text: "Cash mismatch detected", alert: "💰", action: () => setShowReconciliationInline(true) },
-                { text: "Top customer has not purchased in 12 days", alert: "⭐", action: () => setActiveSection('debtor') }
+                { text: "Revenue is 18% lower than yesterday", icon: <TrendingDown className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />, path: "Why is today's revenue lower than yesterday?" },
+                { text: "3 products will run out in 4 days", icon: <Package className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />, action: () => setActiveSection('inventory') },
+                { text: "Cash mismatch detected", icon: <Coins className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />, action: () => setShowReconciliationInline(true) },
+                { text: "Top customer has not purchased in 12 days", icon: <Star className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />, action: () => setActiveSection('debtor') }
               ].map((ins, index) => (
                 <div 
                   key={index}
@@ -340,7 +439,7 @@ export default function Dashboard({
                   }}
                   className="bg-white/5 hover:bg-white/10 border border-white/10 rounded-[18px] p-3 flex gap-2.5 items-start cursor-pointer transition"
                 >
-                  <span className="text-sm shrink-0">{ins.alert}</span>
+                  <span className="shrink-0 mt-0.5">{ins.icon}</span>
                   <span className="text-[11px] text-white/90 font-medium leading-normal">{ins.text}</span>
                 </div>
               ))}
@@ -348,44 +447,42 @@ export default function Dashboard({
           </div>
 
         </div>
-      </div>
-
-      {/* ===============================================
+      </div>      {/* ===============================================
           SECTION 2: TODAY'S BUSINESS SNAPSHOT
           =============================================== */}
-      <div className="text-left font-sans">
-        <h3 className="text-xs uppercase font-black tracking-widest text-neutral-400 mb-2 pl-1">Today's Business Snapshot</h3>
+      <div className="text-left font-sans animate-fade-in">
+        <h3 className="text-xs uppercase font-medium tracking-widest text-[#111111] mb-2.5 pl-1">Today's Business Snapshot</h3>
         <div className="bg-white border border-neutral-150 rounded-[28px] p-5 shadow-xs" id="dashboard-snapshot-card">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 divide-y sm:divide-y-0 sm:divide-x divide-neutral-100">
             
             {/* KPI 1 */}
             <div className="pt-2 sm:pt-0 sm:px-2 first:pt-0 first:border-t-0">
-              <span className="text-[10px] text-neutral-400 font-extrabold uppercase tracking-wide block">Today's Sales</span>
-              <span className="text-lg font-black text-neutral-900 tracking-tight font-mono block mt-1">
+              <span className="text-[10px] text-[#4b5563] font-medium uppercase tracking-wide block">Today's Sales</span>
+              <span className="text-lg font-medium text-neutral-950 tracking-tight font-mono block mt-1">
                 {formatCurrency(expectedToday, currency)}
               </span>
             </div>
 
             {/* KPI 2 */}
             <div className="pt-4 sm:pt-0 sm:pl-4">
-              <span className="text-[10px] text-neutral-400 font-extrabold uppercase tracking-wide block">Today's Profit</span>
-              <span className="text-lg font-black text-emerald-750 tracking-tight font-mono block mt-1">
+              <span className="text-[10px] text-[#4b5563] font-medium uppercase tracking-wide block">Today's Profit</span>
+              <span className="text-lg font-medium text-emerald-800 tracking-tight font-mono block mt-1">
                 {formatCurrency(todayProfit, currency)}
               </span>
             </div>
 
             {/* KPI 3 */}
             <div className="pt-4 sm:pt-0 sm:pl-4">
-              <span className="text-[10px] text-neutral-400 font-extrabold uppercase tracking-wide block">Cash Collected</span>
-              <span className="text-lg font-black text-neutral-900 tracking-tight font-mono block mt-1">
+              <span className="text-[10px] text-[#4b5563] font-medium uppercase tracking-wide block">Cash Collected</span>
+              <span className="text-lg font-medium text-neutral-950 tracking-tight font-mono block mt-1">
                 {formatCurrency(cashCollected, currency)}
               </span>
             </div>
 
             {/* KPI 4 */}
             <div className="pt-4 sm:pt-0 sm:pl-4">
-              <span className="text-[10px] text-neutral-400 font-extrabold uppercase tracking-wide block">Inventory Value</span>
-              <span className="text-lg font-black text-[#1e40af] tracking-tight font-mono block mt-1">
+              <span className="text-[10px] text-[#4b5563] font-medium uppercase tracking-wide block">Inventory Value</span>
+              <span className="text-lg font-medium text-blue-800 tracking-tight font-mono block mt-1">
                 {formatCurrency(totalInventoryValuation, currency)}
               </span>
             </div>
@@ -397,8 +494,8 @@ export default function Dashboard({
       {/* ===============================================
           SECTION 3: QUICK ACTIONS
           =============================================== */}
-      <div className="text-left font-sans">
-        <h3 className="text-xs uppercase font-black tracking-widest text-neutral-400 mb-2 pl-1">Quick Actions</h3>
+      <div className="text-left font-sans animate-fade-in">
+        <h3 className="text-xs uppercase font-medium tracking-widest text-[#111111] mb-2.5 pl-1">Quick Actions</h3>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
           
           <button
@@ -407,12 +504,12 @@ export default function Dashboard({
               window.location.hash = 'receipts/add';
               setActiveSection('receipts');
             }}
-            className="bg-white hover:bg-sky-50 border border-neutral-150 rounded-[22px] p-4 flex flex-col items-center justify-center gap-2 text-center transition cursor-pointer hover:border-sky-300"
+            className="bg-white hover:bg-sky-50/55 border border-neutral-150 rounded-[22px] p-4 flex flex-col items-center justify-center gap-2 text-center transition cursor-pointer hover:border-sky-305"
           >
             <div className="w-10 h-10 rounded-full bg-[#1e40af]/10 flex items-center justify-center">
               <Plus className="w-5 h-5 text-[#1e40af]" />
             </div>
-            <span className="text-xs font-black text-neutral-850">Record Sale</span>
+            <span className="text-xs font-medium text-black">Record Sale</span>
           </button>
 
           <button
@@ -420,12 +517,12 @@ export default function Dashboard({
             onClick={() => {
               setActiveSection('inventory');
             }}
-            className="bg-white hover:bg-indigo-50 border border-neutral-150 rounded-[22px] p-4 flex flex-col items-center justify-center gap-2 text-center transition cursor-pointer hover:border-indigo-300"
+            className="bg-white hover:bg-indigo-50/55 border border-neutral-150 rounded-[22px] p-4 flex flex-col items-center justify-center gap-2 text-center transition cursor-pointer hover:border-indigo-305"
           >
             <div className="w-10 h-10 rounded-full bg-indigo-50 flex items-center justify-center">
               <ShoppingCart className="w-5 h-5 text-indigo-600" />
             </div>
-            <span className="text-xs font-black text-neutral-850">Add Stock</span>
+            <span className="text-xs font-medium text-black">Add Stock</span>
           </button>
 
           <button
@@ -433,12 +530,12 @@ export default function Dashboard({
             onClick={() => {
               setActiveSection('debtor');
             }}
-            className="bg-white hover:bg-emerald-50 border border-neutral-150 rounded-[22px] p-4 flex flex-col items-center justify-center gap-2 text-center transition cursor-pointer hover:border-emerald-300"
+            className="bg-white hover:bg-emerald-50/55 border border-neutral-150 rounded-[22px] p-4 flex flex-col items-center justify-center gap-2 text-center transition cursor-pointer hover:border-emerald-305"
           >
             <div className="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center">
               <Users className="w-5 h-5 text-emerald-600" />
             </div>
-            <span className="text-xs font-black text-neutral-850">Add Customer</span>
+            <span className="text-xs font-medium text-black">Add Customer</span>
           </button>
 
           <button
@@ -446,14 +543,14 @@ export default function Dashboard({
             onClick={() => setShowReconciliationInline(!showReconciliationInline)}
             className={`border rounded-[22px] p-4 flex flex-col items-center justify-center gap-2 text-center transition cursor-pointer ${
               showReconciliationInline 
-                ? 'bg-amber-50 border-amber-300' 
-                : 'bg-white hover:bg-amber-50/50 border-neutral-150 hover:border-amber-300'
+                ? 'bg-amber-50/80 border-amber-300' 
+                : 'bg-white hover:bg-amber-50/40 border-neutral-150 hover:border-amber-310'
             }`}
           >
             <div className={`w-10 h-10 rounded-full flex items-center justify-center ${showReconciliationInline ? 'bg-amber-100' : 'bg-amber-50'}`}>
               <Coins className="w-5 h-5 text-amber-600" />
             </div>
-            <span className="text-xs font-black text-neutral-850">Run Truth Check</span>
+            <span className="text-xs font-medium text-black">Run Truth Check</span>
           </button>
 
         </div>
@@ -461,16 +558,16 @@ export default function Dashboard({
 
       {/* INLINE COLLAPSIBLE TRUTH CHECK ENCLOSURE */}
       {showReconciliationInline && (
-        <div className="bg-[#FCFAF7] border border-amber-200 rounded-[28px] p-5 space-y-4 text-left animate-fade-in" id="dashboard-inline-truthcheck">
-          <div className="flex items-center justify-between border-b border-neutral-150 pb-2">
-            <h4 className="text-sm font-black text-amber-900 flex items-center gap-1.5">
+        <div className="bg-[#fcfa7a]/5 bg-amber-50/10 border border-amber-200 rounded-[28px] p-5 space-y-4 text-left animate-fade-in" id="dashboard-inline-truthcheck">
+          <div className="flex items-center justify-between border-b border-amber-100 pb-2">
+            <h4 className="text-sm font-medium text-amber-900 flex items-center gap-1.5">
               <Coins className="w-4 h-4 text-amber-600" />
               <span>Shift Drawer Truth Matcher</span>
             </h4>
             <button 
               type="button" 
               onClick={() => setShowReconciliationInline(false)}
-              className="text-neutral-400 hover:text-neutral-900 p-1"
+              className="text-neutral-500 hover:text-black p-1"
             >
               <X className="w-4 h-4" />
             </button>
@@ -479,42 +576,42 @@ export default function Dashboard({
           <form onSubmit={handleRunReconciliation} className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-[11px] font-bold text-neutral-500 mb-1">Counted Physical Cash ({currencySymbol})</label>
+                <label className="block text-[11px] font-medium text-neutral-900 mb-1">Counted Physical Cash ({currencySymbol})</label>
                 <input 
                   type="number"
                   value={inputCash}
                   onChange={e => setInputCash(parseFloat(e.target.value) || 0)}
-                  className="w-full bg-white text-xs font-semibold p-2.5 border border-neutral-200 rounded-full focus:outline-none"
+                  className="w-full bg-white text-xs font-medium p-2.5 border border-neutral-200 rounded-full focus:outline-none"
                 />
               </div>
               <div>
-                <label className="block text-[11px] font-bold text-neutral-500 mb-1">Counted Digital Transfers / Card ({currencySymbol})</label>
+                <label className="block text-[11px] font-medium text-neutral-900 mb-1">Counted Digital Transfers / Card ({currencySymbol})</label>
                 <input 
                   type="number"
                   value={inputOthers}
                   onChange={e => setInputOthers(parseFloat(e.target.value) || 0)}
-                  className="w-full bg-white text-xs font-semibold p-2.5 border border-neutral-200 rounded-full focus:outline-none"
+                  className="w-full bg-white text-xs font-medium p-2.5 border border-neutral-200 rounded-full focus:outline-none"
                 />
               </div>
             </div>
 
-            <div className="p-3 bg-white border border-neutral-150 rounded-xl text-xs text-neutral-550 flex items-center justify-between">
+            <div className="p-3 bg-white border border-neutral-150 rounded-xl text-xs text-neutral-955 flex items-center justify-between">
               <span>Expected System Cash Sales:</span>
-              <span className="font-extrabold text-neutral-900 font-mono">{formatCurrency(expectedToday, currency)}</span>
+              <span className="font-medium text-black font-mono">{formatCurrency(expectedToday, currency)}</span>
             </div>
 
             <div className="flex gap-2">
               <button
                 type="submit"
                 disabled={auditLoading}
-                className="flex-1 bg-[#1e40af] hover:bg-[#1a368f] text-white font-bold py-2.5 px-4 rounded-full text-xs transition cursor-pointer disabled:bg-neutral-200"
+                className="flex-1 bg-[#1e40af] hover:bg-[#1a368f] text-white font-medium py-2.5 px-4 rounded-full text-xs transition cursor-pointer disabled:bg-neutral-200"
               >
                 {auditLoading ? "Running calculations..." : "Reconcile Register Count"}
               </button>
               <button
                 type="button"
                 onClick={() => setTruthCheckResult(null)}
-                className="px-4 py-2.5 border border-neutral-200 rounded-full text-xs text-neutral-500 hover:bg-neutral-50"
+                className="px-4 py-2.5 border border-neutral-250 rounded-full text-xs text-neutral-950 hover:bg-neutral-50"
               >
                 Reset
               </button>
@@ -524,23 +621,23 @@ export default function Dashboard({
           {truthCheckResult && (
             <div className="bg-white border border-neutral-150 rounded-[20px] p-4 mt-3 space-y-2 animate-fade-in text-xs">
               <div className="flex items-center justify-between">
-                <span className="font-extrabold text-neutral-900">Truth Check Result:</span>
-                <span className={`font-mono font-bold ${
+                <span className="font-medium text-black">Truth Check Result:</span>
+                <span className={`font-mono font-medium ${
                   truthCheckResult.riskLevel === 'low' ? 'text-green-600' : 'text-red-600'
                 }`}>
                   {truthCheckResult.riskLevel === 'low' ? '🔒 MATCHED' : '⚠️ DISCREPANCY'}
                 </span>
               </div>
-              <p className="text-[#757575] leading-relaxed italic">{truthCheckResult.details}</p>
+              <p className="text-black leading-relaxed italic">{truthCheckResult.details}</p>
               
               <div className="grid grid-cols-2 gap-2 border-t pt-2 mt-2">
                 <div>
-                  <span className="text-[10px] text-neutral-400 block uppercase font-bold">Sum Declared</span>
-                  <span className="font-mono text-neutral-800 font-bold">{formatCurrency((truthCheckResult.declaredRevenue), currency)}</span>
+                  <span className="text-[10px] text-neutral-950 block uppercase font-medium">Sum Declared</span>
+                  <span className="font-mono text-black font-medium">{formatCurrency((truthCheckResult.declaredRevenue), currency)}</span>
                 </div>
                 <div>
-                  <span className="text-[10px] text-neutral-400 block uppercase font-bold">Discrepancy</span>
-                  <span className={`font-mono font-bold ${truthCheckResult.difference < 0 ? 'text-red-650' : 'text-emerald-700'}`}>
+                  <span className="text-[10px] text-neutral-950 block uppercase font-medium">Discrepancy</span>
+                  <span className={`font-mono font-medium ${truthCheckResult.difference < 0 ? 'text-red-650' : 'text-emerald-700'}`}>
                     {truthCheckResult.difference < 0 ? '-' : '+'}{formatCurrency(Math.abs(truthCheckResult.difference), currency)}
                   </span>
                 </div>
@@ -554,13 +651,13 @@ export default function Dashboard({
           SECTION 4: ATTENTION NEEDED
           =============================================== */}
       <div className="text-left font-sans animate-fade-in" id="dashboard-attention-section">
-        <h3 className="text-xs uppercase font-black tracking-widest text-neutral-400 mb-2 pl-1">Attention Needed</h3>
+        <h3 className="text-xs uppercase font-medium tracking-widest text-[#111111] mb-2.5 pl-1">Attention Needed</h3>
         <div className="bg-white border border-neutral-150 rounded-[28px] p-5 shadow-xs space-y-3">
           {[
-            { tag: "🔴", priority: "High Priority", text: "Stock running low", detail: "Peak Milk will run out in 2 days at current velocity.", action: () => setActiveSection('inventory') },
-            { tag: "🔴", priority: "High Priority", text: "Debtor overdue", detail: "John is overdue by 5 days on credit sales.", action: () => setActiveSection('debtor') },
-            { tag: "🟡", priority: "Medium Priority", text: "Revenue declining", detail: "Hourly sales velocity is 12% lower than standard weekend average.", action: () => onNavigateToAssistant("Why is revenue declining?") },
-            { tag: "🟡", priority: "Medium Priority", text: "Customer churn risk", detail: "3 regular merchants have not re-logged inside 14 days.", action: () => setActiveSection('debtor') }
+            { tag: <AlertCircle className="w-4 h-4 text-rose-500 shrink-0" />, priority: "High Priority", text: "Stock running low", detail: "Peak Milk will run out in 2 days at current velocity.", action: () => setActiveSection('inventory') },
+            { tag: <AlertCircle className="w-4 h-4 text-rose-500 shrink-0" />, priority: "High Priority", text: "Debtor overdue", detail: "John is overdue by 5 days on credit sales.", action: () => setActiveSection('debtor') },
+            { tag: <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0" />, priority: "Medium Priority", text: "Revenue declining", detail: "Hourly sales velocity is 12% lower than standard weekend average.", action: () => onNavigateToAssistant("Why is revenue declining?") },
+            { tag: <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0" />, priority: "Medium Priority", text: "Customer churn risk", detail: "3 regular merchants have not re-logged inside 14 days.", action: () => setActiveSection('debtor') }
           ].map((item, i) => (
             <div 
               key={i} 
@@ -568,16 +665,16 @@ export default function Dashboard({
               className="flex items-start justify-between p-3 border border-neutral-100 rounded-[20px] bg-neutral-50/50 hover:bg-neutral-50 transition cursor-pointer"
             >
               <div className="flex gap-2.5 items-start">
-                <span className="text-md shrink-0 mt-0.5">{item.tag}</span>
+                <span className="shrink-0 mt-0.5">{item.tag}</span>
                 <div>
                   <div className="flex items-center gap-1.5">
-                    <h4 className="text-xs font-black text-neutral-900 leading-none">{item.text}</h4>
-                    <span className="text-[8px] font-bold font-mono text-neutral-450 uppercase">{item.priority}</span>
+                    <h4 className="text-xs font-medium text-black leading-none">{item.text}</h4>
+                    <span className="text-[8px] font-medium font-mono text-neutral-900 uppercase">{item.priority}</span>
                   </div>
-                  <p className="text-[11px] text-[#757575] font-semibold mt-1 font-sans">{item.detail}</p>
+                  <p className="text-[11px] text-black font-normal mt-1 font-sans">{item.detail}</p>
                 </div>
               </div>
-              <ChevronRight className="w-4 h-4 text-neutral-400 align-middle self-center" />
+              <ChevronRight className="w-4 h-4 text-neutral-500 align-middle self-center animate-fade-in" />
             </div>
           ))}
         </div>
@@ -670,8 +767,8 @@ export default function Dashboard({
       {/* ===============================================
           SECTION 6: SMART RECOMMENDATIONS
           =============================================== */}
-      <div className="text-left font-sans">
-        <h3 className="text-xs uppercase font-black tracking-widest text-neutral-400 mb-2 pl-1">Smart Recommendations</h3>
+      <div className="text-left font-sans select-none animate-fade-in">
+        <h3 className="text-xs uppercase font-medium tracking-widest text-[#111111] mb-2.5 pl-1">Smart Recommendations</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {recommendations.filter(r => r.state !== 'dismissed').map((rec) => (
             <div 
@@ -681,17 +778,17 @@ export default function Dashboard({
               }`}
             >
               <div className="space-y-1.5">
-                <span className="text-[9px] bg-sky-50 text-sky-800 font-extrabold uppercase px-2 py-0.5 rounded-full inline-block tracking-widest">
+                <span className="text-[9px] bg-sky-50 text-sky-850 font-medium uppercase px-2 py-0.5 rounded-full inline-block tracking-widest">
                   {rec.action}
                 </span>
-                <p className="text-xs font-black text-neutral-900 leading-normal">
+                <p className="text-xs font-medium text-black leading-normal">
                   {rec.text}
                 </p>
               </div>
 
               <div className="flex gap-2">
                 {rec.state === 'approved' ? (
-                  <span className="text-emerald-700 text-xs font-bold font-sans flex items-center gap-1">
+                  <span className="text-emerald-800 text-xs font-medium font-sans flex items-center gap-1">
                     <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
                     <span>Approved & Applied</span>
                   </span>
@@ -700,14 +797,14 @@ export default function Dashboard({
                     <button
                       type="button"
                       onClick={() => handleApproveRec(rec.id, rec.text)}
-                      className="bg-[#1e40af] hover:bg-[#1a368f] text-white font-bold px-4 py-2 rounded-full text-[11px] uppercase tracking-wide cursor-pointer transition shadow-xs"
+                      className="bg-[#1e40af] hover:bg-[#1a368f] text-white font-medium px-4 py-2 rounded-full text-[11px] uppercase tracking-wide cursor-pointer transition shadow-xs"
                     >
                       Approve
                     </button>
                     <button
                       type="button"
                       onClick={() => handleDismissRec(rec.id)}
-                      className="border border-neutral-200 hover:bg-neutral-55 text-neutral-500 font-bold px-4 py-2 rounded-full text-[11px] uppercase tracking-wide cursor-pointer transition"
+                      className="border border-neutral-350 hover:bg-neutral-50 text-neutral-900 font-medium px-4 py-2 rounded-full text-[11px] uppercase tracking-wide cursor-pointer transition"
                     >
                       Dismiss
                     </button>
@@ -717,22 +814,18 @@ export default function Dashboard({
             </div>
           ))}
           {recommendations.filter(r => r.state !== 'dismissed').length === 0 && (
-            <div className="col-span-2 text-center text-xs text-neutral-400 py-6">
+            <div className="col-span-2 text-center text-xs text-neutral-950 py-6 font-normal">
               All recommendations processed. Check back tonight for refreshed insights.
             </div>
           )}
         </div>
       </div>
 
-      {/* ===============================================
-          BOTTOM BAR NAVIGATION MOVED TO GLOBAL APP
-          =============================================== */}
-
       {/* PERSISTENT SLIDE UP BOTTOM SHEET FOR 'MORE' BUTTON */}
       {showMoreMenu && (
         <div className="fixed inset-0 z-50 flex items-end justify-center select-none" id="more-slideup-modal">
           <div 
-            className="fixed inset-0 bg-neutral-900/60 backdrop-blur-xs transition-opacity duration-200"
+            className="fixed inset-0 bg-neutral-950/40 backdrop-blur-xs transition-opacity duration-200"
             onClick={() => setShowMoreMenu(false)}
           />
           <div 
@@ -742,11 +835,11 @@ export default function Dashboard({
             <div className="w-12 h-1 bg-neutral-200 rounded-full mx-auto" />
             
             <div className="flex items-center justify-between border-b pb-3">
-              <h3 className="text-md font-sans font-black text-neutral-900 uppercase tracking-wide">More Operations</h3>
+              <h3 className="text-xs font-sans font-medium text-[#111111] uppercase tracking-widest">More Operations</h3>
               <button 
                 type="button" 
                 onClick={() => setShowMoreMenu(false)}
-                className="text-neutral-400 hover:text-neutral-900 p-1"
+                className="text-neutral-500 hover:text-black p-1"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -764,8 +857,8 @@ export default function Dashboard({
               >
                 <ShieldAlert className="w-6 h-6 text-red-600" />
                 <div>
-                  <h4 className="text-xs font-black text-neutral-900 leading-tight">Forensic Check</h4>
-                  <p className="text-[10px] text-neutral-400 font-sans mt-0.5 font-bold">Trace missing cash</p>
+                  <h4 className="text-xs font-medium text-black leading-tight">Forensic Check</h4>
+                  <p className="text-[10px] text-neutral-950 font-sans mt-0.5 font-normal">Trace missing cash</p>
                 </div>
               </button>
 
@@ -779,8 +872,8 @@ export default function Dashboard({
               >
                 <Coins className="w-6 h-6 text-amber-500" />
                 <div>
-                  <h4 className="text-xs font-black text-neutral-900 leading-tight">Truth Audits</h4>
-                  <p className="text-[10px] text-neutral-400 font-sans mt-0.5 font-bold">Shift balanced files</p>
+                  <h4 className="text-xs font-medium text-black leading-tight">Truth Audits</h4>
+                  <p className="text-[10px] text-neutral-950 font-sans mt-0.5 font-normal">Shift balanced files</p>
                 </div>
               </button>
 
@@ -794,8 +887,8 @@ export default function Dashboard({
               >
                 <Users className="w-6 h-6 text-emerald-600" />
                 <div>
-                  <h4 className="text-xs font-black text-neutral-900 leading-tight">Debtors Ledger</h4>
-                  <p className="text-[10px] text-neutral-400 font-sans mt-0.5 font-bold">Track overdue credit</p>
+                  <h4 className="text-xs font-medium text-black leading-tight">Debtors Ledger</h4>
+                  <p className="text-[10px] text-neutral-950 font-sans mt-0.5 font-normal">Track overdue credit</p>
                 </div>
               </button>
 
@@ -809,8 +902,8 @@ export default function Dashboard({
               >
                 <AlertTriangle className="w-6 h-6 text-sky-600" />
                 <div>
-                  <h4 className="text-xs font-black text-neutral-900 leading-tight">Alert Desk</h4>
-                  <p className="text-[10px] text-neutral-400 font-sans mt-0.5 font-bold">Sentry trigger alarms</p>
+                  <h4 className="text-xs font-medium text-black leading-tight">Alert Desk</h4>
+                  <p className="text-[10px] text-neutral-950 font-sans mt-0.5 font-normal">Sentry trigger alarms</p>
                 </div>
               </button>
 
@@ -819,7 +912,7 @@ export default function Dashboard({
             <button
               type="button"
               onClick={() => setShowMoreMenu(false)}
-              className="w-full text-center py-3 bg-neutral-900 hover:bg-black text-white text-xs font-black rounded-full uppercase tracking-wider transition cursor-pointer"
+              className="w-full text-center py-3 bg-neutral-950 hover:bg-black text-white text-xs font-medium rounded-full uppercase tracking-widest transition cursor-pointer"
             >
               Close Menu
             </button>
