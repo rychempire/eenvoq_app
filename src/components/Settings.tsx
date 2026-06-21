@@ -48,20 +48,38 @@ export default function Settings({ user, onUpdateUser, showConfirm, currency, on
   };
 
   return (
-    <div className="space-y-8 animate-fade-in" id="settings-preferences-view">
+    <div className="space-y-6 pb-24 animate-fade-in text-left font-sans select-none text-[#1F1F1F]" id="settings-preferences-view">
       
-      <div>
-        <div className="flex items-center gap-3">
-          <button 
-            onClick={() => window.location.hash = 'dashboard'}
-            className="p-1 px-1.5 hover:bg-gray-100 rounded-full transition text-[#1F1F1F] cursor-pointer flex items-center justify-center shrink-0"
-            title="Back to Dashboard"
-          >
-            <ArrowLeft className="w-6 h-6 stroke-[1.5]" />
-          </button>
-          <h1 className="text-[22px] font-sans font-semibold text-[#1F1F1F] tracking-tight">Settings</h1>
+      {/* HEADER SECTION WITH MESH GRADIENT */}
+      <div className="relative overflow-hidden rounded-[32px] p-1 border border-neutral-150/45 bg-white shadow-xs" id="settings-mesh-wrapper">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(14,165,233,0.14)_0%,_rgba(14,165,233,0)_75%)] pointer-events-none" />
+        
+        {/* Main Header greetings block */}
+        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between p-6 gap-4" id="settings-navbar-panel">
+          <div className="text-left">
+            <div className="flex items-center gap-2">
+              <button 
+                onClick={() => window.location.hash = 'dashboard'}
+                className="p-1.5 hover:bg-neutral-100 rounded-full transition text-neutral-800 cursor-pointer flex items-center justify-center shrink-0"
+                title="Return to home dashboard"
+              >
+                <ArrowLeft className="w-5 h-5 stroke-[2.5]" />
+              </button>
+              <h1 className="text-xl sm:text-2xl font-sans font-medium text-neutral-900 tracking-tight">
+                Settings
+              </h1>
+            </div>
+            <p className="text-sm font-sans font-normal text-neutral-400 mt-1.5 pl-8">
+              Manage merchant business profiles, API setups, triggers, and monthly billing permissions.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap" id="settings-actions-bar">
+            <span className="text-[10px] uppercase font-bold py-2 px-4 bg-sky-50 text-sky-850 border border-sky-150/40 rounded-full flex items-center gap-1 shadow-xs font-sans">
+              System Parameters Active
+            </span>
+          </div>
         </div>
-        <p className="text-xs text-[#757575] font-normal mt-1 font-sans ml-11">Manage merchant business profiles, API setups, triggers, and monthly billing permissions.</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8" id="settings-splitting-grid">
@@ -188,7 +206,7 @@ export default function Settings({ user, onUpdateUser, showConfirm, currency, on
             <div className="flex items-center justify-between text-xs font-sans">
               <div>
                 <p className="font-bold text-[#1F1F1F]">Auto Credit Lockouts</p>
-                <p className="text-[10px] text-[#757575] mt-1 font-semibold leading-normal">Restrict register sales for B2B debtors</p>
+                <p className="text-[10px] text-[#757575] mt-1 font-semibold leading-normal">Restrict sales on credit for unpaid customers</p>
               </div>
               <button type="button" onClick={() => setAutoBillingLock(!autoBillingLock)} className="cursor-pointer">
                 {autoBillingLock ? <ToggleRight className="w-8 h-8 text-[#1F1F1F]" /> : <ToggleLeft className="w-8 h-8 text-gray-300" />}
@@ -199,7 +217,7 @@ export default function Settings({ user, onUpdateUser, showConfirm, currency, on
             <div className="flex items-center justify-between text-xs font-sans">
               <div>
                 <p className="font-bold text-[#1F1F1F]">Push Notifications</p>
-                <p className="text-[10px] text-[#757575] mt-1 font-semibold leading-normal">Transmit till overrides to active log streams</p>
+                <p className="text-[10px] text-[#757575] mt-1 font-semibold leading-normal">Send cash register alert messages to your phone</p>
               </div>
               <button type="button" onClick={() => setRealtimeNotify(!realtimeNotify)} className="cursor-pointer">
                 {realtimeNotify ? <ToggleRight className="w-8 h-8 text-[#1F1F1F]" /> : <ToggleLeft className="w-8 h-8 text-gray-300" />}

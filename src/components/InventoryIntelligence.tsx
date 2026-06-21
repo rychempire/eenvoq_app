@@ -6,7 +6,7 @@ import {
   Trash2, Check, CheckSquare, Square, User, Calendar, 
   ChevronRight, ArrowUpRight, Barcode, HelpCircle, Package,
   FileCheck, FileText, ArrowRight, ShieldAlert, BadgeCheck, Sparkle,
-  Coins, TrendingDown
+  Coins
 } from 'lucide-react';
 import EenvoqIcon from './EenvoqIcon';
 import { InventoryItem } from '../types';
@@ -18,6 +18,7 @@ interface InventoryIntelligenceProps {
   showConfirm?: (title: string, message: string, onConfirm: () => void, confirmLabel?: string, cancelLabel?: string) => void;
   onAddInventoryItem?: (newItem: InventoryItem) => void;
   currency: string;
+  onUpdateInventory?: (updated: InventoryItem[]) => void;
 }
 
 // Activity Log Item structure
@@ -43,12 +44,25 @@ export default function InventoryIntelligence({
   onTriggerRestock, 
   showConfirm,
   onAddInventoryItem,
-  currency
+  currency,
+  onUpdateInventory
 }: InventoryIntelligenceProps) {
   const currencySymbol = CURRENCIES[currency]?.symbol || '$';
 
   // Local state to keep track of newly added/manipulated inventory items
   const [localInventory, setLocalInventory] = useState<InventoryItem[]>(initialInventory);
+
+  // Keep local inventory synchronized with parent state changes
+  React.useEffect(() => {
+    setLocalInventory(initialInventory);
+  }, [initialInventory]);
+
+  // Synchronize local changes back up to parent state
+  React.useEffect(() => {
+    if (onUpdateInventory && JSON.stringify(localInventory) !== JSON.stringify(initialInventory)) {
+      onUpdateInventory(localInventory);
+    }
+  }, [localInventory, onUpdateInventory, initialInventory]);
   
   // Navigation Tabs state
   const [activeTab, setActiveTab] = useState<'overview' | 'products' | 'activity' | 'alerts'>('overview');
@@ -568,51 +582,60 @@ export default function InventoryIntelligence({
   return (
     <div className="space-y-6 pb-20 animate-fade-in text-left font-sans select-none text-neutral-900" id="eenvoq-inventory-intelligence-page">
       
-      {/* HEADER CONTROLS */}
-      <div className="bg-white border border-neutral-100 rounded-[28px] p-6 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4" id="inventory-header">
-        <div>
-          <div className="flex items-center gap-3">
-            <button 
-              onClick={() => window.location.hash = 'dashboard'}
-              className="p-1 px-1.5 hover:bg-neutral-100 rounded-full transition text-neutral-800 cursor-pointer flex items-center justify-center shrink-0"
-              title="Return to home dashboard"
-            >
-              <ArrowLeft className="w-5 h-5 stroke-[2]" />
-            </button>
-            <h1 className="text-xl sm:text-2xl font-sans font-black text-neutral-950 tracking-tight">Eenvoq Inventory Control</h1>
+      {/* HEADER CONTROLS WITH MESH GRADIENT */}
+      <div className="relative overflow-hidden rounded-[32px] p-1 border border-neutral-150/45 bg-white shadow-xs" id="inventory-mesh-wrapper">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(14,165,233,0.14)_0%,_rgba(14,165,233,0)_75%)] pointer-events-none" />
+        
+        {/* Main Header greetings block */}
+        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between p-6 gap-4" id="inventory-navbar-panel">
+          <div className="text-left">
+            <div className="flex items-center gap-2">
+              <button 
+                onClick={() => window.location.hash = 'dashboard'}
+                className="p-1.5 hover:bg-neutral-100 rounded-full transition text-neutral-800 cursor-pointer flex items-center justify-center shrink-0"
+                title="Return to home dashboard"
+              >
+                <ArrowLeft className="w-5 h-5 stroke-[2.5]" />
+              </button>
+              <h1 className="text-xl sm:text-2xl font-sans font-medium text-neutral-900 tracking-tight">
+                Eenvoq Inventory Control
+              </h1>
+            </div>
+            <p className="text-sm font-sans font-normal text-neutral-400 mt-1.5 pl-8">
+              Evaluate stock levels, trace history updates, and auto-dispatch supplier procurement.
+            </p>
           </div>
-          <p className="text-xs text-neutral-400 font-bold mt-1 pl-8">Evaluate stock levels, trace history updates, and auto-dispatch supplier procurement.</p>
-        </div>
 
-        <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap">
-          {isStockCounting ? (
+          <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap">
+            {isStockCounting ? (
+              <button
+                type="button"
+                onClick={handleSubmitStockCount}
+                className="bg-emerald-600 hover:bg-emerald-700 text-white transition-all duration-200 px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-95 cursor-pointer flex items-center gap-1.5"
+              >
+                <FileCheck className="w-3.5 h-3.5" />
+                <span>Complete Physical Count</span>
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={handleStartStockCount}
+                className="bg-neutral-900 hover:bg-black text-white transition-all duration-200 px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-95 cursor-pointer flex items-center gap-1.5"
+              >
+                <ClipboardList className="w-3.5 h-3.5" />
+                <span>Start Physical Count</span>
+              </button>
+            )}
+
             <button
               type="button"
-              onClick={handleSubmitStockCount}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded-full text-[11px] uppercase tracking-wide transition flex items-center gap-1.5 cursor-pointer shadow-xs"
+              onClick={() => setShowAddModal(true)}
+              className="bg-[#1e40af] hover:bg-blue-800 text-white transition-all duration-200 px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-95 cursor-pointer flex items-center gap-1.5"
             >
-              <FileCheck className="w-3.5 h-3.5" />
-              <span>Complete Physical Count</span>
+              <Plus className="w-3.5 h-3.5" />
+              <span>Add Product</span>
             </button>
-          ) : (
-            <button
-              type="button"
-              onClick={handleStartStockCount}
-              className="bg-neutral-900 hover:bg-black text-white font-bold py-2 px-4 rounded-full text-[11px] uppercase tracking-wide transition flex items-center gap-1.5 cursor-pointer shadow-xs"
-            >
-              <ClipboardList className="w-3.5 h-3.5" />
-              <span>Start PhysicalCount</span>
-            </button>
-          )}
-
-          <button
-            type="button"
-            onClick={() => setShowAddModal(true)}
-            className="bg-[#1e40af] hover:bg-[#1a368f] text-white font-bold py-2 px-4 rounded-full text-[11px] uppercase tracking-wide transition flex items-center gap-1.5 cursor-pointer shadow-xs"
-          >
-            <Plus className="w-3.5 h-3.5" />
-            <span>Add Product</span>
-          </button>
+          </div>
         </div>
       </div>
 
@@ -776,7 +799,7 @@ export default function InventoryIntelligence({
                     switch (type) {
                       case 'crit': return <AlertTriangle className="w-3.5 h-3.5 text-red-650 shrink-0 self-center" />;
                       case 'warning': return <Package className="w-3.5 h-3.5 text-amber-600 shrink-0 self-center" />;
-                      case 'slow': return <TrendingDown className="w-3.5 h-3.5 text-gray-500 shrink-0 self-center" />;
+                      case 'slow': return <ArrowUpRight className="w-3.5 h-3.5 text-gray-500 shrink-0 self-center rotate-90" />;
                       case 'capital': return <Coins className="w-3.5 h-3.5 text-indigo-600 shrink-0 self-center" />;
                       default: return null;
                     }

@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { 
   BookOpen, Lock, Unlock, Sparkles, MessageSquare, 
-  Search, Sliders, ArrowLeft, TrendingDown, CheckSquare, 
+  Search, Sliders, ArrowLeft, CheckSquare, 
   User, Check, DollarSign, Calendar, AlertTriangle, ChevronRight, 
   Activity, Award, FileText, Download, Play, PlusCircle, AlertCircle, Phone, Smartphone, Trash2, ShieldCheck, Mail
 } from 'lucide-react';
@@ -420,34 +420,38 @@ export default function DebtorControl({
   };
 
   return (
-    <div className="space-y-8 animate-fade-in" id="debtors-advanced-dashboard">
+    <div className="space-y-6 pb-24 animate-fade-in text-left font-sans select-none text-[#1F1F1F]" id="debtors-advanced-dashboard">
       
-      {/* 1. STYLED HEADER */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-150 pb-5 select-none">
-        <div>
-          <div className="flex items-center gap-3">
-            <button 
-              onClick={() => window.location.hash = 'dashboard'}
-              className="p-1.5 hover:bg-neutral-100 rounded-full transition text-[#1F1F1F] cursor-pointer flex items-center justify-center shrink-0 border border-neutral-200 bg-white"
-              title="Back to Dashboard"
-            >
-              <ArrowLeft className="w-5 h-5 stroke-[2]" />
-            </button>
-            <h1 className="text-xl md:text-2xl font-bold font-display text-gray-900 flex items-center gap-2">
-              <BookOpen className="w-5 h-5 text-indigo-700 animate-pulse" />
-              Eenvoq Debtor Control Board
-            </h1>
+      {/* HEADER SECTION WITH MESH GRADIENT */}
+      <div className="relative overflow-hidden rounded-[32px] p-1 border border-neutral-150/45 bg-white shadow-xs" id="debtors-mesh-wrapper">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(14,165,233,0.14)_0%,_rgba(14,165,233,0)_75%)] pointer-events-none" />
+        
+        {/* Main Header greetings block */}
+        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between p-6 gap-4" id="debtors-navbar-panel">
+          <div className="text-left">
+            <div className="flex items-center gap-2">
+              <button 
+                onClick={() => window.location.hash = 'dashboard'}
+                className="p-1.5 hover:bg-neutral-100 rounded-full transition text-neutral-800 cursor-pointer flex items-center justify-center shrink-0"
+                title="Return to home dashboard"
+              >
+                <ArrowLeft className="w-5 h-5 stroke-[2.5]" />
+              </button>
+              <h1 className="text-xl sm:text-2xl font-sans font-medium text-neutral-900 tracking-tight">
+                Debtor Control Board
+              </h1>
+            </div>
+            <p className="text-sm font-sans font-normal text-neutral-400 mt-1.5 pl-8">
+              Analyze customer credit liabilities, enforce overdue restrictions, schedule custom payment plans, and dispatch targeted notifications.
+            </p>
           </div>
-          <p className="text-xs text-[#757575] mt-1 font-sans ml-11">
-            Analyze customer credit liabilities, enforce overdue restrictions, schedule custom payment plans, and dispatch templates notifications.
-          </p>
-        </div>
 
-        <div className="flex flex-wrap items-center gap-2 select-none self-start md:self-auto font-sans">
-          <span className="text-[10px] uppercase font-bold py-1 px-3 bg-red-50 text-red-700 border border-red-150 rounded-full flex items-center gap-1">
-            <AlertCircle className="w-3 h-3 text-red-600 shrink-0" />
-            Overdue Priority Check Active
-          </span>
+          <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap" id="debtors-actions-bar">
+            <span className="text-[10px] uppercase font-bold py-2 px-4 bg-red-50 text-red-700 border border-red-150/40 rounded-full flex items-center gap-1 shadow-xs">
+              <AlertCircle className="w-3.5 h-3.5 text-red-600 shrink-0" />
+              <span>Overdue Priority Check Active</span>
+            </span>
+          </div>
         </div>
       </div>
 
@@ -465,29 +469,34 @@ export default function DebtorControl({
       )}
 
       {/* 3. FOUR TABS CONTROL STRIP */}
-      <div className="flex border-b border-[#E3E3E3] bg-transparent text-[#444746] select-none" id="debtors-hub-tabs">
+      <div className="flex border-b border-neutral-150/60 pb-1 text-neutral-600 font-sans select-none overflow-x-auto scrollbar-none items-center gap-2" id="debtors-hub-tabs">
         {[
           { tab: 'overview', label: 'Overview Hub', icon: <Activity className="w-3.5 h-3.5" /> },
           { tab: 'debtors', label: 'Debtors Ledger', icon: <User className="w-3.5 h-3.5" /> },
           { tab: 'collections', label: 'Recovery Automation', icon: <MessageSquare className="w-3.5 h-3.5" /> },
           { tab: 'risk', label: 'Overdraft Risk Analysis', icon: <ShieldCheck className="w-3.5 h-3.5" /> }
-        ].map((t) => (
-          <button
-            key={t.tab}
-            onClick={() => {
-              setActiveTab(t.tab as any);
-              if (t.tab !== 'debtors' && initialDebtors.length > 0 && !selectedDebtor) {
-                setSelectedDebtor(initialDebtors[0]);
-              }
-            }}
-            className={`flex items-center gap-2 py-3.5 px-4 text-xs font-bold border-b-2 transition relative cursor-pointer ${
-              activeTab === t.tab ? 'border-indigo-600 text-indigo-700 font-black' : 'border-transparent hover:text-black font-semibold'
-            }`}
-          >
-            {t.icon}
-            {t.label}
-          </button>
-        ))}
+        ].map((t) => {
+          const isActive = activeTab === t.tab;
+          return (
+            <button
+              key={t.tab}
+              onClick={() => {
+                setActiveTab(t.tab as any);
+                if (t.tab !== 'debtors' && initialDebtors.length > 0 && !selectedDebtor) {
+                  setSelectedDebtor(initialDebtors[0]);
+                }
+              }}
+              className={`flex items-center gap-1.5 py-2.5 px-4 text-xs font-semibold rounded-full transition-all duration-200 whitespace-nowrap cursor-pointer border ${
+                isActive 
+                  ? 'bg-sky-50 text-sky-850 border-sky-200/60 shadow-xs font-bold' 
+                  : 'bg-white text-neutral-600 border-neutral-150/45 hover:bg-neutral-50 hover:text-neutral-900'
+              }`}
+            >
+              <span className={isActive ? 'text-sky-700' : 'text-neutral-400'}>{t.icon}</span>
+              <span>{t.label}</span>
+            </button>
+          );
+        })}
       </div>
 
       {/* 4. MAIN INTERACTIVE VIEWS */}
@@ -506,7 +515,7 @@ export default function DebtorControl({
                   {formatCurrency(debtMetrics.totalOutstanding, currency)}
                 </p>
                 <div className="flex items-center gap-1.5 mt-2.5 text-[10px] text-red-700 font-bold bg-red-50/50 px-2 py-1 rounded-md w-fit">
-                  <TrendingDown className="w-3 h-3 text-red-600 shrink-0" />
+                  <AlertCircle className="w-3 h-3 text-red-600 shrink-0" />
                   <span>Uncollected retail assets</span>
                 </div>
               </div>

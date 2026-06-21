@@ -28,27 +28,38 @@ export default function ReportingCenter({ showConfirm }: ReportingCenterProps) {
   };
 
   return (
-    <div className="space-y-8 animate-fade-in" id="reporting-center-hub">
+    <div className="space-y-6 pb-24 animate-fade-in text-left font-sans select-none text-[#1F1F1F]" id="reporting-center-hub">
       
-      {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 select-none animate-fade-in">
-        <div>
-          <div className="flex items-center gap-3">
-            <button 
-              onClick={() => window.location.hash = 'dashboard'}
-              className="p-1 px-1.5 hover:bg-gray-100 rounded-full transition text-[#1F1F1F] cursor-pointer flex items-center justify-center shrink-0"
-              title="Back to Dashboard"
-            >
-              <ArrowLeft className="w-6 h-6 stroke-[1.5]" />
-            </button>
-            <h1 className="text-[22px] font-sans font-semibold text-[#1F1F1F] tracking-tight">Reporting Center</h1>
+      {/* HEADER SECTION WITH MESH GRADIENT */}
+      <div className="relative overflow-hidden rounded-[32px] p-1 border border-neutral-150/45 bg-white shadow-xs" id="reporting-mesh-wrapper">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(14,165,233,0.14)_0%,_rgba(14,165,233,0)_75%)] pointer-events-none" />
+        
+        {/* Main Header greetings block */}
+        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between p-6 gap-4" id="reporting-navbar-panel">
+          <div className="text-left">
+            <div className="flex items-center gap-2">
+              <button 
+                onClick={() => window.location.hash = 'dashboard'}
+                className="p-1.5 hover:bg-neutral-100 rounded-full transition text-neutral-800 cursor-pointer flex items-center justify-center shrink-0"
+                title="Return to home dashboard"
+              >
+                <ArrowLeft className="w-5 h-5 stroke-[2.5]" />
+              </button>
+              <h1 className="text-xl sm:text-2xl font-sans font-medium text-neutral-900 tracking-tight">
+                Reporting Center
+              </h1>
+            </div>
+            <p className="text-sm font-sans font-normal text-neutral-400 mt-1.5 pl-8">
+              Streamlined summaries matching checkout registries with merchant cashflows.
+            </p>
           </div>
-          <p className="text-xs text-[#757575] font-normal mt-1 font-sans ml-11">Streamlined summaries matching checkout registries with merchant cashflows.</p>
-        </div>
 
-        <div className="flex items-center gap-2 bg-[#f0f9ff] border border-[#bae6fd] text-[#0284c7] rounded-full px-5 py-2.5 text-xs font-bold self-start sm:self-auto select-none cursor-pointer">
-          <CalendarRange className="w-5 h-5 text-[#0284c7] stroke-[1.5]" />
-          <span>Audits Synced</span>
+          <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap" id="reporting-actions-bar">
+            <div className="flex items-center gap-2 bg-[#f0f9ff] border border-[#bae6fd]/60 text-[#0284c7] rounded-full px-4 py-2 text-xs font-semibold select-none cursor-pointer">
+              <CalendarRange className="w-4 h-4 text-[#0284c7] stroke-[2]" />
+              <span>Audits Synced</span>
+            </div>
+          </div>
         </div>
       </div>
 

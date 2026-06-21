@@ -218,10 +218,10 @@ export default function LandingPage({ onEnterApp }: LandingPageProps) {
     setScannerAlertCount(0);
     
     const logs = [
-      "CONNECTION: Syncing with digital banks & cashier register...",
-      "SCANNING: Auditing reference signatures against bank alert api...",
-      "ALERT: Deficit found in Till #2 cash registry! ₦12,500 mismatch detected.",
-      "AUTO-HEAL: Reconciled with matched cashier digital bank voucher."
+      "CONNECTION: Syncing with banks & cashier registers...",
+      "SCANNING: Auditing receipts against bank transfers...",
+      "ALERT: Difference found in Register #2! ₦12,500 mismatch detected.",
+      "AUTO-RESOLVE: Matched with corresponding mobile bank transfer."
     ];
 
     let i = 0;

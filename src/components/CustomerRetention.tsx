@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Users, Sparkles, MessageSquare, Mail, Phone, 
   Send, Copy, AlertTriangle, Check, Sliders, ArrowLeft
@@ -8,12 +8,30 @@ import { INITIAL_RETENTION_CAMPAIGNS } from '../demoData';
 
 interface CustomerRetentionProps {
   showConfirm?: (title: string, message: string, onConfirm: () => void, confirmLabel?: string, cancelLabel?: string) => void;
+  campaigns?: RetentionCampaign[];
+  onUpdateCampaigns?: (campaigns: RetentionCampaign[]) => void;
 }
 
-export default function CustomerRetention({ showConfirm }: CustomerRetentionProps) {
-  const [campaigns, setCampaigns] = useState<RetentionCampaign[]>(INITIAL_RETENTION_CAMPAIGNS);
+export default function CustomerRetention({ 
+  showConfirm,
+  campaigns: parentCampaigns,
+  onUpdateCampaigns
+}: CustomerRetentionProps) {
+  const [campaigns, setCampaigns] = useState<RetentionCampaign[]>(parentCampaigns || INITIAL_RETENTION_CAMPAIGNS);
   const [selectedIdx, setSelectedIdx] = useState(0);
   const [copiedType, setCopiedType] = useState<'sms' | 'wa' | 'email' | null>(null);
+
+  useEffect(() => {
+    if (parentCampaigns) {
+      setCampaigns(parentCampaigns);
+    }
+  }, [parentCampaigns]);
+
+  useEffect(() => {
+    if (onUpdateCampaigns && JSON.stringify(campaigns) !== JSON.stringify(parentCampaigns)) {
+      onUpdateCampaigns(campaigns);
+    }
+  }, [campaigns, onUpdateCampaigns, parentCampaigns]);
 
   const activeCampaign = campaigns[selectedIdx] || campaigns[0];
 
@@ -27,6 +45,9 @@ export default function CustomerRetention({ showConfirm }: CustomerRetentionProp
     const title = "Dispatch Successful";
     const message = `[Message API Simulation]: Dispatching re-engagement invitation to ${campaign.customerName} via ${medium}.\n\nTarget Mobile: ${campaign.phone}`;
     
+    // Also mark campaign as contacted/active
+    setCampaigns(prev => prev.map(c => c.id === campaign.id ? { ...c, contacted: true } : c));
+
     if (showConfirm) {
       showConfirm(title, message, () => {}, "Got it", "Dismiss");
     } else {
@@ -35,29 +56,38 @@ export default function CustomerRetention({ showConfirm }: CustomerRetentionProp
   };
 
   return (
-    <div className="space-y-8 animate-fade-in" id="customer-retention-center">
+    <div className="space-y-6 pb-24 animate-fade-in text-left font-sans select-none text-[#1F1F1F]" id="customer-retention-center">
       
-      {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 select-none">
-        <div>
-          <div className="flex items-center gap-3">
-            <button 
-              onClick={() => window.location.hash = 'dashboard'}
-              className="p-1 px-1.5 hover:bg-gray-100 rounded-full transition text-[#1F1F1F] cursor-pointer flex items-center justify-center shrink-0"
-              title="Back to Dashboard"
-            >
-              <ArrowLeft className="w-6 h-6 stroke-[1.5]" />
-            </button>
-            <h1 className="text-[22px] font-sans font-semibold text-[#1F1F1F] tracking-tight">Retention Engine</h1>
+      {/* HEADER SECTION WITH MESH GRADIENT */}
+      <div className="relative overflow-hidden rounded-[32px] p-1 border border-neutral-150/45 bg-white shadow-xs" id="retention-mesh-wrapper">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(14,165,233,0.14)_0%,_rgba(14,165,233,0)_75%)] pointer-events-none" />
+        
+        {/* Main Header greetings block */}
+        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between p-6 gap-4" id="retention-navbar-panel">
+          <div className="text-left">
+            <div className="flex items-center gap-2">
+              <button 
+                onClick={() => window.location.hash = 'dashboard'}
+                className="p-1.5 hover:bg-neutral-100 rounded-full transition text-neutral-800 cursor-pointer flex items-center justify-center shrink-0"
+                title="Return to home dashboard"
+              >
+                <ArrowLeft className="w-5 h-5 stroke-[2.5]" />
+              </button>
+              <h1 className="text-xl sm:text-2xl font-sans font-medium text-neutral-900 tracking-tight">
+                Retention Engine
+              </h1>
+            </div>
+            <p className="text-sm font-sans font-normal text-neutral-400 mt-1.5 pl-8">
+              Automated re-engagement monitors client checkout gaps and compiles personalized recheck incentives.
+            </p>
           </div>
-          <p className="text-xs text-[#757575] font-normal mt-1 font-sans ml-11">
-            Automated re-engagement monitors client checkout gaps and compiles personalized recheck incentives.
-          </p>
-        </div>
 
-        <div className="flex items-center gap-2 bg-sky-100 border border-sky-200 text-sky-850 px-5 py-2.5 rounded-full text-xs font-bold self-start sm:self-auto select-none shadow-sm">
-          <Users className="w-5 h-5 text-sky-600 stroke-[1.5]" />
-          <span>Active Engagement Tracker</span>
+          <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap" id="retention-actions-bar">
+            <div className="flex items-center gap-2 bg-sky-50 border border-sky-200/50 text-sky-850 px-4 py-2.5 rounded-full text-xs font-semibold select-none shadow-xs">
+              <Users className="w-4 h-4 text-sky-700 stroke-[2]" />
+              <span>Active Engagement Tracker</span>
+            </div>
+          </div>
         </div>
       </div>
 

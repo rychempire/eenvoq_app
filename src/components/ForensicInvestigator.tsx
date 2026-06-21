@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { 
-  Sparkles, Thermometer, Clock, ShieldAlert, UserCheck
+  Sparkles, Thermometer, Clock, ShieldAlert, UserCheck, ArrowLeft
 } from 'lucide-react';
 import EenvoqIcon from './EenvoqIcon';
 import { formatCurrency } from '../utils/currency';
@@ -59,18 +59,38 @@ export default function ForensicInvestigator({ currency }: ForensicInvestigatorP
   const activeAnomalyData = anomaliesList.find(a => a.id === selectedAnomaly) || anomaliesList[0];
 
   return (
-    <div className="space-y-8 animate-fade-in" id="forensic-investigation-workspace">
+    <div className="space-y-6 pb-24 animate-fade-in text-left font-sans select-none text-[#1F1F1F]" id="forensic-investigation-workspace">
       
-      <div>
-        <div className="flex items-center gap-3">
-          <EenvoqIcon className="w-8 h-8 text-[#1F1F1F] stroke-[1.5]" />
-          <h1 className="text-3xl font-sans font-extrabold tracking-tight text-[#1F1F1F]">
-            Forensic Investigator
-          </h1>
+      {/* HEADER SECTION WITH MESH GRADIENT */}
+      <div className="relative overflow-hidden rounded-[32px] p-1 border border-neutral-150/45 bg-white shadow-xs" id="forensic-mesh-wrapper">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(14,165,233,0.14)_0%,_rgba(14,165,233,0)_75%)] pointer-events-none" />
+        
+        {/* Main Header greetings block */}
+        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between p-6 gap-4" id="forensic-navbar-panel">
+          <div className="text-left">
+            <div className="flex items-center gap-2">
+              <button 
+                onClick={() => window.location.hash = 'dashboard'}
+                className="p-1.5 hover:bg-neutral-100 rounded-full transition text-neutral-800 cursor-pointer flex items-center justify-center shrink-0"
+                title="Return to home dashboard"
+              >
+                <ArrowLeft className="w-5 h-5 stroke-[2.5]" />
+              </button>
+              <h1 className="text-xl sm:text-2xl font-sans font-medium text-neutral-900 tracking-tight">
+                Forensic Investigator
+              </h1>
+            </div>
+            <p className="text-sm font-sans font-normal text-neutral-400 mt-1.5 pl-8">
+              Automatically tracks register voids, unlogged deletions, and suspicious transactions in real time.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap" id="forensic-actions-bar">
+            <span className="text-[10px] uppercase font-bold py-2 px-4 bg-purple-50 text-purple-750 border border-purple-200/50 rounded-full flex items-center gap-1 shadow-xs font-sans">
+              Real-time Scan Active
+            </span>
+          </div>
         </div>
-        <p className="text-[#5F6368] text-xs font-sans mt-1.5 max-w-xl font-medium">
-          Automatically tracks register voids, unlogged deletions, and suspicious transactions in real time.
-        </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

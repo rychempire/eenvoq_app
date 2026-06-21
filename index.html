@@ -81,15 +81,26 @@
     <script type="module" src="/src/main.tsx"></script>
     <script>
       if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js')
-            .then((reg) => {
-              console.log('Eenvoq PWA Service Worker registered successfully in scope:', reg.scope);
-            })
-            .catch((err) => {
-              console.error('Eenvoq PWA Service Worker registration failed:', err);
-            });
-        });
+        const isDev = window.location.hostname.includes('localhost') || 
+                      window.location.hostname.includes('run.app') || 
+                      window.location.hostname.includes('127.0.0.1');
+        if (isDev) {
+          navigator.serviceWorker.getRegistrations().then((registrations) => {
+            for (let registration of registrations) {
+              registration.unregister();
+            }
+          });
+        } else {
+          window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js')
+              .then((reg) => {
+                console.log('Eenvoq PWA Service Worker registered successfully in scope:', reg.scope);
+              })
+              .catch((err) => {
+                console.error('Eenvoq PWA Service Worker registration failed:', err);
+              });
+          });
+        }
       }
     </script>
   </body>

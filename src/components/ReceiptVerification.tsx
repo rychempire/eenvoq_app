@@ -491,92 +491,93 @@ export default function ReceiptVerification({
   };
 
   return (
-    <div className="flex flex-col h-full bg-[#fcfaf7] min-h-screen text-[#1f1f1f]" id="eenvoq-sales-panel-wrapper">
+    <div className="space-y-6 pb-24 animate-fade-in font-sans text-[#1F1F1F] select-none" id="eenvoq-sales-panel-wrapper">
       
-      {/* HEADER SECTION */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between p-6 bg-white border-b border-[#e3e3e3] select-none" id="sales-portal-header">
-        <div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-bold font-display tracking-tight">Sales Operating System</h1>
-            <span className="bg-sky-100 text-sky-800 text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full font-mono">
-              Terminal Live
-            </span>
+      {/* HEADER SECTION WITH MESH GRADIENT */}
+      <div className="relative overflow-hidden rounded-[32px] p-1 border border-neutral-150/45 bg-white shadow-xs" id="sales-mesh-wrapper">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(14,165,233,0.14)_0%,_rgba(14,165,233,0)_75%)] pointer-events-none" />
+        
+        {/* Main Header greetings block */}
+        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between p-6 gap-4" id="sales-navbar-panel">
+          <div className="text-left">
+            <div className="flex items-center gap-2">
+              <h1 className="text-xl sm:text-2xl font-sans font-medium text-neutral-900 tracking-tight">
+                Sales Operating System
+              </h1>
+              <span className="bg-sky-50 text-sky-850 text-[9px] font-medium px-2 py-0.5 rounded-full border border-sky-200/40 uppercase tracking-wider font-mono">
+                Terminal Live
+              </span>
+            </div>
+            <p className="text-sm font-sans font-normal text-neutral-400 mt-1.5">
+              Active Cashier: <strong className="text-neutral-900">{currentCashier.name}</strong> ({currentCashier.role}) &bull; Register Central Depot
+            </p>
           </div>
-          <p className="text-xs text-[#757575] mt-1">
-            Active Cashier: <strong className="text-[#1f1f1f]">{currentCashier.name}</strong> ({currentCashier.role}) &bull; Register Central Depot
-          </p>
-        </div>
+          
+          {/* Action controls */}
+          <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap" id="sales-reconciliation-actions-bar">
+            <button 
+              onClick={() => {
+                if (isOnline) {
+                  setIsOnline(false);
+                } else {
+                  handleApplyOfflineSync();
+                }
+              }}
+              className={`flex items-center gap-2 text-xs font-semibold px-4 py-2.5 rounded-full border transition duration-150 cursor-pointer ${
+                isOnline 
+                  ? 'bg-emerald-50 text-emerald-800 border-emerald-200 hover:bg-emerald-100' 
+                  : 'bg-amber-50 text-amber-800 border-amber-200 hover:bg-amber-100'
+              }`}
+              id="network-simulator-toggle"
+            >
+              {isOnline ? <Wifi className="w-3.5 h-3.5 text-emerald-600" /> : <WifiOff className="w-3.5 h-3.5 text-amber-600" />}
+              {isOnline ? "Online Ready" : `Offline Mode (${offlineQueue.length} Queued)`}
+            </button>
 
-        {/* Action controls */}
-        <div className="flex items-center gap-3 mt-4 md:mt-0">
-          <button 
-            onClick={() => {
-              if (isOnline) {
-                setIsOnline(false);
-              } else {
-                handleApplyOfflineSync();
-              }
-            }}
-            className={`flex items-center gap-2 text-xs font-semibold px-4 py-2 rounded-full border transition duration-150 cursor-pointer ${
-              isOnline 
-                ? 'bg-emerald-50 text-emerald-800 border-emerald-200 hover:bg-emerald-100' 
-                : 'bg-amber-50 text-amber-800 border-amber-200 hover:bg-amber-100'
-            }`}
-            id="network-simulator-toggle"
-          >
-            {isOnline ? <Wifi className="w-3.5 h-3.5" /> : <WifiOff className="w-3.5 h-3.5" />}
-            {isOnline ? "Online Ready" : `Offline Mode (${offlineQueue.length} Queued)`}
-          </button>
-
-          <button 
-            onClick={() => setShowReconciliationModal(true)}
-            className="flex items-center gap-1.5 text-xs font-semibold px-4 py-2 bg-[#1f1f1f] text-white hover:bg-black rounded-full transition duration-150 cursor-pointer shadow-xs"
-            id="recon-trigger-btn"
-          >
-            <RefreshCw className="w-3.5 h-3.5 animate-spin-slow" />
-            End of Day Drawer
-          </button>
+            <button 
+              onClick={() => setShowReconciliationModal(true)}
+              className="flex items-center gap-1.5 text-xs font-semibold px-4 py-2.5 bg-neutral-900 text-white hover:bg-black rounded-full transition duration-150 cursor-pointer shadow-xs border border-transparent"
+              id="recon-trigger-btn"
+            >
+              <RefreshCw className="w-3.5 h-3.5" />
+              <span>End of Day Drawer</span>
+            </button>
+          </div>
         </div>
       </div>
 
       {/* TABS SELECTOR */}
-      <div className="flex border-b border-[#e3e3e3] bg-white text-[#444746] px-4 font-sans select-none" id="sales-page-tabs-bar">
-        <button 
-          onClick={() => { setActiveTab('overview'); setAiAnswer(null); }}
-          className={`flex items-center gap-1.5 py-4 px-5 text-sm font-semibold border-b-2 transition-all ${
-            activeTab === 'overview' ? 'border-[#1e40af] text-[#1e40af]' : 'border-transparent hover:text-black'
-          }`}
-        >
-          <TrendingUp className="w-4 h-4" /> Overview
-        </button>
-        <button 
-          onClick={() => setActiveTab('checkout')}
-          className={`flex items-center gap-1.5 py-4 px-5 text-sm font-semibold border-b-2 transition-all ${
-            activeTab === 'checkout' ? 'border-[#1e40af] text-[#1e40af]' : 'border-transparent hover:text-black'
-          }`}
-        >
-          <ShoppingCart className="w-4 h-4" /> New Sale
-        </button>
-        <button 
-          onClick={() => setActiveTab('transactions')}
-          className={`flex items-center gap-1.5 py-4 px-5 text-sm font-semibold border-b-2 transition-all ${
-            activeTab === 'transactions' ? 'border-[#1e40af] text-[#1e40af]' : 'border-transparent hover:text-black'
-          }`}
-        >
-          <FileText className="w-4 h-4" /> Transactions
-        </button>
-        <button 
-          onClick={() => setActiveTab('customers')}
-          className={`flex items-center gap-1.5 py-4 px-5 text-sm font-semibold border-b-2 transition-all ${
-            activeTab === 'customers' ? 'border-[#1e40af] text-[#1e40af]' : 'border-transparent hover:text-black'
-          }`}
-        >
-          <Users className="w-4 h-4" /> Customers
-        </button>
+      <div className="flex border-b border-neutral-150/60 pb-1 text-neutral-600 font-sans select-none overflow-x-auto scrollbar-none items-center gap-2" id="sales-page-tabs-bar">
+        {[
+          { id: 'overview', label: 'Overview', icon: TrendingUp },
+          { id: 'checkout', label: 'New Sale', icon: ShoppingCart },
+          { id: 'transactions', label: 'Transactions', icon: FileText },
+          { id: 'customers', label: 'Customers', icon: Users }
+        ].map((tab) => {
+          const Icon = tab.icon;
+          const isActive = activeTab === tab.id;
+          return (
+            <button
+              key={tab.id}
+              onClick={() => {
+                setActiveTab(tab.id as any);
+                if (tab.id === 'overview') setAiAnswer(null);
+              }}
+              className={`flex items-center gap-1.5 py-2.5 px-4 text-xs font-semibold rounded-full transition-all duration-200 whitespace-nowrap cursor-pointer border ${
+                isActive 
+                  ? 'bg-sky-50 text-sky-850 border-sky-200/60 shadow-xs font-bold' 
+                  : 'bg-white text-neutral-600 border-neutral-150/45 hover:bg-neutral-50 hover:text-neutral-900'
+              }`}
+            >
+              <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-sky-700' : 'text-neutral-400'}`} />
+              <span>{tab.label}</span>
+            </button>
+          );
+        })}
       </div>
 
       {/* CORE CONTENT LAYOUT */}
-      <div className="flex-1 p-4 md:p-6" id="sales-dashboard-tabbed-container">
+      <div className="space-y-6" id="sales-dashboard-tabbed-container">
 
         {/* 1. OVERVIEW TAB */}
         {activeTab === 'overview' && (

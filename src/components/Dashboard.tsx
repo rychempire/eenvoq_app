@@ -3,7 +3,7 @@ import { Receipt, InventoryItem, Debtor, TruthAudit, Alert } from '../types';
 import EenvoqIcon from './EenvoqIcon';
 import { 
   ArrowUpRight, AlertCircle, Sparkles, ChevronRight, ArrowLeft, X, Check, Plus, 
-  Search, TrendingUp, TrendingDown, ShieldAlert, Users, ShoppingCart, Activity, CheckCircle2,
+  Search, TrendingUp, ShieldAlert, Users, ShoppingCart, Activity, CheckCircle2,
   Coins, Filter, ArrowRight, CircleDollarSign, BarChart2, DollarSign, Bot, AlertTriangle,
   Package, Star
 } from 'lucide-react';
@@ -86,14 +86,14 @@ export default function Dashboard({
 
   // Aggregate stats or fallback placeholders
   const verifiedReceipts = receipts.filter(r => r.status === 'verified');
-  const expectedToday = receipts.length > 0 ? receipts.reduce((sum, r) => sum + r.totalAmount, 0) : 245000;
-  const totalTransactions = receipts.length > 0 ? receipts.length : 43;
-  const totalCustomers = debtors.length > 0 ? debtors.length : 31;
-  const todayProfit = expectedToday * 0.58; // 58% dynamic margin
-  const cashCollected = expectedToday * 0.72; // 72% paid as Cash in drawer
+  const expectedToday = receipts.reduce((sum, r) => sum + r.totalAmount, 0);
+  const totalTransactions = receipts.length;
+  const totalCustomers = debtors.length;
+  const todayProfit = expectedToday * 0.15; // Standard 15% retail margin
+  const cashCollected = expectedToday; // Exactly equal to recorded amount
   
   // Calculate inventory valuation
-  const totalInventoryValuation = inventory.reduce((sum, item) => sum + (item.basePrice * item.stockLevel), 0) || 1850000;
+  const totalInventoryValuation = inventory.reduce((sum, item) => sum + (item.basePrice * item.stockLevel), 0);
 
   // Handles AI search bar submission
   const handleAiSearchSubmit = (e: React.FormEvent) => {
@@ -167,13 +167,13 @@ export default function Dashboard({
   };
 
   const trendData = [
-    { day: 'Mon', revenue: expectedToday * 0.8, profit: expectedToday * 0.8 * 0.58, transactions: 34 },
-    { day: 'Tue', revenue: expectedToday * 0.95, profit: expectedToday * 0.95 * 0.58, transactions: 41 },
-    { day: 'Wed', revenue: expectedToday * 1.1, profit: expectedToday * 1.1 * 0.58, transactions: 48 },
-    { day: 'Thu', revenue: expectedToday * 0.75, profit: expectedToday * 0.75 * 0.58, transactions: 31 },
-    { day: 'Fri', revenue: expectedToday * 1.2, profit: expectedToday * 1.2 * 0.58, transactions: 52 },
-    { day: 'Sat', revenue: expectedToday * 1.05, profit: expectedToday * 1.05 * 0.58, transactions: 46 },
-    { day: 'Sun', revenue: expectedToday, profit: todayProfit, transactions: totalTransactions }
+    { day: 'Mon', revenue: expectedToday * 0.8, profit: expectedToday * 0.8 * 0.15, transactions: receipts.length > 0 ? Math.max(1, Math.round(receipts.length * 0.8)) : 0 },
+    { day: 'Tue', revenue: expectedToday * 0.95, profit: expectedToday * 0.95 * 0.15, transactions: receipts.length > 0 ? Math.max(1, Math.round(receipts.length * 0.9)) : 0 },
+    { day: 'Wed', revenue: expectedToday * 1.1, profit: expectedToday * 1.1 * 0.15, transactions: receipts.length > 0 ? Math.max(1, Math.round(receipts.length * 1.1)) : 0 },
+    { day: 'Thu', revenue: expectedToday * 0.75, profit: expectedToday * 0.75 * 0.15, transactions: receipts.length > 0 ? Math.max(1, Math.round(receipts.length * 0.7)) : 0 },
+    { day: 'Fri', revenue: expectedToday * 1.2, profit: expectedToday * 1.2 * 0.15, transactions: receipts.length > 0 ? Math.max(1, Math.round(receipts.length * 1.2)) : 0 },
+    { day: 'Sat', revenue: expectedToday * 1.05, profit: expectedToday * 1.05 * 0.15, transactions: receipts.length > 0 ? Math.max(1, Math.round(receipts.length * 1.0)) : 0 },
+    { day: 'Sun', revenue: expectedToday, profit: todayProfit, transactions: receipts.length }
   ];
 
   return (
@@ -387,7 +387,7 @@ export default function Dashboard({
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {[
-                { text: "Revenue is 18% lower than yesterday", icon: <TrendingDown className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />, path: "Why is today's revenue lower than yesterday?" },
+                { text: "Revenue is 18% lower than yesterday", icon: <TrendingUp className="w-4 h-4 text-rose-400 shrink-0 mt-0.5 scale-y-[-1]" />, path: "Why is today's revenue lower than yesterday?" },
                 { text: "3 products will run out in 4 days", icon: <Package className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />, action: () => setActiveSection('inventory') },
                 { text: "Cash mismatch detected", icon: <Coins className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />, action: () => setShowReconciliationInline(true) },
                 { text: "Top customer has not purchased in 12 days", icon: <Star className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />, action: () => setActiveSection('debtor') }

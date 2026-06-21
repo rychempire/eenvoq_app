@@ -47,8 +47,8 @@ export default function TruthCheck({ audits, receipts, onAddAudit, showConfirm, 
         Math.abs(netDiff) > 40000 ? 'critical' : Math.abs(netDiff) > 5000 ? 'medium' : 'low';
 
       const detailsExplanation = netDiff === 0
-        ? "Perfect transaction matching. Net variance is balanced across physical cash drawers and bank ledger transfers."
-        : `Discrepancy of ${formatCurrency(Math.abs(netDiff), currency)} measured between physical registries and system checkout totals. eenvoq's security metrics indicate a high leakage rate during peak transactions (3 PM - 5 PM). Recommend manual reconciliation of till register #1.`;
+        ? "Excellent! Your cash register matches today's sales bills exactly. There is no missing money."
+        : `Attention: There is a difference of ${formatCurrency(Math.abs(netDiff), currency)} between your actual register money and your sales bills. We suggest double checking the change given or looking for any unrecorded bills.`;
 
       const completedAudit: TruthAudit = {
         id: `AUD-NEW-${Math.floor(Math.random() * 900) + 100}`,
@@ -73,22 +73,38 @@ export default function TruthCheck({ audits, receipts, onAddAudit, showConfirm, 
   };
 
   return (
-    <div className="space-y-8 animate-fade-in" id="truthcheck-audit-center">
+    <div className="space-y-6 pb-24 animate-fade-in text-left font-sans select-none text-[#1F1F1F]" id="truthcheck-audit-center">
       
-      <div>
-        <div className="flex items-center gap-3">
-          <button 
-            onClick={() => window.location.hash = 'dashboard'}
-            className="p-1 px-1.5 hover:bg-gray-100 rounded-full transition text-[#1F1F1F] cursor-pointer flex items-center justify-center shrink-0"
-            title="Back to Dashboard"
-          >
-            <ArrowLeft className="w-6 h-6 stroke-[1.5]" />
-          </button>
-          <h1 className="text-[22px] font-sans font-semibold text-[#1F1F1F] tracking-tight">Daily Cash & Sales Matcher</h1>
+      {/* HEADER SECTION WITH MESH GRADIENT */}
+      <div className="relative overflow-hidden rounded-[32px] p-1 border border-neutral-150/45 bg-white shadow-xs" id="truthcheck-mesh-wrapper">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(14,165,233,0.14)_0%,_rgba(14,165,233,0)_75%)] pointer-events-none" />
+        
+        {/* Main Header greetings block */}
+        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between p-6 gap-4" id="truthcheck-navbar-panel">
+          <div className="text-left">
+            <div className="flex items-center gap-2">
+              <button 
+                onClick={() => window.location.hash = 'dashboard'}
+                className="p-1.5 hover:bg-neutral-100 rounded-full transition text-neutral-800 cursor-pointer flex items-center justify-center shrink-0"
+                title="Return to home dashboard"
+              >
+                <ArrowLeft className="w-5 h-5 stroke-[2.5]" />
+              </button>
+              <h1 className="text-xl sm:text-2xl font-sans font-medium text-neutral-900 tracking-tight">
+                Daily Cash & Sales Matcher
+              </h1>
+            </div>
+            <p className="text-sm font-sans font-normal text-neutral-400 mt-1.5 pl-8">
+              Check and match the total money in your physical store with today's records of customer bills.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap" id="truthcheck-actions-bar">
+            <span className="text-[10px] uppercase font-bold py-2 px-4 bg-orange-50 text-orange-850 border border-orange-200/50 rounded-full flex items-center gap-1 shadow-xs font-sans">
+              Register Matching Active
+            </span>
+          </div>
         </div>
-        <p className="text-xs text-[#757575] font-normal mt-1 font-sans ml-11">
-          Check and match the total money in your physical store with today's records of customer bills.
-        </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8" id="truthcheck-splitting-container">
@@ -165,7 +181,7 @@ export default function TruthCheck({ audits, receipts, onAddAudit, showConfirm, 
           <div className="p-4 bg-[#f0f9ff] rounded-[24px] border border-[#bae6fd] flex gap-3 items-start text-[11px] text-[#0284c7] font-sans mt-2">
             <Info className="w-5 h-5 text-[#0284c7] shrink-0 stroke-[1.5]" />
             <p className="leading-relaxed font-semibold">
-              We match the bills given to customers against cash in the till to make sure money doesn't get lost.
+              We match the receipts given to customers against actual cash in the registers to make sure money doesn't get lost.
             </p>
           </div>
         </div>

@@ -32,8 +32,12 @@ import { getStoredCurrency, setStoredCurrency, formatCurrency } from './utils/cu
 export default function App() {
   const [currency, setCurrency] = useState<string>(getStoredCurrency);
   const [userSession, setUserSession] = useState<UserSession | null>(() => {
-    const saved = localStorage.getItem('eenvoq_user_session');
-    return saved ? JSON.parse(saved) : null;
+    try {
+      const saved = localStorage.getItem('eenvoq_user_session');
+      return saved ? JSON.parse(saved) : null;
+    } catch (err) {
+      return null;
+    }
   });
 
   const [activeSection, _setActiveSection] = useState<string>(() => {
@@ -92,39 +96,87 @@ export default function App() {
 
   // Core application states loaded from localStorage dynamically
   const [receipts, setReceipts] = useState<Receipt[]>(() => {
-    const saved = localStorage.getItem('eenvoq_receipts');
-    return saved ? JSON.parse(saved) : INITIAL_RECEIPTS;
+    try {
+      const saved = localStorage.getItem('eenvoq_receipts');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) return parsed;
+      }
+    } catch (e) {}
+    return INITIAL_RECEIPTS;
   });
   const [inventory, setInventory] = useState<InventoryItem[]>(() => {
-    const saved = localStorage.getItem('eenvoq_inventory');
-    return saved ? JSON.parse(saved) : INITIAL_INVENTORY;
+    try {
+      const saved = localStorage.getItem('eenvoq_inventory');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) return parsed;
+      }
+    } catch (e) {}
+    return INITIAL_INVENTORY;
   });
   const [debtors, setDebtors] = useState<Debtor[]>(() => {
-    const saved = localStorage.getItem('eenvoq_debtors');
-    return saved ? JSON.parse(saved) : INITIAL_DEBTORS;
+    try {
+      const saved = localStorage.getItem('eenvoq_debtors');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) return parsed;
+      }
+    } catch (e) {}
+    return INITIAL_DEBTORS;
   });
   const [audits, setAudits] = useState<TruthAudit[]>(() => {
-    const saved = localStorage.getItem('eenvoq_audits');
-    return saved ? JSON.parse(saved) : INITIAL_AUDITS;
+    try {
+      const saved = localStorage.getItem('eenvoq_audits');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) return parsed;
+      }
+    } catch (e) {}
+    return INITIAL_AUDITS;
   });
   const [alerts, setAlerts] = useState<Alert[]>(() => {
-    const saved = localStorage.getItem('eenvoq_alerts');
-    return saved ? JSON.parse(saved) : INITIAL_ALERTS;
+    try {
+      const saved = localStorage.getItem('eenvoq_alerts');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) return parsed;
+      }
+    } catch (e) {}
+    return INITIAL_ALERTS;
   });
   const [aiInsights, setAiInsights] = useState<string[]>(SAMPLE_AI_INSIGHTS);
   const [retentionCampaigns, setRetentionCampaigns] = useState<RetentionCampaign[]>(() => {
-    const saved = localStorage.getItem('eenvoq_retention_campaigns');
-    return saved ? JSON.parse(saved) : INITIAL_RETENTION_CAMPAIGNS;
+    try {
+      const saved = localStorage.getItem('eenvoq_retention_campaigns');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) return parsed;
+      }
+    } catch (e) {}
+    return INITIAL_RETENTION_CAMPAIGNS;
   });
   const [chatLogs, setChatLogs] = useState<ChatMessage[]>(() => {
-    const saved = localStorage.getItem('eenvoq_chat_logs');
-    return saved ? JSON.parse(saved) : [];
+    try {
+      const saved = localStorage.getItem('eenvoq_chat_logs');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) return parsed;
+      }
+    } catch (e) {}
+    return [];
   });
 
   // Team & role management states
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>(() => {
-    const saved = localStorage.getItem('eenvoq_team_members');
-    return saved ? JSON.parse(saved) : [];
+    try {
+      const saved = localStorage.getItem('eenvoq_team_members');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) return parsed;
+      }
+    } catch (e) {}
+    return [];
   });
 
   const [activeOperatorId, setActiveOperatorId] = useState<string>(() => {
@@ -142,7 +194,16 @@ export default function App() {
   useEffect(() => {
     if (userSession) {
       const saved = localStorage.getItem('eenvoq_team_members');
-      let loaded: TeamMember[] = saved ? JSON.parse(saved) : [];
+      let loaded: TeamMember[] = [];
+      try {
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed)) {
+            loaded = parsed;
+          }
+        }
+      } catch (err) {}
+
       const creatorExists = loaded.some(m => m.isCreator);
       if (!creatorExists) {
         const creator: TeamMember = {
@@ -664,10 +725,11 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
             showConfirm={showConfirm} 
             onAddInventoryItem={(newItem) => setInventory(prev => [newItem, ...prev])}
             currency={currency}
+            onUpdateInventory={setInventory}
           />
         );
       case 'retention':
-        return <CustomerRetention showConfirm={showConfirm} />;
+        return <CustomerRetention campaigns={retentionCampaigns} onUpdateCampaigns={setRetentionCampaigns} showConfirm={showConfirm} />;
       case 'debtor':
         return <DebtorControl debtors={debtors} onToggleLock={handleToggleDebtorLock} showConfirm={showConfirm} currency={currency} />;
       case 'reports':
@@ -800,8 +862,8 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
         </main>
 
         {/* Global Mobile Bottom Navigation Bar: Screen-wide, Flush base, Premium Sky Blue active styling */}
-        <div className="fixed bottom-0 left-0 right-0 bg-[#F8FAFC] border-t border-slate-200/50 pb-5 pt-3 shadow-xs z-40 md:hidden select-none animate-fade-in" id="global-mobile-bottom-nav">
-          <div className="max-w-7xl mx-auto px-2 flex items-center justify-around">
+        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 pb-5 pt-3.5 shadow-md z-45 md:hidden select-none" id="global-mobile-bottom-nav">
+          <div className="max-w-7xl mx-auto px-4 flex items-center justify-around">
             
             <button 
               type="button" 
@@ -809,54 +871,54 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
                 setActiveSection('dashboard');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
-              className={`flex flex-col items-center gap-1.5 bg-transparent border-0 cursor-pointer ${
-                activeSection === 'dashboard' ? 'text-sky-500 font-medium' : 'text-[#2D2D2D] hover:text-black font-medium'
+              className={`flex flex-col items-center gap-1.5 bg-transparent border-0 cursor-pointer transition ${
+                activeSection === 'dashboard' ? 'text-sky-500 font-semibold' : 'text-slate-400 hover:text-slate-600 font-medium'
               }`}
             >
               <Activity className="w-5 h-5 stroke-[1.5]" />
-              <span className="text-[10px] tracking-tight leading-none uppercase font-medium">Home</span>
+              <span className="text-[10px] tracking-tight leading-none uppercase">Home</span>
             </button>
 
             <button 
               type="button" 
               onClick={() => setActiveSection('receipts')}
-              className={`flex flex-col items-center gap-1.5 bg-transparent border-0 cursor-pointer ${
-                activeSection === 'receipts' ? 'text-sky-500 font-medium' : 'text-[#2D2D2D] hover:text-black font-medium'
+              className={`flex flex-col items-center gap-1.5 bg-transparent border-0 cursor-pointer transition ${
+                activeSection === 'receipts' ? 'text-sky-500 font-semibold' : 'text-slate-400 hover:text-slate-600 font-medium'
               }`}
             >
               <CircleDollarSign className="w-5 h-5 stroke-[1.5]" />
-              <span className="text-[10px] tracking-tight leading-none uppercase font-medium">Sales</span>
+              <span className="text-[10px] tracking-tight leading-none uppercase">Sales</span>
             </button>
 
             <button 
               type="button" 
               onClick={() => setActiveSection('inventory')}
-              className={`flex flex-col items-center gap-1.5 bg-transparent border-0 cursor-pointer ${
-                activeSection === 'inventory' ? 'text-sky-500 font-medium' : 'text-[#2D2D2D] hover:text-black font-medium'
+              className={`flex flex-col items-center gap-1.5 bg-transparent border-0 cursor-pointer transition ${
+                activeSection === 'inventory' ? 'text-sky-500 font-semibold' : 'text-slate-400 hover:text-slate-600 font-medium'
               }`}
             >
               <ShoppingCart className="w-5 h-5 stroke-[1.5]" />
-              <span className="text-[10px] tracking-tight leading-none uppercase font-medium">Inventory</span>
+              <span className="text-[10px] tracking-tight leading-none uppercase">Inventory</span>
             </button>
 
             <button 
               type="button" 
               onClick={() => setActiveSection('assistant')}
-              className={`flex flex-col items-center gap-1.5 bg-transparent border-0 cursor-pointer ${
-                activeSection === 'assistant' ? 'text-sky-500 font-medium' : 'text-[#2D2D2D] hover:text-black font-medium'
+              className={`flex flex-col items-center gap-1.5 bg-transparent border-0 cursor-pointer transition ${
+                activeSection === 'assistant' ? 'text-sky-500 font-semibold' : 'text-slate-400 hover:text-slate-600 font-medium'
               }`}
             >
               <Bot className="w-5 h-5 stroke-[1.5]" />
-              <span className="text-[10px] tracking-tight leading-none uppercase font-medium">Eenvoq AI</span>
+              <span className="text-[10px] tracking-tight leading-none uppercase">Eenvoq AI</span>
             </button>
 
             <button 
               type="button" 
               onClick={() => setMobileMenuOpen(true)}
-              className="flex flex-col items-center gap-1.5 bg-transparent border-0 cursor-pointer text-[#2D2D2D] hover:text-black font-medium"
+              className="flex flex-col items-center gap-1.5 bg-transparent border-0 cursor-pointer text-slate-400 hover:text-slate-600 font-medium transition"
             >
               <Menu className="w-5 h-5 stroke-[1.5]" />
-              <span className="text-[10px] tracking-tight leading-none uppercase font-medium">More</span>
+              <span className="text-[10px] tracking-tight leading-none uppercase">More</span>
             </button>
 
           </div>
