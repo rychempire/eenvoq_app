@@ -5,7 +5,8 @@ import {
   Activity, ClipboardList, RefreshCw, FileDown, Upload, 
   Trash2, Check, CheckSquare, Square, User, Calendar, 
   ChevronRight, ArrowUpRight, Barcode, HelpCircle, Package,
-  FileCheck, FileText, ArrowRight, ShieldAlert, BadgeCheck, Sparkle
+  FileCheck, FileText, ArrowRight, ShieldAlert, BadgeCheck, Sparkle,
+  Coins, TrendingDown
 } from 'lucide-react';
 import EenvoqIcon from './EenvoqIcon';
 import { InventoryItem } from '../types';
@@ -509,13 +510,13 @@ export default function InventoryIntelligence({
 
     if (query.includes("reorder") || query.includes("order")) {
       const list = localInventory.filter(i => i.stockLevel <= i.safeMin).map(i => i.name).join(", ");
-      reply += `🚨 **Products needing urgent restock:** You have ${lowStockProducts.length} items below safe limit: **${list || "None!"}**.\n\nWe recommend ordering 48 cartons of Peak Milk from FrieslandCampina today to secure your profit margin.`;
+      reply += `**Products needing urgent restock:** You have ${lowStockProducts.length} items below safe limit: **${list || "None!"}**.\n\nWe recommend ordering 48 cartons of Peak Milk from FrieslandCampina today to secure your profit margin.`;
     } else if (query.includes("run out") || query.includes("deplet") || query.includes("week")) {
-      reply += `📅 **Expected Stock Outs within 7 days:** \n- **Milo Refill Pack 800g** (3.3 days remaining, velocity 1.2 packs/day)\n- **Supa Garri Yellow 50kg** (4.5 days remaining)\n- **Indomie Onion Chicken** (2.2 days remaining).`;
+      reply += `**Expected Stock Outs within 7 days:** \n- Milo Refill Pack 800g (3.3 days remaining, velocity 1.2 packs/day)\n- Supa Garri Yellow 50kg (4.5 days remaining)\n- Indomie Onion Chicken (2.2 days remaining).`;
     } else if (query.includes("dead") || query.includes("slow")) {
-      reply += `📉 **Dead stock (Velocity < 1.2 units/day):** \n- **Supa Garri Yellow** is selling very slow. Keep stock levels minimal to prevent capital being tied up in storage.`;
+      reply += `**Dead stock (Velocity < 1.2 units/day):** \n- Supa Garri Yellow is selling very slow. Keep stock levels minimal to prevent capital being tied up in storage.`;
     } else {
-      reply += `📊 **Inventory Outlook optimal:** We track ${localInventory.length} lines. Total retail valuation is of ${formatCurrency(totalRetailValue, currency)} with a predicted potential profit of ${formatCurrency(potentialProfit, currency)}.`;
+      reply += `**Inventory Outlook optimal:** We track ${localInventory.length} lines. Total retail valuation is of ${formatCurrency(totalRetailValue, currency)} with a predicted potential profit of ${formatCurrency(potentialProfit, currency)}.`;
     }
 
     setAiAssistantReply(reply);
@@ -766,22 +767,34 @@ export default function InventoryIntelligence({
               <h4 className="text-xs uppercase font-black text-neutral-400 tracking-wider">Predictive Sentry Warnings</h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {[
-                  { text: `${lowStockProducts[0]?.name || "Peak Milk"} will run out in 3 days`, type: 'crit', badge: '⚠ OUT' },
-                  { text: `${lowStockProducts.length || 3} products are below safe limit reorder levels`, type: 'warning', badge: '📦 LOW' },
-                  { text: "12 slower products have not recorded checkouts in 30 days", type: 'slow', badge: '📉 DEAD' },
-                  { text: `${formatCurrency(85000, currency)} current capital tied up in slow-moving stock lines`, type: 'capital', badge: '💰 TIED' }
-                ].map((item, idx) => (
-                  <div 
-                    key={idx}
-                    onClick={() => {
-                      setActiveTab('alerts');
-                    }}
-                    className="p-3 border border-neutral-100 rounded-[20px] bg-neutral-50/50 hover:bg-neutral-50 flex items-start gap-2.5 cursor-pointer transition"
-                  >
-                    <span className="text-[9px] bg-orange-50 text-orange-850 font-bold px-2 py-0.5 rounded-md self-center font-mono">{item.badge}</span>
-                    <span className="text-xs text-neutral-800 font-semibold leading-normal self-center">{item.text}</span>
-                  </div>
-                ))}
+                  { text: `${lowStockProducts[0]?.name || "Peak Milk"} will run out in 3 days`, type: 'crit', badge: 'OUT' },
+                  { text: `${lowStockProducts.length || 3} products are below safe limit reorder levels`, type: 'warning', badge: 'LOW' },
+                  { text: "12 slower products have not recorded checkouts in 30 days", type: 'slow', badge: 'DEAD' },
+                  { text: `${formatCurrency(85000, currency)} current capital tied up in slow-moving stock lines`, type: 'capital', badge: 'TIED' }
+                ].map((item, idx) => {
+                  const getWarningIcon = (type: string) => {
+                    switch (type) {
+                      case 'crit': return <AlertTriangle className="w-3.5 h-3.5 text-red-650 shrink-0 self-center" />;
+                      case 'warning': return <Package className="w-3.5 h-3.5 text-amber-600 shrink-0 self-center" />;
+                      case 'slow': return <TrendingDown className="w-3.5 h-3.5 text-gray-500 shrink-0 self-center" />;
+                      case 'capital': return <Coins className="w-3.5 h-3.5 text-indigo-600 shrink-0 self-center" />;
+                      default: return null;
+                    }
+                  };
+                  return (
+                    <div 
+                      key={idx}
+                      onClick={() => {
+                        setActiveTab('alerts');
+                      }}
+                      className="p-3 border border-neutral-100 rounded-[20px] bg-neutral-50/50 hover:bg-neutral-50 flex items-start gap-2.5 cursor-pointer transition"
+                    >
+                      {getWarningIcon(item.type)}
+                      <span className="text-[9px] bg-orange-50 text-orange-850 font-bold px-2 py-0.5 rounded-md self-center font-mono">{item.badge}</span>
+                      <span className="text-xs text-neutral-800 font-semibold leading-normal self-center">{item.text}</span>
+                    </div>
+                  );
+                })}
               </div>
             </div>
 
@@ -1487,7 +1500,7 @@ export default function InventoryIntelligence({
                           <div className="flex items-center gap-2">
                             <h5 className="font-sans font-black text-neutral-900 text-sm">{item.name}</h5>
                             <span className="text-[9px] text-red-800 bg-red-100 font-bold px-2 py-0.5 rounded uppercase font-mono">
-                              {isOut ? '🔴 Out Of Stock' : '🔴 Critical STOCK'}
+                              {isOut ? 'Out Of Stock' : 'Critical STOCK'}
                             </span>
                           </div>
                           

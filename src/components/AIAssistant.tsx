@@ -101,9 +101,9 @@ export default function AIAssistant({
           structured: {
             answer: "Welcome back. I am fully integrated with your POS register, debtor ledgers, and inventory database. Ask me to find security breaches, calculate true daily profit, or draft restock purchase orders.",
             evidence: [
-              "🔌 Live connection: checkout terminal broader network is functioning",
-              "📁 Reconciled audits: 7 complete ledgers loaded",
-              "📊 Outstanding customer tab assets tracking: active"
+              "Terminal live connection status: online",
+              "Reconciled audits: 7 complete registers synchronized",
+              "Outstanding customer customer tab assets tracking: active"
             ],
             actions: [
               { type: 'ask_profit', label: 'Suggest restock recommendations', value: 'Which products should I reorder?' },
@@ -260,10 +260,10 @@ export default function AIAssistant({
       if (category === 'invoice') {
         answer = "Gemini OCR extracted Supplier Invoice from Peak Distributors. Successfully read metadata and line-items. I recommend generating a Purchase Order Draft for high velocity milk units.";
         evidence = [
-          "📂 Supplier: Jiggler Foods & Diary Ltd.",
-          "📦 Product: Peak Milk 50cl (Total count: 48 cartons)",
-          "💰 Invoice Value: N57,600 Naira",
-          "📅 Date logged: 2026-06-20"
+          "Supplier Record: Jiggler Foods & Diary Ltd.",
+          "Line Product Name: Peak Milk 50cl (Total count: 48 cartons)",
+          "Invoice Cost Valuation: N57,600 Naira",
+          "Date Logged in System: 2026-06-20"
         ];
         actions = [
           { type: 'approve_purchase_order', label: 'Approve Purchase OrderPO-394', value: 'Approve Invoice purchase' },
@@ -273,10 +273,10 @@ export default function AIAssistant({
       } else if (category === 'receipt') {
         answer = "Extracted customer checkout verification swipe from terminal. The system automatically reconciled transaction total with virtual ledger balance.";
         evidence = [
-          "🧾 POS Receipt ID: TXN-4011-BROAD",
-          "💰 Extracted Total: N12,400 Naira",
-          "👤 Cashier Operator: Prince",
-          "✅ Audit matching: 100% matched to Broad-Street terminal journal entries."
+          "POS Receipt Reference ID: TXN-4011-BROAD",
+          "Extracted Receipt Total: N12,400 Naira",
+          "System Operator Session: Prince",
+          "Journal Verification Audit: 100% matched to Broad-Street terminal journal entries."
         ];
         actions = [
           { type: 'reconcile_match', label: 'Flag & Record Validated Sale', value: 'Save verified' },
@@ -285,9 +285,9 @@ export default function AIAssistant({
       } else {
         answer = "Image parsing completed. Discrepancy logged for physical damages matching damaged inventory stock logs.";
         evidence = [
-          "📁 File type: DAMAGED STOCK CAPTURED",
-          "📦 Affected product index: Fanta Soft Drinks",
-          "⚠️ Reason: Carbonation leak / burst container during broad corridor transport"
+          "Log File Category: DAMAGED STOCK CAPTURED",
+          "Target Product Name: Fanta Soft Drinks",
+          "Identified Inventory Exception: Carbonation leak / burst container during broad corridor transport"
         ];
         actions = [
           { type: 'write_off_inventory', label: 'Write-off Damaged Unit', value: 'Write-off stock' },
@@ -382,7 +382,7 @@ export default function AIAssistant({
       if (lowercaseQuery.includes('stock') || lowercaseQuery.includes('reorder') || lowercaseQuery.includes('depletion') || lowercaseQuery.includes('run out')) {
         const lowStockItems = inventory.filter(p => p.stockLevel <= p.safeMin);
         answerTxt = `Low stock intelligence triggers active warnings. I detected ${lowStockItems.length} core products nearing critical stock exhaustion. I recommend prompt restocks to prevent competitor sales capture.`;
-        evidenceList = lowStockItems.map(p => `📦 ${p.name}: Count ${p.stockLevel} units (Minimum Margin Limit: ${p.safeMin})`);
+        evidenceList = lowStockItems.map(p => `Stock Alert: ${p.name} - Count ${p.stockLevel} units (Minimum Margin Limit: ${p.safeMin})`);
         
         actionsList = [
           { type: 'restock_peak', label: 'Approve Restock PO (All Overdues)', value: 'Draft restocks instantly' },
@@ -394,7 +394,7 @@ export default function AIAssistant({
         const outstanding = debtors.filter(d => d.amountOwed > 0);
         const outstandingSum = outstanding.reduce((sum, d) => sum + d.amountOwed, 0);
         answerTxt = `Accounts Receivable ledgers hold outstanding debts totaling ${formatCurrency(outstandingSum, currency)}. There are ${outstanding.filter(d => d.riskRating === 'high').length} high-risk active customer lines operating outside payment grace periods.`;
-        evidenceList = outstanding.map(d => `⚠️ ${d.name}: owes ${formatCurrency(d.amountOwed, currency)} (DueDate: ${d.dueDate} - risk index: ${d.riskRating.toUpperCase()})`);
+        evidenceList = outstanding.map(d => `Outstanding Trace: ${d.name} owes ${formatCurrency(d.amountOwed, currency)} (DueDate: ${d.dueDate} - risk index: ${d.riskRating.toUpperCase()})`);
         
         actionsList = [
           { type: 'sms_push_reminders', label: 'Dispatch Automated SMS Reminders', value: 'Launch reminder queue' },
@@ -407,9 +407,9 @@ export default function AIAssistant({
         const totalSalesToday = todayReceipts.reduce((sum, r) => sum + r.totalAmount, 0);
         answerTxt = `Revenue today is reported at ${formatCurrency(totalSalesToday || 218500, currency)}. This represents a 14% drop in food corridor traffic relative to previous shift registers, mostly caused by an afternoon local network disconnect.`;
         evidenceList = [
-          `📉 Beverage product baskets dropped 22% during afternoon hours.`,
-          `💵 Reconciled Tills show no structural deficits.`,
-          `📊 Calculated gross margins: 24.5% safe baseline.`
+          `Beverage product baskets dropped 22% during afternoon hours.`,
+          `Reconciled Tills show no structural deficits.`,
+          `Calculated gross margins: 24.5% safe baseline.`
         ];
         
         actionsList = [
@@ -421,9 +421,9 @@ export default function AIAssistant({
       else if (lowercaseQuery.includes('suspicious') || lowercaseQuery.includes('fraud') || lowercaseQuery.includes(' Prince') || lowercaseQuery.includes('leak') || lowercaseQuery.includes('variance')) {
         answerTxt = `Operational forensic monitors flagged 2 anomalies under checkout supervisor sign-offs that suggest cash drawer leaks or excessive soft discounts.`;
         evidenceList = [
-          `⚠️ Operator Prince: Logged 2 high-value checkout voids within 4 minutes.`,
-          `⚠️ Discount margins: An average 28% coupon was used three times without standard authorization logs.`,
-          `⚖️ Cash drawer matching: Expected cashier balances exceeded actual hand-over by 1,450 naira.`
+          `Operator Prince alert: Logged 2 high-value checkout voids within 4 minutes.`,
+          `Discount margins alert: An average 28% coupon was used three times without standard authorization logs.`,
+          `Cash drawer matching discrepancy: Expected cashier balances exceeded actual hand-over by 1,450 naira.`
         ];
         
         actionsList = [
@@ -435,9 +435,9 @@ export default function AIAssistant({
       else {
         answerTxt = `Understood. I am online with access to the store database. How would you like me to forecast store margins, draft PO files, or dispatch debt messages?`;
         evidenceList = [
-          `📁 26 active inventory records registered.`,
-          `👤 7 operators verified within team rosters.`,
-          `🔒 Core system security levels are optimal.`
+          `26 active inventory records registered.`,
+          `7 operators verified within team rosters.`,
+          `Core system security levels are optimal.`
         ];
         actionsList = [
           { type: 'forecast_demand', label: 'Forecast next week\'s product demand', value: 'Predict trends' },
@@ -495,27 +495,27 @@ export default function AIAssistant({
       switch (actionType) {
         case 'restock_peak':
         case 'approve_purchase_order':
-          successMsg = `✅ Restock Purchase Order (Total: N48,500) successfully structured and dispatched to Suppliers. Stock allocation reserves will update upon warehouse fulfillment.`;
+          successMsg = `Restock Purchase Order (Total: N48,500) successfully structured and dispatched to Suppliers. Stock allocation reserves will update upon warehouse fulfillment.`;
           break;
         case 'sms_push_reminders':
         case 'sms_push':
-          successMsg = `📡 Customer overdue collection remind streams initiated! Automated SMS alerts successfully dispatched to Baba Sadiq and pending debtor profiles.`;
+          successMsg = `Customer overdue collection remind streams initiated! Automated SMS alerts successfully dispatched to Baba Sadiq and pending debtor profiles.`;
           break;
         case 'credit_suspend_highs':
-          successMsg = `🔒 Account credit suspended for Baba Sadiq and related high-risk debtors! POS swipe registers are locked for these profiles until balances are settled.`;
+          successMsg = `Account credit suspended for Baba Sadiq and related high-risk debtors! POS swipe registers are locked for these profiles until balances are settled.`;
           break;
         case 'flag_audit':
-          successMsg = `🕵️ Forensic alert dispatched to administrator panel. Cashier Prince terminal activity is flagged for dual-void inspection audits.`;
+          successMsg = `Forensic alert dispatched to administrator panel. Cashier Prince terminal activity is flagged for dual-void inspection audits.`;
           break;
         case 'launch_push_promotion':
         case 'create_promo':
-          successMsg = `🎉 Flash promotion campaign launched! "5% weekend discount on Pepsi & Coca-Cola" push notification broadcast to all regular customers.`;
+          successMsg = `Flash promotion campaign launched! "5% weekend discount on Pepsi & Coca-Cola" push notification broadcast to all regular customers.`;
           break;
         case 'write_off_inventory':
-          successMsg = `⚖️ Inventory stock discrepancy registered. Damaged beverage units written-off; audit logging track updated.`;
+          successMsg = `Inventory stock discrepancy registered. Damaged beverage units written-off; audit logging track updated.`;
           break;
         default:
-          successMsg = `👍 Action "${metaLabel}" approved and fully executed. Store audit log was updated.`;
+          successMsg = `Action "${metaLabel}" approved and fully executed. Store audit log was updated.`;
           break;
       }
 
@@ -588,12 +588,12 @@ export default function AIAssistant({
       </div>
 
       {/* 2. CORE NAVIGATION TAB STRIPS */}
-      <div className="flex border-b border-[#e3e3e3] bg-white text-[#444746] px-6 select-none shrink-0" id="assistant-inner-tabs">
+      <div className="flex overflow-x-auto whitespace-nowrap scrollbar-none border-b border-[#e3e3e3] bg-white text-[#444746] px-4 select-none shrink-0" id="assistant-inner-tabs">
         {[
-          { tab: 'chat', label: 'Executive Chat', icon: <MessageSquare className="w-3.5 h-3.5" /> },
-          { tab: 'insights', label: 'Daily Intelligence Insights', icon: <Sparkles className="w-3.5 h-3.5" /> },
-          { tab: 'tasks', label: 'Action Center Tasks', icon: <CheckSquare className="w-3.5 h-3.5" /> },
-          { tab: 'history', label: 'Previous Audit History', icon: <Clock className="w-3.5 h-3.5" /> }
+          { tab: 'chat', label: <span><span className="hidden xs:inline">Executive </span>Chat</span>, icon: <MessageSquare className="w-3.5 h-3.5" /> },
+          { tab: 'insights', label: <span><span className="hidden sm:inline">Daily </span>Insights</span>, icon: <Sparkles className="w-3.5 h-3.5" /> },
+          { tab: 'tasks', label: <span><span className="hidden sm:inline">Action </span>Tasks</span>, icon: <CheckSquare className="w-3.5 h-3.5" /> },
+          { tab: 'history', label: <span><span className="hidden md:inline">Previous </span>History</span>, icon: <Clock className="w-3.5 h-3.5" /> }
         ].map((t) => (
           <button 
             key={t.tab}
@@ -603,7 +603,7 @@ export default function AIAssistant({
                 setTimeout(() => threadEndRef.current?.scrollIntoView({ behavior: 'smooth' }), 50);
               }
             }}
-            className={`flex items-center gap-2 py-3.5 px-4 text-xs border-b-2 transition-all relative cursor-pointer ${
+            className={`flex-1 flex items-center justify-center gap-2 py-3.5 px-3 text-xs border-b-2 transition-all relative cursor-pointer ${
               activeTab === t.tab ? 'border-sky-500 text-sky-600 font-medium' : 'border-transparent text-slate-500 hover:text-black font-normal'
             }`}
           >

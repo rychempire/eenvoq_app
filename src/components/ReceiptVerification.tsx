@@ -301,7 +301,7 @@ export default function ReceiptVerification({
       setOfflineQueue(prev => [...prev, newReceipt]);
       if (showConfirm) {
         showConfirm(
-          "Offline Offline Queue Buffered 📡",
+          "Offline Queue Buffered [Sync Pending]",
           `Connectivity offline! Sale draft saved locally. It will auto-synchronize back once network is restored.`,
           () => {}
         );
@@ -339,9 +339,9 @@ export default function ReceiptVerification({
     if (query.includes('sales down')) {
       setAiAnswer("Sales are Down 18% today matching systemic power cuts in broad-street corridor which limited POS transactions after 4:16 PM. Cash collections were robust compared to card swipes.");
     } else if (query.includes('restock')) {
-      setAiAnswer("Suggested Reorders:\n📦 Pepsi 50cl (Stock: 4) - Reorder 40 units\n📦 Milk Refills (Stock: 1) - Reorder 20 units.\nBoth carry high velocity trends.");
+      setAiAnswer("Suggested Reorders:\nPepsi 50cl (Stock: 4) - Reorder 40 units\nMilk Refills (Stock: 1) - Reorder 20 units.\nBoth carry high velocity trends.");
     } else if (query.includes('unusual') || query.includes('suspicious')) {
-      setAiAnswer("Audit AI identified 2 flagrant anomalies today:\n⚠️ Excessive discount (30%) approved by supervisor 'Prince' on TXN-2026-61301.\n⚠️ Refund recorded for client 'Amara Cole' with zero corresponding inventory returns.");
+      setAiAnswer("Audit AI identified 2 flagrant anomalies today:\nExcessive discount (30%) approved by supervisor 'Prince' on TXN-2026-61301.\nRefund recorded for client 'Amara Cole' with zero corresponding inventory returns.");
     } else {
       setAiAnswer("GroceryGate Sales Intelligence matches current stock levels and notes normal volume indices. High spending observed across bulk cereal products.");
     }
@@ -782,21 +782,34 @@ export default function ReceiptVerification({
                 </h3>
                 <div className="space-y-3" id="insights-cards-bucket">
                   {[
-                    { flag: '⚠', title: 'Revenue variance', desc: 'Revenue sits 18% below yesterday matching early afternoon credit terms lockouts.', ext: 'Our broad-street terminal recorded lower consumer transactions compared to online credit ledgers.' },
-                    { flag: '🌱', title: 'Loyalty index rises', desc: 'Customer points claiming increased by 12% following campaign alerts.', ext: 'Bulk product purchases with loyalty cards boosted general retention indexes.' },
-                    { flag: '📦', title: 'Stock-out proximity alerts', desc: '3 inventory categories face depletion within 48 hours.', ext: 'Pepsi and Milk products require urgent reorder to maintain positive customer velocity.' },
-                    { flag: '💰', title: 'Cash hand-over variance', desc: 'Slight POS difference recorded on previous shift log.', ext: 'Cashier drawer reported 500 variance against computer-tallied bills.' }
-                  ].map((ins, i) => (
-                    <div 
-                      key={i} 
-                      onClick={() => setSelectedInsight({ title: ins.title, desc: ins.ext })}
-                      className="p-3.5 bg-neutral-50/70 border border-neutral-100 hover:border-gray-300 hover:bg-neutral-50 rounded-xl transition cursor-pointer select-none text-xs"
-                    >
-                      <span className="font-sans mr-2 text-sm">{ins.flag}</span>
-                      <strong className="text-slate-900 font-display font-bold block mb-1">{ins.title}</strong>
-                      <p className="text-[#5f6368] leading-relaxed text-[11px]">{ins.desc}</p>
-                    </div>
-                  ))}
+                    { flag: 'alert', title: 'Revenue variance', desc: 'Revenue sits 18% below yesterday matching early afternoon credit terms lockouts.', ext: 'Our broad-street terminal recorded lower consumer transactions compared to online credit ledgers.' },
+                    { flag: 'growth', title: 'Loyalty index rises', desc: 'Customer points claiming increased by 12% following campaign alerts.', ext: 'Bulk product purchases with loyalty cards boosted general retention indexes.' },
+                    { flag: 'stock', title: 'Stock-out proximity alerts', desc: '3 inventory categories face depletion within 48 hours.', ext: 'Pepsi and Milk products require urgent reorder to maintain positive customer velocity.' },
+                    { flag: 'finance', title: 'Cash hand-over variance', desc: 'Slight POS difference recorded on previous shift log.', ext: 'Cashier drawer reported 500 variance against computer-tallied bills.' }
+                  ].map((ins, i) => {
+                    const getInsightIcon = (flag: string) => {
+                      switch (flag) {
+                        case 'alert': return <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0" />;
+                        case 'growth': return <TrendingUp className="w-4 h-4 text-emerald-500 shrink-0" />;
+                        case 'stock': return <ShoppingCart className="w-4 h-4 text-sky-500 shrink-0" />;
+                        case 'finance': return <CreditCard className="w-4 h-4 text-indigo-500 shrink-0" />;
+                        default: return null;
+                      }
+                    };
+                    return (
+                      <div 
+                        key={i} 
+                        onClick={() => setSelectedInsight({ title: ins.title, desc: ins.ext })}
+                        className="p-3.5 bg-neutral-50/70 border border-neutral-100 hover:border-gray-300 hover:bg-neutral-50 rounded-xl transition cursor-pointer select-none text-xs"
+                      >
+                        <div className="flex items-center gap-2 mb-1">
+                          {getInsightIcon(ins.flag)}
+                          <strong className="text-slate-900 font-display font-bold">{ins.title}</strong>
+                        </div>
+                        <p className="text-[#5f6368] leading-relaxed text-[11px]">{ins.desc}</p>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
 
@@ -1420,7 +1433,7 @@ export default function ReceiptVerification({
                       <div>
                         <span className="text-gray-400 text-[9px] uppercase tracking-wider block">Security Token Signature</span>
                         <span className="text-[10px] font-mono text-indigo-900 bg-indigo-50 border border-indigo-100 px-3 py-1 rounded-sm block mt-0.5">
-                          🔒 {selectedTx.securitySignature}
+                          Verified Trace Key: {selectedTx.securitySignature}
                         </span>
                       </div>
                       
@@ -1580,8 +1593,8 @@ export default function ReceiptVerification({
                   <div className="space-y-4" id="cust-details-card-body">
                     <div className="select-text">
                       <strong className="text-lg font-black text-slate-800 block leading-tight">{selectedCustProfile.name}</strong>
-                      <span className="text-[11px] text-[#5f6368] font-mono block mt-1">📧 {selectedCustProfile.email}</span>
-                      <span className="text-[11px] text-[#5f6368] font-mono block">📱 {selectedCustProfile.phone}</span>
+                      <span className="text-[11px] text-[#5f6368] font-mono block mt-1">Email: {selectedCustProfile.email}</span>
+                      <span className="text-[11px] text-[#5f6368] font-mono block">Phone: {selectedCustProfile.phone}</span>
                     </div>
 
                     <div className="border-t border-b border-gray-100 py-3.5 space-y-2 select-none text-xs">
@@ -1613,10 +1626,10 @@ export default function ReceiptVerification({
                       <div className="flex justify-between items-center mt-2 text-xs">
                         <span className="font-semibold text-sky-950">
                           {selectedCustProfile.totalSpend > 150000 
-                            ? '⭐ Top Value Account' 
+                            ? 'Top Value Account' 
                             : selectedCustProfile.txCount > 4 
-                              ? '🌱 Loyal Household buyer' 
-                              : '📈 Walk-in Buyer'}
+                              ? 'Loyal Household buyer' 
+                              : 'Walk-in Buyer'}
                         </span>
                         <span className="text-[10px] font-bold text-sky-800">{selectedCustProfile.totalSpend > 150000 ? '98% retention' : '82% retention'}</span>
                       </div>
@@ -1733,7 +1746,7 @@ export default function ReceiptVerification({
             </div>
 
             <p className="text-[11px] text-indigo-900 font-medium bg-[#f0f4ff] border border-indigo-100 p-2.5 rounded-xl block mt-4 leading-normal font-mono">
-              ⚡ Calculated target revenue of today: {formatCurrency(todayRevenue, currency)}.
+              Calculated target revenue of today: {formatCurrency(todayRevenue, currency)}.
             </p>
 
             <div className="flex gap-2.5 mt-5">
@@ -1884,7 +1897,7 @@ export default function ReceiptVerification({
             </button>
 
             <div className="text-center pb-3 border-b border-dashed border-gray-200">
-              <span className="text-emerald-600 text-2xl font-black block">✓ Sale Logged</span>
+              <span className="text-emerald-600 text-2xl font-black block">Sale Logged Successfully</span>
               <p className="text-[10px] text-gray-500 mt-1 uppercase font-bold tracking-widest leading-none font-sans">GroceryGate Terminal</p>
             </div>
 
