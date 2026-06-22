@@ -258,498 +258,538 @@ export default function Dashboard({
   ];
 
   return (
-    <div className="space-y-6 pb-24 animate-fade-in font-sans text-neutral-900 select-none max-w-7xl mx-auto w-full px-3 sm:px-4 md:px-6 lg:px-8" id="eenvoq-improved-dashboard">
+    <div className="space-y-6 pb-24 animate-fade-in font-sans text-neutral-900 select-none" id="eenvoq-mobile-dashboard">
       
       {/* ===============================================
-          1. HEADER GREETING & INTEGRATED BALANCE BANNER
+          MAIN GREETING & SKY BLUE GLOW MESH BACKGROUND
           =============================================== */}
-      <div className="relative overflow-hidden rounded-[28px] md:rounded-[32px] border border-neutral-200 bg-gradient-to-br from-white via-sky-50/10 to-sky-100/10 p-5 md:p-6 lg:p-8 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-6" id="dashboard-mesh-wrapper">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(14,165,233,0.08)_0%,_rgba(14,165,233,0)_70%)] pointer-events-none" />
+      <div className="relative overflow-hidden rounded-[32px] p-1 border border-neutral-150/45 bg-white shadow-xs" id="dashboard-mesh-wrapper">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(14,165,233,0.14)_0%,_rgba(14,165,233,0)_75%)] pointer-events-none" />
         
-        {/* Profile/Store Meta */}
-        <div className="relative z-10 text-left space-y-2 max-w-xl">
-          <div className="flex flex-wrap items-center gap-2.5">
-            <h1 className="text-xl sm:text-2xl md:text-3xl font-sans font-medium text-neutral-900 tracking-tight" id="dashboard-business-heading">
-              {businessName}
-            </h1>
-            <span className="bg-sky-50 text-sky-805 text-[9px] font-bold px-2 py-0.5 rounded-full border border-sky-150 uppercase tracking-wider font-mono shrink-0">
-              Live &bull; Active
-            </span>
-          </div>
-          <p className="text-xs sm:text-sm text-neutral-600 font-sans">
-            Good morning, <span className="text-indigo-900 font-semibold">{userName}</span>. Here is your store's financial standing and risk checklist for today.
-          </p>
-        </div>
-
-        {/* Total balance widget inside header */}
-        <div className="relative z-10 w-full md:w-auto bg-white/70 backdrop-blur-md border border-neutral-200 rounded-2xl sm:rounded-[24px] p-4 sm:p-5 flex flex-col [@media(min-width:375px)]:flex-row justify-between items-start [@media(min-width:375px)]:items-center gap-4 shadow-xs" id="dashboard-hero-balance-card">
+        {/* Main Header Greeting Block */}
+        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between p-6 gap-4" id="dashboard-navbar-panel">
           <div className="text-left">
-            <span className="text-[10px] text-neutral-500 font-semibold uppercase tracking-wider block">Today's Sales Value</span>
-            <div className="flex items-baseline gap-1 mt-1">
-              <span className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 font-sans">
-                {expectedToday.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-              </span>
-              <span className="text-xs font-semibold text-sky-600 font-mono">
-                {currencySymbol}
+            <div className="flex items-center gap-2">
+              <h1 className="text-xl sm:text-2xl font-sans font-medium text-neutral-900 tracking-tight" id="dashboard-business-heading">
+                {businessName}
+              </h1>
+              <span className="bg-sky-50 text-sky-850 text-[9px] font-medium px-2 py-0.5 rounded-full border border-sky-200/40 uppercase tracking-wider font-mono">
+                You're Online
               </span>
             </div>
+            <p className="text-sm font-sans font-normal text-neutral-900 mt-1.5">
+              Good morning, <span className="text-[#102a43] font-medium">{userName}</span> &bull;
+            </p>
           </div>
-          <div className="bg-emerald-50 border border-emerald-150 px-3 py-1.5 rounded-full flex items-center gap-1.5 shrink-0 select-none">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-650 animate-pulse" />
-            <span className="text-[10px] font-bold text-emerald-800 font-mono uppercase tracking-tight">+12.4% today</span>
+
+          {/* Record a Sale CTA Button (Replacing Currency Toggle) */}
+          <button
+            type="button"
+            onClick={() => {
+              window.location.hash = 'receipts/add';
+              setActiveSection('receipts');
+            }}
+            className="flex items-center gap-2 bg-[#1e40af] hover:bg-blue-800 text-white transition-all duration-200 px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider shadow-md hover:shadow-lg focus:ring-2 focus:ring-blue-300 hover:scale-[1.02] active:scale-95 cursor-pointer border border-transparent whitespace-nowrap self-start sm:self-auto"
+            id="header-record-sale-cta"
+          >
+            <Plus className="w-4.5 h-4.5 shrink-0 text-white" />
+            <span>Record a Sale</span>
+          </button>
+        </div>
+
+        {/* ===============================================
+            TODAY'S TOTAL BALANCE (THE NEW UNIFIED HERO CARD)
+            =============================================== */}
+        <div className="relative z-10 px-6 pb-6">
+          <div className="relative bg-sky-50/25 backdrop-blur-md border border-sky-100/40 rounded-[32px] p-6 shadow-xs overflow-hidden" id="dashboard-hero-balance-card">
+            
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+              <div className="text-left">
+                <span className="text-[10px] text-neutral-900 font-medium uppercase tracking-wider block">Today's Sales Sum</span>
+                <div className="flex items-baseline gap-1 mt-1.5">
+                  <span className="text-4xl font-medium tracking-tight text-sky-950 font-sans">
+                    {expectedToday.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  </span>
+                  <sup className="text-xs uppercase font-medium align-super text-sky-600 ml-1">
+                    {currencySymbol}
+                  </sup>
+                </div>
+              </div>
+
+              {/* vs Yesterday percentage indicator */}
+              <div className="bg-emerald-50/70 border border-emerald-200/60 px-3.5 py-1.5 rounded-full flex items-center gap-1.5 text-left">
+                <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse" />
+                <span className="text-xs font-medium text-emerald-800 font-mono">+12.4% vs yesterday</span>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
 
       {/* ===============================================
-      {/* ===============================================
-          2. GENERAL GRID STRUCTURE: MAIN vs SIDEBAR
+          3. SPLIT METRICS CARDS (TRANSACTIONS & CUSTOMERS)
           =============================================== */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 items-start">
+      <div className="grid grid-cols-2 gap-4 relative select-none" id="dashboard-split-metrics-grid">
         
-        {/* LEFT COLUMN: PRIMARY GRAPHS & METRIC SUMMARIES */}
-        <div className="lg:col-span-2 space-y-6">
+        {/* Left-Hand Column (Transactions) */}
+        <div className="bg-sky-50/25 backdrop-blur-md border border-sky-100/40 rounded-[32px] p-5 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-3 text-left">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-sky-100/80 flex items-center justify-center text-sky-600 shrink-0">
+              <Activity className="w-5 h-5 stroke-[1.5]" />
+            </div>
+            <div className="text-left">
+              <p className="text-[10px] font-medium text-neutral-900 uppercase tracking-widest leading-none">Transactions</p>
+              <p className="text-2xl font-normal text-sky-950 font-mono mt-1">{totalTransactions}</p>
+            </div>
+          </div>
+          <div className="text-[10px] text-emerald-800 font-mono font-medium md:text-right mt-1 md:mt-0">
+            Up 20% from yesterday
+          </div>
+        </div>
+
+        {/* Right-Hand Column (Customers) */}
+        <div className="relative bg-sky-50/25 backdrop-blur-md border border-sky-100/40 rounded-[32px] p-5 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-3 text-left">
           
-          {/* Quick Stats Grid */}
-          <div className="grid grid-cols-2 gap-4" id="dashboard-split-metrics-grid">
-            <div className="bg-sky-50/20 backdrop-blur-xs border border-sky-100/50 rounded-2.5xl p-4 sm:p-5 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-left">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-sky-100/70 flex items-center justify-center text-sky-600 shrink-0">
-                  <Activity className="w-5 h-5 stroke-[1.5]" />
-                </div>
-                <div>
-                  <p className="text-[10px] font-bold text-neutral-500 uppercase tracking-wider leading-none">Transactions</p>
-                  <p className="text-xl sm:text-2xl font-bold text-sky-950 font-mono mt-1">{totalTransactions}</p>
-                </div>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-[#bfdbfe]/40 flex items-center justify-center text-blue-600 shrink-0">
+              <Users className="w-5 h-5 stroke-[1.5]" />
+            </div>
+            <div className="text-left">
+              <p className="text-[10px] font-medium text-neutral-900 uppercase tracking-widest leading-none">Customers</p>
+              <p className="text-2xl font-normal text-sky-950 font-mono mt-1">{totalCustomers}</p>
+            </div>
+          </div>
+          <div className="text-[10px] text-sky-800 font-mono font-medium md:text-right mt-1 md:mt-0">
+            2 New leads added
+          </div>
+        </div>
+
+      </div>
+
+      {/* ===============================================
+          SECTION 1: DAILY BUSINESS RUNDOWN (REPLACES AUTONOMOUS INTELLIGENCE HERO AREA)
+          =============================================== */}
+      <div 
+        className="relative border border-slate-950 rounded-[32px] overflow-hidden shadow-lg p-6 md:p-8 cursor-pointer hover:border-sky-500 transition-all duration-300 group" 
+        id="dashboard-ai-command-center"
+        onClick={() => setShowRundownModal(true)}
+        style={{ 
+          background: 'linear-gradient(135deg, #111111 0%, #1A1A1A 100%)' 
+        }}
+      >
+        <div className="absolute top-0 right-10 w-[200px] h-[150px] bg-sky-500/10 rounded-full blur-[80px] pointer-events-none" />
+        <div className="absolute bottom-0 left-5 w-[150px] h-[120px] bg-emerald-500/5 rounded-full blur-[60px] pointer-events-none" />
+
+        <div className="relative z-10 space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
+            <div className="flex items-center gap-2.5">
+              <div className="w-9 h-9 rounded-full bg-white/10 border border-white/20 flex items-center justify-center shrink-0">
+                <Clock className="w-4.5 h-4.5 text-sky-450 animate-pulse" />
               </div>
-              <span className="text-[9px] font-bold font-mono text-emerald-705 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100 shrink-0 self-start sm:self-center">
-                +20%
+              <div className="text-left">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-sky-400 block font-display">Daily Operational Status</span>
+                <h2 className="text-sm font-sans font-normal text-white uppercase tracking-wider leading-none mt-1">Daily Business Rundown</h2>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 self-start sm:self-center">
+              {isEndOfDay ? (
+                <span className="text-[10px] bg-rose-500/25 text-rose-300 font-bold px-3 py-1 rounded-full border border-rose-500/30 uppercase tracking-wider font-mono">
+                  Closed &bull; EOD Ready
+                </span>
+              ) : (
+                <span className="text-[10px] bg-emerald-500/25 text-emerald-300 font-bold px-3 py-1 rounded-full border border-emerald-500/30 uppercase tracking-wider font-mono">
+                  Open &bull; Active Hours
+                </span>
+              )}
+            </div>
+          </div>
+
+          <div className="text-left grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+            <div className="bg-white/5 p-4 rounded-2xl border border-white/10">
+              <span className="text-[10px] text-zinc-400 uppercase font-bold tracking-wider block font-display">Today's Turnover</span>
+              <span className="text-lg font-normal text-white mt-1 block font-mono">{formatCurrency(expectedToday, currency)}</span>
+            </div>
+            <div className="bg-white/5 p-4 rounded-2xl border border-white/10">
+              <span className="text-[10px] text-zinc-400 uppercase font-bold tracking-wider block font-display">Receipts Generated</span>
+              <span className="text-lg font-normal text-white mt-1 block font-mono">{totalTransactions} Receipts</span>
+            </div>
+            <div className="bg-white/5 p-4 rounded-2xl border border-white/10">
+              <span className="text-[10px] text-zinc-400 uppercase font-bold tracking-wider block font-display">Active Debtor Count</span>
+              <span className="text-lg font-normal text-white mt-1 block font-mono">{totalCustomers} Overdues</span>
+            </div>
+          </div>
+
+          <p className="text-xs text-zinc-400 font-sans leading-relaxed text-left">
+            {isEndOfDay 
+              ? "The operating day has ended. Click here to trigger the comprehensive closing summary, audit cash register variances, verify cashier logs, and finalize statistics."
+              : "Business is currently active. Click here to check the real-time sales rundown, audit current registers, and view inventory updates so far today."}
+          </p>
+
+          <div className="flex items-center gap-1.5 text-xs text-sky-400 font-bold group-hover:text-sky-300 transition select-none pt-2 font-display">
+            <span>View Complete {isEndOfDay ? "Day-End Summary" : "Mid-Day Snapshot"}</span>
+            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-all" />
+          </div>
+        </div>
+      </div>      {/* ===============================================
+          SECTION 2: TODAY'S BUSINESS SNAPSHOT (Beautified Layout)
+          =============================================== */}
+      <div className="text-left font-sans animate-fade-in">
+        <div className="flex justify-between items-center mb-3">
+          <h3 className="text-xs uppercase font-normal tracking-widest text-black pl-1">Today's Business Snapshot</h3>
+          <span className="text-[10px] text-sky-700 font-medium font-mono px-2 py-0.5 bg-sky-50 border border-sky-200/40 rounded-full">Real-time Metrics</span>
+        </div>
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="dashboard-snapshot-kpi-grid">
+          
+          {/* KPI 1: Today's Sales */}
+          <div className="bg-white border border-neutral-200 hover:border-indigo-250 hover:shadow-xs transition-all duration-300 rounded-[24px] p-5 flex items-start gap-4" id="kpi-sales-card">
+            <div className="p-3 bg-indigo-50 border border-indigo-100 rounded-2xl text-indigo-600 shrink-0">
+              <CircleDollarSign className="w-5 h-5 stroke-[2]" />
+            </div>
+            <div className="text-left w-full min-w-0">
+              <span className="text-[10px] text-gray-500 font-medium uppercase tracking-wider block">Today's Sales</span>
+              <span className="text-lg font-bold text-neutral-950 tracking-tight font-sans block mt-1 overflow-hidden text-ellipsis whitespace-nowrap">
+                {formatCurrency(expectedToday, currency)}
               </span>
-            </div>
-
-            <div className="bg-sky-50/20 backdrop-blur-xs border border-sky-100/50 rounded-2.5xl p-4 sm:p-5 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-left">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-blue-100/70 flex items-center justify-center text-blue-600 shrink-0">
-                  <Users className="w-5 h-5 stroke-[1.5]" />
-                </div>
-                <div>
-                  <p className="text-[10px] font-bold text-neutral-500 uppercase tracking-wider leading-none">Total Clients</p>
-                  <p className="text-xl sm:text-2xl font-bold text-sky-950 font-mono mt-1">{totalCustomers}</p>
-                </div>
+              <div className="flex items-center gap-1 mt-1">
+                <span className="text-[9px] font-mono text-emerald-600 font-medium bg-emerald-50 rounded-full px-1.5 py-0.2 select-none">+4.5%</span>
+                <span className="text-[9px] text-[#757a7f] whitespace-nowrap">since yesterday</span>
               </div>
-              <span className="text-[9px] font-bold font-mono text-sky-850 bg-sky-50 px-2 py-0.5 rounded-full border border-sky-150 shrink-0 self-start sm:self-center">
-                +2 New
+            </div>
+          </div>
+
+          {/* KPI 2: Today's Profit */}
+          <div className="bg-white border border-neutral-200 hover:border-emerald-250 hover:shadow-xs transition-all duration-300 rounded-[24px] p-5 flex items-start gap-4" id="kpi-profit-card">
+            <div className="p-3 bg-emerald-50 border border-emerald-100 rounded-2xl text-emerald-600 shrink-0">
+              <TrendingUp className="w-5 h-5 stroke-[2]" />
+            </div>
+            <div className="text-left w-full min-w-0">
+              <span className="text-[10px] text-gray-500 font-medium uppercase tracking-wider block">Today's Profit</span>
+              <span className="text-lg font-bold text-emerald-850 tracking-tight font-sans block mt-1 overflow-hidden text-ellipsis whitespace-nowrap">
+                {formatCurrency(todayProfit, currency)}
               </span>
+              <div className="flex items-center gap-1 mt-1">
+                <span className="text-[9px] font-mono text-emerald-605 text-emerald-600 font-medium bg-emerald-50 rounded-full px-1.5 py-0.2 select-none">Healthy</span>
+                <span className="text-[9px] text-[#757a7f] whitespace-nowrap">23.4% margin</span>
+              </div>
             </div>
           </div>
 
-          {/* Performance Chart Trend */}
-          <div className="bg-white border border-neutral-200 rounded-3xl p-5 md:p-6 shadow-sm text-left" id="dashboard-trend-panel">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
-              <div>
-                <h3 className="text-xs uppercase font-bold tracking-wider text-neutral-400">Business Trends</h3>
-                <h4 className="text-base font-semibold text-[#111111] mt-0.5 font-sans">Performance Over Time</h4>
-              </div>
-              
-              <div className="flex bg-neutral-100 p-0.5 rounded-full border border-neutral-200 self-start text-xs" id="chart-toggle">
-                <button
-                  type="button"
-                  onClick={() => setTrendType('revenue')}
-                  className={`px-3 py-1 rounded-full text-[10px] sm:text-xs font-semibold tracking-tight transition uppercase ${
-                    trendType === 'revenue' ? 'bg-white text-neutral-900 shadow-xs' : 'text-neutral-500 hover:text-neutral-900'
-                  }`}
-                >
-                  Revenue
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setTrendType('profit')}
-                  className={`px-3 py-1 rounded-full text-[10px] sm:text-xs font-semibold tracking-tight transition uppercase ${
-                    trendType === 'profit' ? 'bg-white text-neutral-900 shadow-xs' : 'text-neutral-500 hover:text-neutral-900'
-                  }`}
-                >
-                  Profit
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setTrendType('transactions')}
-                  className={`px-3 py-1 rounded-full text-[10px] sm:text-xs font-semibold tracking-tight transition uppercase ${
-                    trendType === 'transactions' ? 'bg-white text-neutral-900 shadow-xs' : 'text-neutral-500 hover:text-neutral-900'
-                  }`}
-                >
-                  sales count
-                </button>
-              </div>
+          {/* KPI 3: Cash Collected */}
+          <div className="bg-white border border-neutral-200 hover:border-amber-250 hover:shadow-xs transition-all duration-300 rounded-[24px] p-5 flex items-start gap-4" id="kpi-cash-card">
+            <div className="p-3 bg-amber-50 border border-amber-100 rounded-2xl text-amber-600 shrink-0">
+              <Coins className="w-5 h-5 stroke-[2]" />
             </div>
-
-            <div className="h-64 sm:h-72 w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={trendData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-                  <defs>
-                    <linearGradient id="colorTrend" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#1e40af" stopOpacity={0.15} />
-                      <stop offset="95%" stopColor="#1e40af" stopOpacity={0.0} />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
-                  <XAxis 
-                    dataKey="day" 
-                    stroke="#888888" 
-                    fontSize={10} 
-                    tickLine={false} 
-                    axisLine={false} 
-                    dy={8}
-                  />
-                  <YAxis 
-                    stroke="#888888" 
-                    fontSize={9} 
-                    tickLine={false} 
-                    axisLine={false} 
-                    tickFormatter={formatChartVal}
-                    dx={-8}
-                  />
-                  <Tooltip 
-                    formatter={(val: any) => [
-                      trendType === 'transactions' ? val : formatCurrency(Number(val), currency),
-                      trendType.toUpperCase()
-                    ]}
-                    contentStyle={{ border: '1px solid #e5e7eb', borderRadius: 16, fontSize: 11, fontFamily: 'sans-serif', backgroundColor: '#ffffff', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}
-                  />
-                  <Area 
-                    type="monotone" 
-                    dataKey={trendType} 
-                    stroke="#1e40af" 
-                    strokeWidth={2.5} 
-                    fillOpacity={1} 
-                    fill="url(#colorTrend)" 
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
+            <div className="text-left w-full min-w-0">
+              <span className="text-[10px] text-gray-500 font-medium uppercase tracking-wider block">Cash Collected</span>
+              <span className="text-lg font-bold text-neutral-950 tracking-tight font-sans block mt-1 overflow-hidden text-ellipsis whitespace-nowrap">
+                {formatCurrency(cashCollected, currency)}
+              </span>
+              <div className="flex items-center gap-1 mt-1">
+                <span className="text-[9px] font-mono text-amber-700 font-medium bg-amber-50 rounded-full px-1.5 py-0.2 select-none">Synced</span>
+                <span className="text-[9px] text-[#757a7f] whitespace-nowrap">drawer reconcile</span>
+              </div>
             </div>
           </div>
 
-          {/* Today's Snapshot Grid */}
-          <div className="space-y-3 text-left">
-            <div className="flex justify-between items-center px-1">
-              <h3 className="text-xs uppercase font-bold tracking-wider text-neutral-400">Store Financial health</h3>
-              <span className="text-[10px] text-sky-800 font-bold font-mono px-2 py-0.5 bg-sky-50 border border-sky-150 rounded-full uppercase">Real-time stats</span>
+          {/* KPI 4: Inventory Valuation */}
+          <div className="bg-white border border-neutral-200 hover:border-blue-250 hover:shadow-xs transition-all duration-300 rounded-[24px] p-5 flex items-start gap-4" id="kpi-inventory-card">
+            <div className="p-3 bg-blue-50 border border-blue-100 rounded-2xl text-blue-600 shrink-0">
+              <Package className="w-5 h-5 stroke-[2]" />
             </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4" id="dashboard-snapshot-kpi-grid">
-              
-              {/* Turnover */}
-              <div className="bg-white border border-neutral-200 hover:border-indigo-300 hover:shadow-xs transition-all duration-305 rounded-2xl p-4 flex flex-col justify-between h-30" id="kpi-sales-card">
-                <div className="w-8 h-8 rounded-xl bg-indigo-50 border border-indigo-150 text-indigo-600 flex items-center justify-center shrink-0">
-                  <CircleDollarSign className="w-4 h-4 stroke-[2]" />
-                </div>
-                <div className="text-left mt-3">
-                  <span className="text-[10px] text-neutral-400 font-semibold uppercase tracking-wider block">Gross Sales</span>
-                  <span className="text-base sm:text-lg font-bold text-neutral-900 tracking-tight font-sans block mt-0.5 truncate">
-                    {formatCurrency(expectedToday, currency)}
-                  </span>
-                </div>
-              </div>
-
-              {/* Profit */}
-              <div className="bg-white border border-neutral-200 hover:border-emerald-300 hover:shadow-xs transition-all duration-305 rounded-2xl p-4 flex flex-col justify-between h-30" id="kpi-profit-card">
-                <div className="w-8 h-8 rounded-xl bg-emerald-50 border border-emerald-150 text-emerald-600 flex items-center justify-center shrink-0">
-                  <TrendingUp className="w-4 h-4 stroke-[2]" />
-                </div>
-                <div className="text-left mt-3">
-                  <span className="text-[10px] text-neutral-400 font-semibold uppercase tracking-wider block">Retail Profit</span>
-                  <span className="text-base sm:text-lg font-bold text-emerald-800 tracking-tight font-sans block mt-0.5 truncate">
-                    {formatCurrency(todayProfit, currency)}
-                  </span>
-                </div>
-              </div>
-
-              {/* Cash count */}
-              <div className="bg-white border border-neutral-200 hover:border-amber-300 hover:shadow-xs transition-all duration-305 rounded-2xl p-4 flex flex-col justify-between h-30" id="kpi-cash-card">
-                <div className="w-8 h-8 rounded-xl bg-amber-50 border border-amber-100 text-amber-600 flex items-center justify-center shrink-0">
-                  <Coins className="w-4 h-4 stroke-[2]" />
-                </div>
-                <div className="text-left mt-3">
-                  <span className="text-[10px] text-neutral-400 font-semibold uppercase tracking-wider block">Cash Balance</span>
-                  <span className="text-base sm:text-lg font-bold text-neutral-900 tracking-tight font-sans block mt-0.5 truncate">
-                    {formatCurrency(cashCollected, currency)}
-                  </span>
-                </div>
-              </div>
-
-              {/* Inventory valuation */}
-              <div className="bg-white border border-neutral-200 hover:border-blue-300 hover:shadow-xs transition-all duration-305 rounded-2xl p-4 flex flex-col justify-between h-30" id="kpi-inventory-card">
-                <div className="w-8 h-8 rounded-xl bg-blue-50 border border-blue-150 text-blue-600 flex items-center justify-center shrink-0">
-                  <Package className="w-4 h-4 stroke-[2]" />
-                </div>
-                <div className="text-left mt-3">
-                  <span className="text-[10px] text-neutral-400 font-semibold uppercase tracking-wider block">Inventory Value</span>
-                  <span className="text-base sm:text-lg font-bold text-neutral-900 tracking-tight font-sans block mt-0.5 truncate">
-                    {formatCurrency(totalInventoryValuation, currency)}
-                  </span>
-                </div>
-              </div>
-
-            </div>
-          </div>
-
-          {/* Daily Business Rundown (EOD Interactive) */}
-          <div 
-            className="relative border border-neutral-200 bg-[#111] rounded-3xl overflow-hidden shadow-sm p-5 sm:p-6 transition-all duration-300 group cursor-pointer hover:border-indigo-400" 
-            id="dashboard-ai-command-center"
-            onClick={() => setShowRundownModal(true)}
-          >
-            <div className="absolute top-0 right-10 w-[200px] h-[150px] bg-sky-500/10 rounded-full blur-[80px] pointer-events-none" />
-            <div className="absolute bottom-0 left-5 w-[150px] h-[120px] bg-emerald-500/5 rounded-full blur-[60px] pointer-events-none" />
-
-            <div className="relative z-10 space-y-4">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4 text-left">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-9 h-9 rounded-xl bg-white/10 border border-white/15 flex items-center justify-center shrink-0">
-                    <Clock className="w-4 h-4 text-sky-455 animate-pulse" />
-                  </div>
-                  <div className="text-left">
-                    <span className="text-[9px] font-bold uppercase tracking-widest text-[#00a8e8] block">Workday Schedule Tracker</span>
-                    <h2 className="text-sm font-semibold text-white tracking-wide mt-0.5">EOD Audits Menu</h2>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-2 self-start sm:self-center">
-                  {isEndOfDay ? (
-                    <span className="text-[10px] bg-rose-500/20 text-rose-300 font-bold px-3 py-1 rounded-full border border-rose-500/30 uppercase tracking-widest font-mono">
-                      Closed &bull; Summary Ready
-                    </span>
-                  ) : (
-                    <span className="text-[10px] bg-emerald-500/20 text-emerald-300 font-bold px-3 py-1 rounded-full border border-emerald-500/30 uppercase tracking-widest font-mono">
-                      Running &bull; active hours
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              <p className="text-xs text-zinc-350 leading-relaxed text-left">
-                {isEndOfDay 
-                  ? "Operational hours are over. Select to trigger your daily register audits and export summary to supervisor profiles."
-                  : "Store schedule is currently within normal operating hours. Select to preview current terminal calculations, debtor collections, or stock balances."}
-              </p>
-
-              <div className="flex items-center gap-1.5 text-xs text-sky-405 font-bold group-hover:text-sky-300 transition select-none pt-1">
-                <span>View Daily Performance Rundown</span>
-                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-all" />
+            <div className="text-left w-full min-w-0">
+              <span className="text-[10px] text-gray-500 font-medium uppercase tracking-wider block">Inventory Value</span>
+              <span className="text-lg font-bold text-blue-850 tracking-tight font-sans block mt-1 overflow-hidden text-ellipsis whitespace-nowrap">
+                {formatCurrency(totalInventoryValuation, currency)}
+              </span>
+              <div className="flex items-center gap-1 mt-1">
+                <span className="text-[9px] font-mono text-blue-700 font-medium bg-blue-50 rounded-full px-1.5 py-0.2 select-none">On shelf</span>
+                <span className="text-[9px] text-[#757a7f] whitespace-nowrap">audited inventory value</span>
               </div>
             </div>
           </div>
 
         </div>
+      </div>
 
-        {/* RIGHT COLUMN: ACTION HUBS, ALARMS & AUDIT TOOLS */}
-        <div className="space-y-6">
+      {/* ===============================================
+          SECTION 3: QUICK ACTIONS
+          =============================================== */}
+      <div className="text-left font-sans animate-fade-in">
+        <h3 className="text-xs uppercase font-normal tracking-widest text-black mb-2.5 pl-1">Quick Actions</h3>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
           
-          {/* Quick Tasks & Actions Grid */}
-          <div className="bg-white border border-neutral-200 rounded-3xl p-5 shadow-sm text-left">
-            <h3 className="text-xs uppercase font-bold tracking-wider text-neutral-400 mb-3.5">Store Operations</h3>
-            
-            <div className="grid grid-cols-2 gap-3">
-              <button
-                type="button"
-                onClick={() => {
-                  window.location.hash = 'receipts/add';
-                  setActiveSection('receipts');
-                }}
-                className="bg-[#FCFBF9] hover:bg-sky-50/40 border border-neutral-200 hover:border-sky-305 rounded-2xl p-3.5 flex flex-col items-center justify-center gap-2 text-center transition cursor-pointer min-h-[92px] active:scale-98"
-              >
-                <div className="w-9 h-9 rounded-xl bg-sky-50 flex items-center justify-center shrink-0">
-                  <Plus className="w-4.5 h-4.5 text-[#1e40af]" />
-                </div>
-                <span className="text-xs font-semibold text-neutral-800">Add Sale</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setActiveSection('inventory')}
-                className="bg-[#FCFBF9] hover:bg-slate-50 border border-neutral-200 hover:border-indigo-305 rounded-2xl p-3.5 flex flex-col items-center justify-center gap-2 text-center transition cursor-pointer min-h-[92px] active:scale-98"
-              >
-                <div className="w-9 h-9 rounded-xl bg-indigo-50 flex items-center justify-center shrink-0">
-                  <ShoppingCart className="w-4.5 h-4.5 text-indigo-600" />
-                </div>
-                <span className="text-xs font-semibold text-neutral-800">Fill Stock</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setActiveSection('debtor')}
-                className="bg-[#FCFBF9] hover:bg-slate-50 border border-neutral-200 hover:border-emerald-305 rounded-2xl p-3.5 flex flex-col items-center justify-center gap-2 text-center transition cursor-pointer min-h-[92px] active:scale-98"
-              >
-                <div className="w-9 h-9 rounded-xl bg-emerald-50 flex items-center justify-center shrink-0">
-                  <Users className="w-4.5 h-4.5 text-emerald-600" />
-                </div>
-                <span className="text-xs font-semibold text-neutral-800">Client Ledger</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setShowReconciliationInline(!showReconciliationInline)}
-                className={`border rounded-2xl p-3.5 flex flex-col items-center justify-center gap-2 text-center transition cursor-pointer min-h-[92px] active:scale-98 ${
-                  showReconciliationInline 
-                    ? 'bg-amber-50/70 border-amber-300' 
-                    : 'bg-[#FCFBF9] hover:bg-amber-50/40 border-neutral-200 hover:border-amber-305'
-                }`}
-              >
-                <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${showReconciliationInline ? 'bg-amber-100' : 'bg-amber-50'}`}>
-                  <Coins className="w-4.5 h-4.5 text-amber-600" />
-                </div>
-                <span className="text-xs font-semibold text-neutral-800">Truth Check</span>
-              </button>
+          <button
+            type="button"
+            onClick={() => {
+              window.location.hash = 'receipts/add';
+              setActiveSection('receipts');
+            }}
+            className="bg-white hover:bg-sky-50/55 border border-neutral-150 rounded-[22px] p-4 flex flex-col items-center justify-center gap-2 text-center transition cursor-pointer hover:border-sky-305"
+          >
+            <div className="w-10 h-10 rounded-full bg-[#1e40af]/10 flex items-center justify-center">
+              <Plus className="w-5 h-5 text-[#1e40af]" />
             </div>
+            <span className="text-xs font-medium text-black">Record Sale</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              setActiveSection('inventory');
+            }}
+            className="bg-white hover:bg-indigo-50/55 border border-neutral-150 rounded-[22px] p-4 flex flex-col items-center justify-center gap-2 text-center transition cursor-pointer hover:border-indigo-305"
+          >
+            <div className="w-10 h-10 rounded-full bg-indigo-50 flex items-center justify-center">
+              <ShoppingCart className="w-5 h-5 text-indigo-600" />
+            </div>
+            <span className="text-xs font-medium text-black">Add Stock</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              setActiveSection('debtor');
+            }}
+            className="bg-white hover:bg-emerald-50/55 border border-neutral-150 rounded-[22px] p-4 flex flex-col items-center justify-center gap-2 text-center transition cursor-pointer hover:border-emerald-305"
+          >
+            <div className="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center">
+              <Users className="w-5 h-5 text-emerald-600" />
+            </div>
+            <span className="text-xs font-medium text-black">Add Customer</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setShowReconciliationInline(!showReconciliationInline)}
+            className={`border rounded-[22px] p-4 flex flex-col items-center justify-center gap-2 text-center transition cursor-pointer ${
+              showReconciliationInline 
+                ? 'bg-amber-50/80 border-amber-300' 
+                : 'bg-white hover:bg-amber-50/40 border-neutral-150 hover:border-amber-310'
+            }`}
+          >
+            <div className={`w-10 h-10 rounded-full flex items-center justify-center ${showReconciliationInline ? 'bg-amber-100' : 'bg-amber-50'}`}>
+              <Coins className="w-5 h-5 text-amber-600" />
+            </div>
+            <span className="text-xs font-medium text-black">Run Truth Check</span>
+          </button>
+
+        </div>
+      </div>
+
+      {/* INLINE COLLAPSIBLE TRUTH CHECK ENCLOSURE */}
+      {showReconciliationInline && (
+        <div className="bg-[#fcfa7a]/5 bg-amber-50/10 border border-amber-200 rounded-[28px] p-5 space-y-4 text-left animate-fade-in" id="dashboard-inline-truthcheck">
+          <div className="flex items-center justify-between border-b border-amber-100 pb-2">
+            <h4 className="text-sm font-medium text-amber-900 flex items-center gap-1.5">
+              <Coins className="w-4 h-4 text-amber-600" />
+              <span>Shift Drawer Truth Matcher</span>
+            </h4>
+            <button 
+              type="button" 
+              onClick={() => setShowReconciliationInline(false)}
+              className="text-neutral-500 hover:text-black p-1"
+            >
+              <X className="w-4 h-4" />
+            </button>
           </div>
 
-          {/* Collapsible Truth Check Form */}
-          {showReconciliationInline && (
-            <div className="bg-gradient-to-b from-amber-50/30 to-amber-50/5 border border-amber-200 rounded-3xl p-5 space-y-4 text-left animate-fade-in" id="dashboard-inline-truthcheck">
-              <div className="flex items-center justify-between border-b border-amber-150 pb-2">
-                <h4 className="text-xs font-bold text-amber-900 flex items-center gap-1.5 uppercase tracking-wider">
-                  <Coins className="w-4 h-4 text-amber-605" />
-                  <span>Register Truth Matcher</span>
-                </h4>
-                <button 
-                  type="button" 
-                  onClick={() => setShowReconciliationInline(false)}
-                  className="text-amber-700 hover:text-black p-1 active:scale-95 cursor-pointer"
-                >
-                  <X className="w-4 h-4" />
-                </button>
+          <form onSubmit={handleRunReconciliation} className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-[11px] font-medium text-neutral-900 mb-1">Counted Physical Cash ({currencySymbol})</label>
+                <input 
+                  type="number"
+                  value={inputCash}
+                  onChange={e => setInputCash(parseFloat(e.target.value) || 0)}
+                  className="w-full bg-white text-xs font-medium p-2.5 border border-neutral-200 rounded-full focus:outline-none"
+                />
               </div>
+              <div>
+                <label className="block text-[11px] font-medium text-neutral-900 mb-1">Counted Digital Transfers / Card ({currencySymbol})</label>
+                <input 
+                  type="number"
+                  value={inputOthers}
+                  onChange={e => setInputOthers(parseFloat(e.target.value) || 0)}
+                  className="w-full bg-white text-xs font-medium p-2.5 border border-neutral-200 rounded-full focus:outline-none"
+                />
+              </div>
+            </div>
 
-              <form onSubmit={handleRunReconciliation} className="space-y-4">
-                <div className="space-y-3">
-                  <div>
-                    <label className="block text-[10px] font-bold text-neutral-500 uppercase tracking-wide mb-1.5 pl-1">Counted Register Cash ({currencySymbol})</label>
-                    <input 
-                      type="number"
-                      required
-                      value={inputCash}
-                      onChange={e => setInputCash(parseFloat(e.target.value) || 0)}
-                      className="w-full bg-white text-xs font-semibold p-3 border border-neutral-200 rounded-full focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-200"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-[10px] font-bold text-neutral-500 uppercase tracking-wide mb-1.5 pl-1">Counted Other (POS/Transfers) ({currencySymbol})</label>
-                    <input 
-                      type="number"
-                      required
-                      value={inputOthers}
-                      onChange={e => setInputOthers(parseFloat(e.target.value) || 0)}
-                      className="w-full bg-white text-xs font-semibold p-3 border border-neutral-200 rounded-full focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-200"
-                    />
-                  </div>
-                </div>
+            <div className="p-3 bg-white border border-neutral-150 rounded-xl text-xs text-neutral-955 flex items-center justify-between">
+              <span>Expected System Cash Sales:</span>
+              <span className="font-medium text-black font-mono">{formatCurrency(expectedToday, currency)}</span>
+            </div>
 
-                <div className="p-3 bg-white/80 border border-neutral-200 rounded-2xl text-xs text-neutral-700 flex items-center justify-between">
-                  <span className="font-sans text-neutral-500 font-medium">Billed System Target:</span>
-                  <span className="font-bold text-neutral-900 font-mono">{formatCurrency(expectedToday, currency)}</span>
-                </div>
+            <div className="flex gap-2">
+              <button
+                type="submit"
+                disabled={auditLoading}
+                className="flex-1 bg-[#1e40af] hover:bg-[#1a368f] text-white font-medium py-2.5 px-4 rounded-full text-xs transition cursor-pointer disabled:bg-neutral-200"
+              >
+                {auditLoading ? "Running calculations..." : "Reconcile Register Count"}
+              </button>
+              <button
+                type="button"
+                onClick={() => setTruthCheckResult(null)}
+                className="px-4 py-2.5 border border-neutral-250 rounded-full text-xs text-neutral-950 hover:bg-neutral-50"
+              >
+                Reset
+              </button>
+            </div>
+          </form>
 
-                <div className="flex gap-2.5 max-w-full">
-                  <button
-                    type="submit"
-                    disabled={auditLoading}
-                    className="flex-grow bg-[#1e40af] hover:bg-blue-800 text-white font-bold py-3 px-4 rounded-full text-xs transition cursor-pointer disabled:bg-neutral-200 tracking-wider uppercase"
-                  >
-                    {auditLoading ? "Balancing books..." : "Run Reconciler"}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setTruthCheckResult(null);
-                      setInputCash(0);
-                      setInputOthers(0);
-                    }}
-                    className="px-4 py-3 border border-neutral-200 rounded-full text-xs font-bold text-neutral-700 hover:bg-neutral-50 active:scale-95 transition"
-                  >
-                    Reset
-                  </button>
+          {truthCheckResult && (
+            <div className="bg-white border border-neutral-150 rounded-[20px] p-4 mt-3 space-y-2 animate-fade-in text-xs">
+              <div className="flex items-center justify-between">
+                <span className="font-medium text-black">Truth Check Result:</span>
+                <span className={`font-mono font-medium ${
+                  truthCheckResult.riskLevel === 'low' ? 'text-green-600' : 'text-red-600'
+                }`}>
+                  {truthCheckResult.riskLevel === 'low' ? '🔒 MATCHED' : '⚠️ DISCREPANCY'}
+                </span>
+              </div>
+              <p className="text-black leading-relaxed italic">{truthCheckResult.details}</p>
+              
+              <div className="grid grid-cols-2 gap-2 border-t pt-2 mt-2">
+                <div>
+                  <span className="text-[10px] text-neutral-950 block uppercase font-medium">Sum Declared</span>
+                  <span className="font-mono text-black font-medium">{formatCurrency((truthCheckResult.declaredRevenue), currency)}</span>
                 </div>
-              </form>
-
-              {truthCheckResult && (
-                <div className="bg-white border border-neutral-200 rounded-2xl p-4 mt-2.5 space-y-2.5 animate-fade-in text-xs text-left">
-                  <div className="flex items-center justify-between">
-                    <span className="font-bold text-neutral-800 uppercase tracking-widest text-[9px]">Settle status</span>
-                    <span className={`font-mono font-bold text-[10px] px-2 py-0.5 rounded-full border ${
-                      truthCheckResult.riskLevel === 'low' 
-                        ? 'text-teal-800 bg-teal-50 border-teal-150' 
-                        : 'text-rose-800 bg-rose-50 border-rose-150'
-                    }`}>
-                      {truthCheckResult.riskLevel === 'low' ? '🔒 MATCHED' : '⚠️ DISCREPANCY'}
-                    </span>
-                  </div>
-                  <p className="text-neutral-700 leading-relaxed font-semibold italic text-[11px] font-sans">
-                    "{truthCheckResult.details}"
-                  </p>
-                  
-                  <div className="grid grid-cols-2 gap-2 border-t border-dashed border-neutral-250 pt-2.5">
-                    <div>
-                      <span className="text-[9px] text-[#757575] block uppercase font-bold tracking-wider">Owner Declared</span>
-                      <span className="font-mono text-neutral-900 font-bold text-xs">{formatCurrency((truthCheckResult.declaredRevenue), currency)}</span>
-                    </div>
-                    <div>
-                      <span className="text-[9px] text-[#757575] block uppercase font-bold tracking-wider">Book Gap</span>
-                      <span className={`font-mono font-bold text-xs ${truthCheckResult.difference < 0 ? 'text-rose-600' : 'text-teal-600'}`}>
-                        {truthCheckResult.difference < 0 ? '-' : '+'}{formatCurrency(Math.abs(truthCheckResult.difference), currency)}
-                      </span>
-                    </div>
-                  </div>
+                <div>
+                  <span className="text-[10px] text-neutral-950 block uppercase font-medium">Discrepancy</span>
+                  <span className={`font-mono font-medium ${truthCheckResult.difference < 0 ? 'text-red-650' : 'text-emerald-700'}`}>
+                    {truthCheckResult.difference < 0 ? '-' : '+'}{formatCurrency(Math.abs(truthCheckResult.difference), currency)}
+                  </span>
                 </div>
-              )}
+              </div>
             </div>
           )}
+        </div>
+      )}
 
-          {/* Attention Needed (Store Sentry Guard Alarms) */}
-          <div className="bg-white border border-neutral-200 rounded-3xl p-5 shadow-sm text-left" id="dashboard-attention-section">
-            <h3 className="text-xs uppercase font-bold tracking-wider text-neutral-400 mb-3.5">Active Checklist</h3>
-            
-            <div className="space-y-3">
-              {attentionItems.length === 0 ? (
-                <div className="text-center py-8 text-neutral-400 font-sans">
-                  <CheckCircle2 className="w-8 h-8 text-teal-400 mx-auto mb-2" />
-                  <p className="text-xs font-bold text-neutral-800">All columns cleared</p>
-                  <p className="text-[10px] text-neutral-400 mt-1 max-w-sm mx-auto leading-relaxed">
-                    Capture store sales, audit dynamic product stock, or maintain credit registers to activate your AI store sentry guards.
-                  </p>
-                </div>
-              ) : (
-                attentionItems.map((item, i) => (
-                  <div 
-                    key={i} 
-                    onClick={item.action}
-                    className="flex items-start justify-between p-3 border border-neutral-100 rounded-2xl bg-neutral-50/50 hover:bg-neutral-50 transition cursor-pointer hover:border-neutral-200"
-                  >
-                    <div className="flex gap-2.5 items-start text-left min-w-0 flex-1">
-                      <span className="shrink-0 mt-0.5">{item.tag}</span>
-                      <div className="min-w-0 pr-1 text-left">
-                        <div className="flex flex-wrap items-center gap-1.5">
-                          <h4 className="text-[11px] sm:text-xs font-bold text-neutral-900 leading-snug truncate text-left">{item.text}</h4>
-                          <span className={`text-[8px] font-bold font-mono px-1.5 py-0.2 rounded-sm uppercase border scale-95 shrink-0 ${
-                            item.priority === "High Priority"
-                              ? 'text-rose-700 bg-rose-50 border-rose-150'
-                              : 'text-amber-805 bg-amber-50 border-amber-150 text-amber-700'
-                          }`}>
-                            {item.priority}
-                          </span>
-                        </div>
-                        <p className="text-[10.5px] leading-relaxed text-[#5F6368] font-normal mt-1 block text-left">
-                          {item.detail}
-                        </p>
-                      </div>
-                    </div>
-                    <ChevronRight className="w-4 h-4 text-neutral-400 shrink-0 align-middle self-center font-bold" />
-                  </div>
-                ))
-              )}
+      {/* ===============================================
+          SECTION 4: ATTENTION NEEDED
+          =============================================== */}
+      <div className="text-left font-sans animate-fade-in" id="dashboard-attention-section">
+        <h3 className="text-xs uppercase font-normal tracking-widest text-black mb-2.5 pl-1">Attention Needed</h3>
+        <div className="bg-white border border-neutral-150 rounded-[28px] p-5 shadow-xs space-y-3">
+          {attentionItems.length === 0 ? (
+            <div className="text-center py-6 text-neutral-400 font-sans">
+              <CheckCircle2 className="w-8 h-8 text-neutral-250 mx-auto mb-2" />
+              <p className="text-xs font-semibold text-neutral-700">All systems clear</p>
+              <p className="text-[10px] text-neutral-400 mt-1 max-w-md mx-auto leading-relaxed">
+                Add products in your inventory, capture sales receipts, or record debtor tabs under your account to activate AI guardian alarms.
+              </p>
             </div>
-          </div>
+          ) : (
+            attentionItems.map((item, i) => (
+              <div 
+                key={i} 
+                onClick={item.action}
+                className="flex items-start justify-between p-3 border border-neutral-100 rounded-[20px] bg-neutral-50/50 hover:bg-neutral-50 transition cursor-pointer"
+              >
+                <div className="flex gap-2.5 items-start">
+                  <span className="shrink-0 mt-0.5">{item.tag}</span>
+                  <div>
+                    <div className="flex items-center gap-1.5">
+                      <h4 className="text-xs font-medium text-black leading-none">{item.text}</h4>
+                      <span className="text-[8px] font-medium font-mono text-[#111111] bg-neutral-100 border border-neutral-200 px-1.5 py-0.5 rounded-sm uppercase tracking-wide">{item.priority}</span>
+                    </div>
+                    <p className="text-[11px] text-black font-normal mt-1 font-sans leading-snug">{item.detail}</p>
+                  </div>
+                </div>
+                <ChevronRight className="w-4 h-4 text-neutral-500 align-middle self-center animate-fade-in" />
+              </div>
+            ))
+          )}
+        </div>
+      </div>
 
+      {/* ===============================================
+          SECTION 5: PERFORMANCE TREND
+          =============================================== */}
+      <div className="text-left font-sans">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2 px-1">
+          <h3 className="text-xs uppercase font-normal tracking-widest text-black">Performance Trend</h3>
+          
+          <div className="flex bg-neutral-100 p-0.5 rounded-full border border-neutral-150 self-start" id="chart-toggle">
+            <button
+              type="button"
+              onClick={() => setTrendType('revenue')}
+              className={`px-3 py-1 rounded-full text-[11px] font-black tracking-tight transition uppercase ${
+                trendType === 'revenue' ? 'bg-white text-neutral-950 shadow-xs' : 'text-neutral-500 hover:text-neutral-950'
+              }`}
+            >
+              Revenue
+            </button>
+            <button
+              type="button"
+              onClick={() => setTrendType('profit')}
+              className={`px-3 py-1 rounded-full text-[11px] font-black tracking-tight transition uppercase ${
+                trendType === 'profit' ? 'bg-white text-neutral-950 shadow-xs' : 'text-neutral-500 hover:text-neutral-950'
+              }`}
+            >
+              Profit
+            </button>
+            <button
+              type="button"
+              onClick={() => setTrendType('transactions')}
+              className={`px-3 py-1 rounded-full text-[11px] font-black tracking-tight transition uppercase ${
+                trendType === 'transactions' ? 'bg-white text-neutral-950 shadow-xs' : 'text-neutral-500 hover:text-neutral-950'
+              }`}
+            >
+              Transactions
+            </button>
+          </div>
         </div>
 
+        <div className="bg-white border border-neutral-150 rounded-[28px] p-4 shadow-xs" id="dashboard-trend-panel">
+          <div className="h-64 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={trendData} margin={{ top: 20, right: 10, left: 10, bottom: 0 }}>
+                <defs>
+                  <linearGradient id="colorTrend" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#1e40af" stopOpacity={0.25} />
+                    <stop offset="95%" stopColor="#1e40af" stopOpacity={0.0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+                <XAxis 
+                  dataKey="day" 
+                  stroke="#ababab" 
+                  fontSize={10} 
+                  tickLine={false} 
+                  axisLine={false} 
+                />
+                <YAxis 
+                  stroke="#ababab" 
+                  fontSize={9} 
+                  tickLine={false} 
+                  axisLine={false} 
+                  tickFormatter={formatChartVal}
+                />
+                <Tooltip 
+                  formatter={(val: any) => [
+                    trendType === 'transactions' ? val : formatCurrency(Number(val), currency),
+                    trendType.toUpperCase()
+                  ]}
+                  contentStyle={{ border: '1px solid #dcdcdc', borderRadius: 16, fontSize: 11, fontFamily: 'sans-serif' }}
+                />
+                <Area 
+                  type="monotone" 
+                  dataKey={trendType} 
+                  stroke="#1e40af" 
+                  strokeWidth={2.5} 
+                  fillOpacity={1} 
+                  fill="url(#colorTrend)" 
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
       </div>
 
       {/* Smart Recommendations section deleted */}
