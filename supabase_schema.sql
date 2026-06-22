@@ -254,6 +254,17 @@ CREATE TRIGGER before_audit_inserted_or_updated
 -- Enabling Row Level Security ensures that owners, supervisor accounts and cashiers
 -- can only read/edit records belonging to their matching store workspace.
 
+-- Helper functions designed to bypass RLS recursion on the profiles table
+CREATE OR REPLACE FUNCTION public.get_user_store_id()
+RETURNS UUID AS $$
+    SELECT store_id FROM public.profiles WHERE id = auth.uid();
+$$ LANGUAGE sql SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION public.get_user_role()
+RETURNS VARCHAR AS $$
+    SELECT role FROM public.profiles WHERE id = auth.uid();
+$$ LANGUAGE sql SECURITY DEFINER;
+
 ALTER TABLE public.stores ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.inventory ENABLE ROW LEVEL SECURITY;
@@ -269,7 +280,7 @@ ALTER TABLE public.system_alerts ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Users can view stores they belong to" ON public.stores;
 CREATE POLICY "Users can view stores they belong to"
     ON public.stores FOR SELECT
-    USING (auth.uid() IN (SELECT id FROM public.profiles WHERE store_id = public.stores.id) OR owner_id = auth.uid());
+    USING (id = public.get_user_store_id() OR owner_id = auth.uid());
 
 DROP POLICY IF EXISTS "Owners can manage stores" ON public.stores;
 CREATE POLICY "Owners can manage stores"
@@ -280,58 +291,58 @@ CREATE POLICY "Owners can manage stores"
 DROP POLICY IF EXISTS "Users can read profiles from same store" ON public.profiles;
 CREATE POLICY "Users can read profiles from same store"
     ON public.profiles FOR SELECT
-    USING (store_id = (SELECT store_id FROM public.profiles WHERE id = auth.uid()) OR id = auth.uid());
+    USING (store_id = public.get_user_store_id() OR id = auth.uid());
 
 DROP POLICY IF EXISTS "Owners/Admins can manage team profiles" ON public.profiles;
 CREATE POLICY "Owners/Admins can manage team profiles"
     ON public.profiles FOR ALL
-    USING (auth.uid() IN (SELECT id FROM public.profiles WHERE role IN ('Owner', 'Admin')));
+    USING (public.get_user_role() IN ('Owner', 'Admin'));
 
 -- 3. INVENTORY Policies
 DROP POLICY IF EXISTS "Store employees can read inventory" ON public.inventory;
 CREATE POLICY "Store employees can read inventory"
     ON public.inventory FOR SELECT
-    USING (store_id = (SELECT store_id FROM public.profiles WHERE id = auth.uid()));
+    USING (store_id = public.get_user_store_id());
 
 DROP POLICY IF EXISTS "Store supervisors and above can edit stock" ON public.inventory;
 CREATE POLICY "Store supervisors and above can edit stock"
     ON public.inventory FOR ALL
     USING (
-        store_id = (SELECT store_id FROM public.profiles WHERE id = auth.uid())
-        AND auth.uid() IN (SELECT id FROM public.profiles WHERE role IN ('Owner', 'Admin', 'Manager', 'Supervisor'))
+        store_id = public.get_user_store_id()
+        AND public.get_user_role() IN ('Owner', 'Admin', 'Manager', 'Supervisor')
     );
 
 -- 4. RECEIPTS / SALES Policies
 DROP POLICY IF EXISTS "Store employees can read/write receipts" ON public.receipts;
 CREATE POLICY "Store employees can read/write receipts"
     ON public.receipts FOR ALL
-    USING (store_id = (SELECT store_id FROM public.profiles WHERE id = auth.uid()));
+    USING (store_id = public.get_user_store_id());
 
 -- 5. RECEIPT ITEMS Policies
 DROP POLICY IF EXISTS "Store employees can manage receipt items" ON public.receipt_items;
 CREATE POLICY "Store employees can manage receipt items"
     ON public.receipt_items FOR ALL
-    USING (receipt_id IN (SELECT id FROM public.receipts WHERE store_id = (SELECT store_id FROM public.profiles WHERE id = auth.uid())));
+    USING (receipt_id IN (SELECT id FROM public.receipts WHERE store_id = public.get_user_store_id()));
 
 -- 6. DEBTORS Policies
 DROP POLICY IF EXISTS "Store employees can manage debtors list" ON public.debtors;
 CREATE POLICY "Store employees can manage debtors list"
     ON public.debtors FOR ALL
-    USING (store_id = (SELECT store_id FROM public.profiles WHERE id = auth.uid()));
+    USING (store_id = public.get_user_store_id());
 
 -- 7. DEBTOR PAYMENTS Policies
 DROP POLICY IF EXISTS "Store employees can manage debtor payments" ON public.debtor_payments;
 CREATE POLICY "Store employees can manage debtor payments"
     ON public.debtor_payments FOR ALL
-    USING (debtor_id IN (SELECT id FROM public.debtors WHERE store_id = (SELECT store_id FROM public.profiles WHERE id = auth.uid())));
+    USING (debtor_id IN (SELECT id FROM public.debtors WHERE store_id = public.get_user_store_id()));
 
 -- 8. TRUTH AUDITS Policies
 DROP POLICY IF EXISTS "Auditors / Owners can read/write audits" ON public.truth_audits;
 CREATE POLICY "Auditors / Owners can read/write audits"
     ON public.truth_audits FOR ALL
     USING (
-        store_id = (SELECT store_id FROM public.profiles WHERE id = auth.uid())
-        AND auth.uid() IN (SELECT id FROM public.profiles WHERE role IN ('Owner', 'Admin', 'Manager', 'Auditor'))
+        store_id = public.get_user_store_id()
+        AND public.get_user_role() IN ('Owner', 'Admin', 'Manager', 'Auditor')
     );
 
 -- 9. CHATS Policies
@@ -344,4 +355,4 @@ CREATE POLICY "Users can only see their own AI chats"
 DROP POLICY IF EXISTS "Store employees can read/write system alerts" ON public.system_alerts;
 CREATE POLICY "Store employees can read/write system alerts"
     ON public.system_alerts FOR ALL
-    USING (store_id = (SELECT store_id FROM public.profiles WHERE id = auth.uid()));
+    USING (store_id = public.get_user_store_id());

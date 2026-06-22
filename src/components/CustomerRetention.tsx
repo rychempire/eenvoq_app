@@ -33,7 +33,7 @@ export default function CustomerRetention({
     }
   }, [campaigns, onUpdateCampaigns, parentCampaigns]);
 
-  const activeCampaign = campaigns[selectedIdx] || campaigns[0];
+  const activeCampaign = (campaigns && campaigns.length > 0) ? (campaigns[selectedIdx] || campaigns[0]) : null;
 
   const handleCopyText = (text: string, type: 'sms' | 'wa' | 'email') => {
     navigator.clipboard.writeText(text);
@@ -102,157 +102,177 @@ export default function CustomerRetention({
             </h3>
           </div>
 
-          <div className="divide-y divide-[#E3E3E3] min-h-[350px]" id="retention-customers-scroller">
-            {campaigns.map((item, index) => {
-              const isSelected = selectedIdx === index;
-              return (
-                <div
-                  key={item.id}
-                  onClick={() => setSelectedIdx(index)}
-                  className={`p-5 flex items-center justify-between hover:bg-sky-50/20 cursor-pointer transition border-l-4 ${
-                    isSelected 
-                      ? 'bg-sky-50 border-sky-500' 
-                      : 'border-transparent'
-                  }`}
-                >
-                  <div className="min-w-0 pr-3">
-                    <p className="font-bold text-[#1F1F1F] text-xs mb-1.5 font-sans justify-start flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-red-650 animate-pulse" />
-                      {item.customerName}
-                    </p>
-                    <div className="flex items-center gap-2 text-[10px] text-[#757575] font-mono">
-                      <span>{item.phone}</span>
-                      <span>•</span>
-                      <span className="text-red-700 font-bold bg-red-50 px-2 py-0.5 rounded-full border border-red-100 uppercase">Inactive: {item.lastVisitDaysAgo} days</span>
+          <div className="divide-y divide-[#E3E3E3] min-h-[350px] flex flex-col justify-center" id="retention-customers-scroller">
+            {campaigns.length === 0 ? (
+              <div className="text-center py-12 text-[#757575] font-sans px-6 select-none">
+                <Users className="w-10 h-10 text-sky-400 mx-auto mb-3.5 stroke-[1.5]" />
+                <p className="text-xs font-bold text-gray-800">Perfect Retention Rating</p>
+                <p className="text-[11px] mt-1.5 text-gray-500 leading-relaxed max-w-sm mx-auto">
+                  No high-risk churn indicators or inactive patrons registered inside the active dockets. All clients are within expected shopping intervals!
+                </p>
+              </div>
+            ) : (
+              campaigns.map((item, index) => {
+                const isSelected = selectedIdx === index;
+                return (
+                  <div
+                    key={item.id}
+                    onClick={() => setSelectedIdx(index)}
+                    className={`p-5 flex items-center justify-between hover:bg-sky-50/20 cursor-pointer transition border-l-4 ${
+                      isSelected 
+                        ? 'bg-sky-50 border-sky-500' 
+                        : 'border-transparent'
+                    }`}
+                  >
+                    <div className="min-w-0 pr-3">
+                      <p className="font-bold text-[#1F1F1F] text-xs mb-1.5 font-sans justify-start flex items-center gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-red-650 animate-pulse" />
+                        {item.customerName}
+                      </p>
+                      <div className="flex items-center gap-2 text-[10px] text-[#757575] font-mono">
+                        <span>{item.phone}</span>
+                        <span>•</span>
+                        <span className="text-red-700 font-bold bg-red-50 px-2 py-0.5 rounded-full border border-red-100 uppercase">Inactive: {item.lastVisitDaysAgo} days</span>
+                      </div>
                     </div>
-                  </div>
 
-                  <div className="text-right shrink-0 select-none">
-                    <span className="text-xs font-mono font-bold text-red-600 block">
-                      Churn Probability: {item.churnProbability}%
-                    </span>
-                    {/* Linear health meters */}
-                    <div className="flex items-center gap-1.5 mt-1.5 justify-end">
-                      <span className="text-[10px] text-[#757575] font-sans font-normal">Score:</span>
-                      <span className={`text-[10px] font-bold font-mono ${
-                        item.healthScore > 70 ? 'text-sky-650' :
-                        item.healthScore > 50 ? 'text-amber-700' :
-                        'text-red-700'
-                      }`}>
-                        {item.healthScore}%
+                    <div className="text-right shrink-0 select-none">
+                      <span className="text-xs font-mono font-bold text-red-600 block">
+                        Churn Probability: {item.churnProbability}%
                       </span>
+                      {/* Linear health meters */}
+                      <div className="flex items-center gap-1.5 mt-1.5 justify-end">
+                        <span className="text-[10px] text-[#757575] font-sans font-normal">Score:</span>
+                        <span className={`text-[10px] font-bold font-mono ${
+                          item.healthScore > 70 ? 'text-sky-650' :
+                          item.healthScore > 50 ? 'text-amber-700' :
+                          'text-red-700'
+                        }`}>
+                          {item.healthScore}%
+                        </span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })
+            )}
           </div>
         </div>
 
         {/* Right column: re-engagement copy drafts */}
         <div className="bg-white border-2 border-sky-400 rounded-[24px] p-6 self-start space-y-6 flex flex-col shadow-sm" id="retention-campaigns-panel">
-          
-          <div className="border-b border-[#E3E3E3] pb-4 select-none">
-            <span className="text-[10px] text-[#757575] font-mono block uppercase">Client Retention Card</span>
-            <h3 className="font-sans font-bold text-[#1F1F1F] text-base mt-1">{activeCampaign.customerName}</h3>
-          </div>
-
-          <div className="space-y-4" id="retention-copy-workspace">
-            
-            {/* Quick summary advisory */}
-            <div className="bg-sky-50 border border-sky-200 p-4.5 rounded-[24px] space-y-1.5 text-xs text-[#0284c7]" id="retention-churn-analytics">
-              <span className="font-bold uppercase tracking-wider text-[9px] text-sky-700 block select-none">Action Proposal</span>
-              <p className="font-semibold text-[11.5px] leading-relaxed text-sky-950">{activeCampaign.suggestedAction}</p>
+          {!activeCampaign ? (
+            <div className="text-center py-20 text-[#757575] font-sans select-none">
+              <Sparkles className="w-8 h-8 text-sky-400 mx-auto mb-3" />
+              <p className="text-xs font-bold text-gray-800">No Target Active</p>
+              <p className="text-[10px] mt-1 text-gray-500 leading-relaxed">
+                Select an inactive ledger patron from the main queue to generate recheck incentive templates.
+              </p>
             </div>
-
-            {/* Simulated Marketing Copy Toggles */}
-            <div className="space-y-4 pt-1" id="marketing-drafts-list">
-              
-              {/* WhatsApp draft segment */}
-              <div className="space-y-1.5 font-sans">
-                <div className="flex justify-between items-center text-[9px] font-bold text-[#757575] uppercase tracking-wider select-none">
-                  <span className="flex items-center gap-1.5 text-sky-600"><MessageSquare className="w-4 h-4 text-sky-650 stroke-[1.5]" /> WhatsApp Blueprint</span>
-                  <div className="flex gap-1">
-                    <button 
-                      type="button"
-                      onClick={() => handleCopyText(activeCampaign.draftWhatsapp, 'wa')}
-                      className="text-[#757575] hover:text-[#1F1F1F] p-1 transition cursor-pointer"
-                      title="Copy copy text"
-                    >
-                      {copiedType === 'wa' ? <Check className="w-3.5 h-3.5 text-sky-500 stroke-[2]" /> : <Copy className="w-3.5 h-3.5" />}
-                    </button>
-                    <button 
-                      type="button"
-                      onClick={() => handleSimulateDispatch(activeCampaign, 'WhatsApp')}
-                      className="text-[#757575] hover:text-[#1F1F1F] p-1 transition cursor-pointer"
-                      title="Simulate Dispatch"
-                    >
-                      <Send className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-                </div>
-                <div className="bg-[#FCFAF7] text-xs border border-[#E3E3E3] text-[#1F1F1F] p-4 rounded-2xl leading-relaxed font-sans shadow-none font-semibold">
-                  {activeCampaign.draftWhatsapp}
-                </div>
+          ) : (
+            <>
+              <div className="border-b border-[#E3E3E3] pb-4 select-none">
+                <span className="text-[10px] text-[#757575] font-mono block uppercase">Client Retention Card</span>
+                <h3 className="font-sans font-bold text-[#1F1F1F] text-base mt-1">{activeCampaign.customerName}</h3>
               </div>
 
-              {/* SMS draft segment */}
-              <div className="space-y-1.5 font-sans">
-                <div className="flex justify-between items-center text-[9px] font-bold text-[#757575] uppercase tracking-wider select-none">
-                  <span className="flex items-center gap-1.5 text-blue-700"><Phone className="w-4 h-4 text-blue-700 stroke-[1.5]" /> SMS Blueprint</span>
-                  <div className="flex gap-1 font-sans">
-                    <button 
-                      type="button"
-                      onClick={() => handleCopyText(activeCampaign.draftSms, 'sms')}
-                      className="text-[#757575] hover:text-[#1F1F1F] p-1 transition cursor-pointer"
-                      title="Copy copy text"
-                    >
-                      {copiedType === 'sms' ? <Check className="w-3.5 h-3.5 text-sky-500 stroke-[2]" /> : <Copy className="w-3.5 h-3.5" />}
-                    </button>
-                    <button 
-                      type="button"
-                      onClick={() => handleSimulateDispatch(activeCampaign, 'SMS')}
-                      className="text-[#757575] hover:text-[#1F1F1F] p-1 transition cursor-pointer"
-                    >
-                      <Send className="w-3.5 h-3.5" />
-                    </button>
+              <div className="space-y-4" id="retention-copy-workspace">
+                
+                {/* Quick summary advisory */}
+                <div className="bg-sky-50 border border-sky-200 p-4.5 rounded-[24px] space-y-1.5 text-xs text-[#0284c7]" id="retention-churn-analytics">
+                  <span className="font-bold uppercase tracking-wider text-[9px] text-sky-700 block select-none">Action Proposal</span>
+                  <p className="font-semibold text-[11.5px] leading-relaxed text-sky-950">{activeCampaign.suggestedAction}</p>
+                </div>
+
+                {/* Simulated Marketing Copy Toggles */}
+                <div className="space-y-4 pt-1" id="marketing-drafts-list">
+                  
+                  {/* WhatsApp draft segment */}
+                  <div className="space-y-1.5 font-sans">
+                    <div className="flex justify-between items-center text-[9px] font-bold text-[#757575] uppercase tracking-wider select-none">
+                      <span className="flex items-center gap-1.5 text-sky-600"><MessageSquare className="w-4 h-4 text-sky-650 stroke-[1.5]" /> WhatsApp Blueprint</span>
+                      <div className="flex gap-1">
+                        <button 
+                          type="button"
+                          onClick={() => handleCopyText(activeCampaign.draftWhatsapp, 'wa')}
+                          className="text-[#757575] hover:text-[#1F1F1F] p-1 transition cursor-pointer"
+                          title="Copy copy text"
+                        >
+                          {copiedType === 'wa' ? <Check className="w-3.5 h-3.5 text-sky-500 stroke-[2]" /> : <Copy className="w-3.5 h-3.5" />}
+                        </button>
+                        <button 
+                          type="button"
+                          onClick={() => handleSimulateDispatch(activeCampaign, 'WhatsApp')}
+                          className="text-[#757575] hover:text-[#1F1F1F] p-1 transition cursor-pointer"
+                          title="Simulate Dispatch"
+                        >
+                          <Send className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </div>
+                    <div className="bg-[#FCFAF7] text-xs border border-[#E3E3E3] text-[#1F1F1F] p-4 rounded-2xl leading-relaxed font-sans shadow-none font-semibold">
+                      {activeCampaign.draftWhatsapp}
+                    </div>
                   </div>
-                </div>
-                <div className="bg-[#FCFAF7] text-xs border border-[#E3E3E3] text-[#1F1F1F] p-4 rounded-2xl leading-relaxed font-sans shadow-none font-semibold">
-                  {activeCampaign.draftSms}
-                </div>
-              </div>
 
-              {/* Email draft segment */}
-              <div className="space-y-1.5 font-sans">
-                <div className="flex justify-between items-center text-[9px] font-bold text-[#757575] uppercase tracking-wider select-none">
-                  <span className="flex items-center gap-1.5 text-purple-700"><Mail className="w-4 h-4 text-purple-700 stroke-[1.5]" /> Email Campaign</span>
-                  <div className="flex gap-1">
-                    <button 
-                      type="button"
-                      onClick={() => handleCopyText(activeCampaign.draftEmail, 'email')}
-                      className="text-[#757575] hover:text-[#1F1F1F] p-1 transition cursor-pointer"
-                    >
-                      {copiedType === 'email' ? <Check className="w-3.5 h-3.5 text-sky-500 stroke-[2]" /> : <Copy className="w-3.5 h-3.5" />}
-                    </button>
-                    <button 
-                      type="button"
-                      onClick={() => handleSimulateDispatch(activeCampaign, 'Email')}
-                      className="text-[#757575] hover:text-[#1F1F1F] p-1 transition cursor-pointer"
-                    >
-                      <Send className="w-3.5 h-3.5" />
-                    </button>
+                  {/* SMS draft segment */}
+                  <div className="space-y-1.5 font-sans">
+                    <div className="flex justify-between items-center text-[9px] font-bold text-[#757575] uppercase tracking-wider select-none">
+                      <span className="flex items-center gap-1.5 text-blue-700"><Phone className="w-4 h-4 text-blue-700 stroke-[1.5]" /> SMS Blueprint</span>
+                      <div className="flex gap-1 font-sans">
+                        <button 
+                          type="button"
+                          onClick={() => handleCopyText(activeCampaign.draftSms, 'sms')}
+                          className="text-[#757575] hover:text-[#1F1F1F] p-1 transition cursor-pointer"
+                          title="Copy copy text"
+                        >
+                          {copiedType === 'sms' ? <Check className="w-3.5 h-3.5 text-sky-500 stroke-[2]" /> : <Copy className="w-3.5 h-3.5" />}
+                        </button>
+                        <button 
+                          type="button"
+                          onClick={() => handleSimulateDispatch(activeCampaign, 'SMS')}
+                          className="text-[#757575] hover:text-[#1F1F1F] p-1 transition cursor-pointer"
+                        >
+                          <Send className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </div>
+                    <div className="bg-[#FCFAF7] text-xs border border-[#E3E3E3] text-[#1F1F1F] p-4 rounded-2xl leading-relaxed font-sans shadow-none font-semibold">
+                      {activeCampaign.draftSms}
+                    </div>
                   </div>
+
+                  {/* Email draft segment */}
+                  <div className="space-y-1.5 font-sans">
+                    <div className="flex justify-between items-center text-[9px] font-bold text-[#757575] uppercase tracking-wider select-none">
+                      <span className="flex items-center gap-1.5 text-purple-700"><Mail className="w-4 h-4 text-purple-700 stroke-[1.5]" /> Email Campaign</span>
+                      <div className="flex gap-1">
+                        <button 
+                          type="button"
+                          onClick={() => handleCopyText(activeCampaign.draftEmail, 'email')}
+                          className="text-[#757575] hover:text-[#1F1F1F] p-1 transition cursor-pointer"
+                        >
+                          {copiedType === 'email' ? <Check className="w-3.5 h-3.5 text-sky-500 stroke-[2]" /> : <Copy className="w-3.5 h-3.5" />}
+                        </button>
+                        <button 
+                          type="button"
+                          onClick={() => handleSimulateDispatch(activeCampaign, 'Email')}
+                          className="text-[#757575] hover:text-[#1F1F1F] p-1 transition cursor-pointer"
+                        >
+                          <Send className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </div>
+                    <div className="bg-[#FCFAF7] text-[#1F1F1F] text-xs border border-[#E3E3E3] p-4 rounded-2xl leading-relaxed font-sans whitespace-pre-wrap shadow-none font-semibold">
+                      {activeCampaign.draftEmail}
+                    </div>
+                  </div>
+
                 </div>
-                <div className="bg-[#FCFAF7] text-xs border border-[#E3E3E3] text-[#1F1F1F] p-4 rounded-2xl leading-relaxed font-sans whitespace-pre-wrap shadow-none font-semibold">
-                  {activeCampaign.draftEmail}
-                </div>
+
               </div>
-
-            </div>
-
-          </div>
-
+            </>
+          )}
         </div>
 
       </div>

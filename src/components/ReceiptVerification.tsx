@@ -124,7 +124,7 @@ export default function ReceiptVerification({
 
     // Extract from receipts
     receipts.forEach(r => {
-      if (r.deleted) return;
+      if (!r || r.deleted || !r.customerName) return;
       if (!clients[r.customerName]) {
         clients[r.customerName] = {
           name: r.customerName,
@@ -132,12 +132,12 @@ export default function ReceiptVerification({
           email: `${r.customerName.toLowerCase().replace(/\s+/g, '')}@example.com`,
           totalSpend: 0,
           txCount: 0,
-          lastTxDate: r.timestamp
+          lastTxDate: r.timestamp || '2026-06-15T12:00:00Z'
         };
       }
-      clients[r.customerName].totalSpend += r.totalAmount;
+      clients[r.customerName].totalSpend += r.totalAmount || 0;
       clients[r.customerName].txCount += 1;
-      if (new Date(r.timestamp) > new Date(clients[r.customerName].lastTxDate)) {
+      if (r.timestamp && new Date(r.timestamp) > new Date(clients[r.customerName].lastTxDate)) {
         clients[r.customerName].lastTxDate = r.timestamp;
       }
     });

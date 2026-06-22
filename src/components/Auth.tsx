@@ -1,8 +1,35 @@
 import React, { useState, useEffect } from 'react';
-import { Sparkles, User, Mail, Store, MapPin, Key, ArrowRight, CornerDownRight, ArrowLeft, ShieldCheck, Users } from 'lucide-react';
+import { Sparkles, User, Mail, Store, MapPin, Key, ArrowRight, CornerDownRight, ArrowLeft, ShieldCheck, Users, Globe } from 'lucide-react';
 import { UserSession, TeamMember } from '../types';
 import EenvoqIcon from './EenvoqIcon';
 import { supabase, isSupabaseConfigured, fetchStoreTeam } from '../lib/supabase';
+
+const COUNTRIES = [
+  "Nigeria", "Ghana", "Kenya", "South Africa", "United States", "United Kingdom", "Canada", "Australia", 
+  "Germany", "France", "India", "United Arab Emirates", "Saudi Arabia", "Egypt", "Ethiopia", 
+  "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", 
+  "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", 
+  "Benin", "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria", 
+  "Burkina Faso", "Burundi", "Cabo Verde", "Cambodia", "Cameroon", "Central African Republic", "Chad", 
+  "Chile", "China", "Colombia", "Comoros", "Congo (Congo-Brazzaville)", "Congo (Democratic Republic)", 
+  "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czechia (Czech Republic)", "Denmark", "Djibouti", 
+  "Dominica", "Dominican Republic", "Ecuador", "Eritrea", "Estonia", "Eswatini", "Fiji", "Finland", 
+  "Gabon", "Gambia", "Georgia", "Greece", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", 
+  "Haiti", "Honduras", "Hungary", "Iceland", "Indonesia", "Iran", "Iraq", "Ireland", "Israel", "Italy", 
+  "Jamaica", "Japan", "Jordan", "Kazakhstan", "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon", 
+  "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Madagascar", "Malawi", 
+  "Malaysia", "Maldives", "Mali", "Malta", "Mauritania", "Mauritius", "Mexico", "Moldova", "Monaco", 
+  "Mongolia", "Montenegro", "Morocco", "Mozambique", "Myanmar (formerly Burma)", "Namibia", "Nepal", 
+  "Netherlands", "New Zealand", "Nicaragua", "Niger", "North Korea", "North Macedonia", "Norway", "Oman", 
+  "Pakistan", "Palestine State", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Poland", 
+  "Portugal", "Qatar", "Romania", "Russia", "Rwanda", "Saint Kitts and Nevis", "Saint Lucia", 
+  "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe", "Senegal", "Serbia", 
+  "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", 
+  "Spain", "Sri Lanka", "Sudan", "Suriname", "Sweden", "Switzerland", "Syria", "Tajikistan", "Tanzania", 
+  "Thailand", "Timor-Leste", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", 
+  "Tuvalu", "Uganda", "Ukraine", "Uruguay", "Uzbekistan", "Vanuatu", "Venezuela", "Vietnam", "Yemen", 
+  "Zambia", "Zimbabwe"
+];
 
 interface AuthProps {
   onLogin: (session: UserSession, operatorId: string) => void;
@@ -44,6 +71,7 @@ export default function Auth({ onLogin, onBackToLanding }: AuthProps) {
   // Business Context (Emptied for authentic registration)
   const [storeName, setStoreName] = useState('');
   const [storeLocation, setStoreLocation] = useState('');
+  const [country, setCountry] = useState('Nigeria');
   const [businessCategory, setBusinessCategory] = useState('Retail Store');
   const [customCategory, setCustomCategory] = useState('');
 
@@ -191,6 +219,8 @@ export default function Auth({ onLogin, onBackToLanding }: AuthProps) {
         return;
       }
 
+      const fullLocation = storeLocation.trim() ? `${storeLocation.trim()}, ${country}` : country;
+
       // 1. SUPABASE REGISTER FLOW
       if (isSupabaseConfigured) {
         try {
@@ -233,7 +263,7 @@ export default function Auth({ onLogin, onBackToLanding }: AuthProps) {
               .from('stores')
               .insert([{
                 name: storeName,
-                location: storeLocation,
+                location: fullLocation,
                 currency: 'NGN',
                 owner_id: user.id
               }])
@@ -304,7 +334,7 @@ export default function Auth({ onLogin, onBackToLanding }: AuthProps) {
           const newSimStore = {
             id: mockStoreId,
             name: storeName,
-            location: storeLocation,
+            location: fullLocation,
             currency: 'NGN',
             owner_id: mockUserId
           };
@@ -838,18 +868,41 @@ export default function Auth({ onLogin, onBackToLanding }: AuthProps) {
               </div>
             </div>
 
-            <div>
-              <label className="block text-xs font-normal text-[#757575] mb-2 pl-1">Primary Location / Address</label>
-              <div className="relative">
-                <MapPin className="absolute left-4 top-3.5 w-4 h-4 text-[#757575] stroke-[1.5]" />
-                <input
-                  type="text"
-                  required
-                  value={storeLocation}
-                  onChange={(e) => setStoreLocation(e.target.value)}
-                  className="w-full bg-[#FCFBF9] text-[#1F1F1F] border border-[#E3E3E3] rounded-full py-3.5 pl-12 pr-4 text-xs focus:outline-none focus:border-[#5F6368] focus:bg-white transition-all"
-                  placeholder="14 Broad Street, Lagos"
-                />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-normal text-[#757575] mb-2 pl-1">Primary Location / Address</label>
+                <div className="relative">
+                  <MapPin className="absolute left-4 top-3.5 w-4 h-4 text-[#757575] stroke-[1.5]" />
+                  <input
+                    type="text"
+                    required
+                    value={storeLocation}
+                    onChange={(e) => setStoreLocation(e.target.value)}
+                    className="w-full bg-[#FCFBF9] text-[#1F1F1F] border border-[#E3E3E3] rounded-full py-3.5 pl-12 pr-4 text-xs focus:outline-none focus:border-[#5F6368] focus:bg-white transition-all"
+                    placeholder="14 Broad Street, Lagos"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-normal text-[#757575] mb-2 pl-1">Country</label>
+                <div className="relative">
+                  <Globe className="absolute left-4 top-3.5 w-4 h-4 text-[#757575] stroke-[1.5]" />
+                  <select
+                    value={country}
+                    onChange={(e) => setCountry(e.target.value)}
+                    className="w-full bg-[#FCFBF9] text-[#1F1F1F] border border-[#E3E3E3] rounded-full py-3.5 pl-12 pr-8 text-xs focus:outline-none focus:border-[#5F6368] focus:bg-white transition-all h-[46px] appearance-none"
+                  >
+                    {COUNTRIES.map((c) => (
+                      <option key={c} value={c}>{c}</option>
+                    ))}
+                  </select>
+                  <div className="pointer-events-none absolute inset-y-0 right-4 flex items-center">
+                    <svg className="h-4 w-4 text-[#757575]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </div>
+                </div>
               </div>
             </div>
 
