@@ -93,7 +93,7 @@ export default function Dashboard({
   const todayProfit = expectedToday * 0.15; // Standard 15% retail margin
   const cashCollected = expectedToday; // Exactly equal to recorded amount
   
-  // Calculate inventory valuation
+  // Calculate the inventory valuation
   const totalInventoryValuation = inventory.reduce((sum, item) => sum + (item.basePrice * item.stockLevel), 0);
 
   // Operational hours calculation
