@@ -273,9 +273,6 @@ export default function Dashboard({
               <h1 className="text-xl sm:text-2xl font-sans font-medium text-neutral-900 tracking-tight" id="dashboard-business-heading">
                 {businessName}
               </h1>
-              <span className="bg-sky-50 text-sky-850 text-[9px] font-medium px-2 py-0.5 rounded-full border border-sky-200/40 uppercase tracking-wider font-mono">
-                You're Online
-              </span>
             </div>
             <p className="text-sm font-sans font-normal text-neutral-900 mt-1.5">
               Good morning, <span className="text-[#102a43] font-medium">{userName}</span> &bull;
