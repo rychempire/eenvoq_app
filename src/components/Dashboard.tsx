@@ -5,7 +5,7 @@ import {
   ArrowUpRight, AlertCircle, Sparkles, ChevronRight, ArrowLeft, X, Check, Plus, 
   Search, TrendingUp, ShieldAlert, Users, ShoppingCart, Activity, CheckCircle2,
   Coins, Filter, ArrowRight, CircleDollarSign, BarChart2, DollarSign, Bot, AlertTriangle,
-  Package, Star
+  Package, Star, Clock
 } from 'lucide-react';
 import { formatCurrency, CURRENCIES } from '../utils/currency';
 import { 
@@ -53,7 +53,7 @@ export default function Dashboard({
 }: DashboardProps) {
 
   const userName = user?.name || 'Prince';
-  const businessName = user?.businessName || 'Eenvoq Enterprise';
+  const businessName = user?.storeName || user?.businessName || 'Eenvoq Enterprise';
   const currencySymbol = CURRENCIES[currency]?.symbol || '$';
 
   // Toggle state for currency selection
@@ -69,6 +69,7 @@ export default function Dashboard({
   const [trendType, setTrendType] = useState<'revenue' | 'profit' | 'transactions'>('revenue');
   const [showMoreMenu, setShowMoreMenu] = useState(false);
   const [showReconciliationInline, setShowReconciliationInline] = useState(false);
+  const [showRundownModal, setShowRundownModal] = useState(false);
 
   // Reconciliation interactive states
   const [inputCash, setInputCash] = useState<number>(245000);
@@ -94,6 +95,86 @@ export default function Dashboard({
   
   // Calculate inventory valuation
   const totalInventoryValuation = inventory.reduce((sum, item) => sum + (item.basePrice * item.stockLevel), 0);
+
+  // Operational hours calculation
+  const todayDayName = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][new Date().getDay()];
+  let openTimeStr = "08:00";
+  let closeTimeStr = "18:00";
+  let isOpenToday = true;
+  
+  try {
+    const savedHours = localStorage.getItem('eenvoq_hours_settings');
+    if (savedHours) {
+      const parsed = JSON.parse(savedHours);
+      if (parsed[todayDayName]) {
+        isOpenToday = parsed[todayDayName].open;
+        openTimeStr = parsed[todayDayName].openTime;
+        closeTimeStr = parsed[todayDayName].closeTime;
+      }
+    }
+  } catch (e) {}
+
+  const now = new Date();
+  const currentHourMin = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+  const isEndOfDay = !isOpenToday || (currentHourMin >= closeTimeStr);
+
+  // Dynamic alerts for Attention Needed
+  const userHasData = receipts.length > 0 || inventory.length > 0 || debtors.length > 0 || audits.length > 0;
+  const attentionItems: { tag: React.ReactNode; priority: string; text: string; detail: string; action: () => void }[] = [];
+
+  if (userHasData) {
+    // 1. Low inventory stock alerts
+    const lowStockItems = inventory.filter(item => item.stockLevel <= item.safeMin);
+    lowStockItems.slice(0, 2).forEach(item => {
+      attentionItems.push({
+        tag: <AlertCircle className="w-4.5 h-4.5 text-rose-500 shrink-0" />,
+        priority: "High Priority",
+        text: "Stock running low",
+        detail: `${item.name} is running low (${item.stockLevel} ${item.unit} left, safe minimum is ${item.safeMin}).`,
+        action: () => setActiveSection('inventory')
+      });
+    });
+
+    // 2. Debtor overdue alerts
+    const overdueDebtors = debtors.filter(d => d.amountOwed > 0);
+    overdueDebtors.slice(0, 2).forEach(debtor => {
+      attentionItems.push({
+        tag: <AlertCircle className="w-4.5 h-4.5 text-rose-500 shrink-0" />,
+        priority: "High Priority",
+        text: "Debtor overdue",
+        detail: `${debtor.name} is overdue with outstanding balance of ${formatCurrency(debtor.amountOwed, currency)}.`,
+        action: () => setActiveSection('debtor')
+      });
+    });
+
+    // 3. System alerts
+    const activeAlerts = alerts.filter(a => !a.read);
+    activeAlerts.slice(0, 2).forEach(alert => {
+      attentionItems.push({
+        tag: alert.priority === 'critical' || alert.priority === 'high'
+          ? <AlertCircle className="w-4.5 h-4.5 text-rose-500 shrink-0" />
+          : <AlertTriangle className="w-4.5 h-4.5 text-amber-500 shrink-0" />,
+        priority: alert.priority === 'critical' || alert.priority === 'high' ? "High Priority" : "Medium Priority",
+        text: alert.title,
+        detail: alert.description,
+        action: () => {
+          if (alert.category === 'inventory') setActiveSection('inventory');
+          else if (alert.category === 'debtor') setActiveSection('debtor');
+          else onNavigateToAssistant(alert.description);
+        }
+      });
+    });
+
+    // 4. Fallback default alerts if none of the explicit rules trigger but data is present
+    if (attentionItems.length === 0) {
+      attentionItems.push(
+        { tag: <AlertCircle className="w-4.5 h-4.5 text-rose-500 shrink-0" />, priority: "High Priority", text: "Stock running low", detail: "Peak Milk will run out in 2 days at current velocity.", action: () => setActiveSection('inventory') },
+        { tag: <AlertCircle className="w-4.5 h-4.5 text-rose-500 shrink-0" />, priority: "High Priority", text: "Debtor overdue", detail: "John is overdue by 5 days on credit sales.", action: () => setActiveSection('debtor') },
+        { tag: <AlertTriangle className="w-4.5 h-4.5 text-amber-500 shrink-0" />, priority: "Medium Priority", text: "Revenue declining", detail: "Hourly sales velocity is 12% lower than standard weekend average.", action: () => onNavigateToAssistant("Why is revenue declining?") },
+        { tag: <AlertTriangle className="w-4.5 h-4.5 text-amber-500 shrink-0" />, priority: "Medium Priority", text: "Customer churn risk", detail: "3 regular merchants have not re-logged inside 14 days.", action: () => setActiveSection('debtor') }
+      );
+    }
+  }
 
   // Handles AI search bar submission
   const handleAiSearchSubmit = (e: React.FormEvent) => {
@@ -189,7 +270,7 @@ export default function Dashboard({
         <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between p-6 gap-4" id="dashboard-navbar-panel">
           <div className="text-left">
             <div className="flex items-center gap-2">
-              <h1 className="text-xl sm:text-2xl font-sans font-medium text-neutral-900 tracking-tight">
+              <h1 className="text-xl sm:text-2xl font-sans font-medium text-neutral-900 tracking-tight" id="dashboard-business-heading">
                 {businessName}
               </h1>
               <span className="bg-sky-50 text-sky-850 text-[9px] font-medium px-2 py-0.5 rounded-full border border-sky-200/40 uppercase tracking-wider font-mono">
@@ -270,34 +351,6 @@ export default function Dashboard({
         {/* Right-Hand Column (Customers) */}
         <div className="relative bg-sky-50/25 backdrop-blur-md border border-sky-100/40 rounded-[32px] p-5 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-3 text-left">
           
-          {/* Decorative Gauge arch intersecting bottom of Balance card and top/right edge of Customers card for mobile */}
-          <div className="absolute right-6 top-[-16px] w-24 h-11 z-20 pointer-events-none sm:hidden">
-            <svg viewBox="0 0 100 50" className="w-full h-full">
-              <path 
-                d="M 10 50 A 40 40 0 0 1 90 50" 
-                fill="none" 
-                stroke="#E2E8F0" 
-                strokeWidth="6" 
-                strokeLinecap="round" 
-              />
-              <path 
-                d="M 10 50 A 40 40 0 0 1 90 50" 
-                fill="none" 
-                stroke="url(#balance-gauge-grad-mob)" 
-                strokeWidth="6" 
-                strokeDasharray="125" 
-                strokeDashoffset="45" 
-                strokeLinecap="round" 
-              />
-              <defs>
-                <linearGradient id="balance-gauge-grad-mob" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#F59E0B" /> {/* amber gold */}
-                  <stop offset="100%" stopColor="#0284C7" /> {/* rich ocean blue */}
-                </linearGradient>
-              </defs>
-            </svg>
-          </div>
-
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-[#bfdbfe]/40 flex items-center justify-center text-blue-600 shrink-0">
               <Users className="w-5 h-5 stroke-[1.5]" />
@@ -315,108 +368,76 @@ export default function Dashboard({
       </div>
 
       {/* ===============================================
-          SECTION 1: AI COMMAND CENTER (HERO AREA)
+          SECTION 1: DAILY BUSINESS RUNDOWN (REPLACES AUTONOMOUS INTELLIGENCE HERO AREA)
           =============================================== */}
       <div 
-        className="relative border border-slate-900 rounded-[32px] overflow-hidden shadow-lg p-6 md:p-8" 
+        className="relative border border-slate-950 rounded-[32px] overflow-hidden shadow-lg p-6 md:p-8 cursor-pointer hover:border-sky-500 transition-all duration-300 group" 
         id="dashboard-ai-command-center"
+        onClick={() => setShowRundownModal(true)}
         style={{ 
-          background: 'radial-gradient(circle at top left, #0D1B2A 0%, #1B263B 60%, #415A77 100%)' 
+          background: 'linear-gradient(135deg, #111111 0%, #1A1A1A 100%)' 
         }}
       >
-        {/* Glow ambient background lights */}
-        <div className="absolute top-0 right-10 w-[200px] h-[150px] bg-sky-400/10 rounded-full blur-[80px] pointer-events-none" />
-        <div className="absolute bottom-0 left-5 w-[150px] h-[120px] bg-amber-400/5 rounded-full blur-[60px] pointer-events-none" />
+        <div className="absolute top-0 right-10 w-[200px] h-[150px] bg-sky-500/10 rounded-full blur-[80px] pointer-events-none" />
+        <div className="absolute bottom-0 left-5 w-[150px] h-[120px] bg-emerald-500/5 rounded-full blur-[60px] pointer-events-none" />
 
-        <div className="relative z-10 space-y-6">
-          {/* Header row with avatar sizer */}
-          <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-full bg-white/10 border border-white/20 flex items-center justify-center shrink-0">
-              <EenvoqIcon className="w-4.5 h-4.5 text-sky-300 animate-pulse" />
+        <div className="relative z-10 space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
+            <div className="flex items-center gap-2.5">
+              <div className="w-9 h-9 rounded-full bg-white/10 border border-white/20 flex items-center justify-center shrink-0">
+                <Clock className="w-4.5 h-4.5 text-sky-450 animate-pulse" />
+              </div>
+              <div className="text-left">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-sky-400 block font-display">Daily Operational Status</span>
+                <h2 className="text-sm font-sans font-normal text-white uppercase tracking-wider leading-none mt-1">Daily Business Rundown</h2>
+              </div>
             </div>
-            <div className="text-left">
-              <span className="text-[10px] font-black uppercase tracking-widest text-sky-300 font-mono block">Autonomous Intelligence</span>
-              <h2 className="text-lg font-sans font-black text-white leading-none">Eenvoq Core</h2>
-            </div>
-          </div>
 
-          {/* AI Search input block */}
-          <form onSubmit={handleAiSearchSubmit} className="relative w-full">
-            <input 
-              type="text"
-              value={aiQuery}
-              onChange={e => setAiQuery(e.target.value)}
-              placeholder="Ask Eenvoq anything..."
-              className="w-full bg-white/10 text-white placeholder-white/50 border border-white/20 rounded-full py-3.5 pl-5 pr-12 text-sm focus:outline-none focus:bg-white/15 focus:border-sky-400/60 font-medium transition"
-            />
-            <button 
-              type="submit"
-              className="absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-sky-500 hover:bg-sky-400 text-neutral-950 flex items-center justify-center cursor-pointer transition shadow-xs"
-            >
-              <Search className="w-4 h-4 stroke-[2]" />
-            </button>
-          </form>
-
-          {/* Question Examples */}
-          <div className="text-left space-y-2">
-            <span className="text-[10px] uppercase font-bold text-white/50 tracking-wider">Examples:</span>
-            <div className="flex flex-wrap gap-2">
-              {[
-                "Why are sales down today?",
-                "What products should I restock?",
-                "Which customers haven't returned?",
-                "Show suspicious transactions"
-              ].map((ex, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  onClick={() => onNavigateToAssistant(ex)}
-                  className="px-3.5 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-white text-[11px] font-medium transition cursor-pointer text-left"
-                >
-                  {ex}
-                </button>
-              ))}
+            <div className="flex items-center gap-2 self-start sm:self-center">
+              {isEndOfDay ? (
+                <span className="text-[10px] bg-rose-500/25 text-rose-300 font-bold px-3 py-1 rounded-full border border-rose-500/30 uppercase tracking-wider font-mono">
+                  Closed &bull; EOD Ready
+                </span>
+              ) : (
+                <span className="text-[10px] bg-emerald-500/25 text-emerald-300 font-bold px-3 py-1 rounded-full border border-emerald-500/30 uppercase tracking-wider font-mono">
+                  Open &bull; Active Hours
+                </span>
+              )}
             </div>
           </div>
 
-          {/* AI Insights bullet points inside Hero area */}
-          <div className="border-t border-white/10 pt-4 text-left">
-            <h3 className="text-xs uppercase font-medium text-sky-400 tracking-wider mb-3 flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>AI Insights</span>
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {[
-                { text: "Revenue is 18% lower than yesterday", icon: <TrendingUp className="w-4 h-4 text-rose-400 shrink-0 mt-0.5 scale-y-[-1]" />, path: "Why is today's revenue lower than yesterday?" },
-                { text: "3 products will run out in 4 days", icon: <Package className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />, action: () => setActiveSection('inventory') },
-                { text: "Cash mismatch detected", icon: <Coins className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />, action: () => setShowReconciliationInline(true) },
-                { text: "Top customer has not purchased in 12 days", icon: <Star className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />, action: () => setActiveSection('debtor') }
-              ].map((ins, index) => (
-                <div 
-                  key={index}
-                  onClick={() => {
-                    if (ins.action) {
-                      ins.action();
-                    } else if (ins.path) {
-                      onNavigateToAssistant(ins.path);
-                    }
-                  }}
-                  className="bg-white/5 hover:bg-white/10 border border-white/10 rounded-[18px] p-3 flex gap-2.5 items-start cursor-pointer transition"
-                >
-                  <span className="shrink-0 mt-0.5">{ins.icon}</span>
-                  <span className="text-[11px] text-white/90 font-medium leading-normal">{ins.text}</span>
-                </div>
-              ))}
+          <div className="text-left grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+            <div className="bg-white/5 p-4 rounded-2xl border border-white/10">
+              <span className="text-[10px] text-zinc-400 uppercase font-bold tracking-wider block font-display">Today's Turnover</span>
+              <span className="text-lg font-normal text-white mt-1 block font-mono">{formatCurrency(expectedToday, currency)}</span>
+            </div>
+            <div className="bg-white/5 p-4 rounded-2xl border border-white/10">
+              <span className="text-[10px] text-zinc-400 uppercase font-bold tracking-wider block font-display">Receipts Generated</span>
+              <span className="text-lg font-normal text-white mt-1 block font-mono">{totalTransactions} Receipts</span>
+            </div>
+            <div className="bg-white/5 p-4 rounded-2xl border border-white/10">
+              <span className="text-[10px] text-zinc-400 uppercase font-bold tracking-wider block font-display">Active Debtor Count</span>
+              <span className="text-lg font-normal text-white mt-1 block font-mono">{totalCustomers} Overdues</span>
             </div>
           </div>
 
+          <p className="text-xs text-zinc-400 font-sans leading-relaxed text-left">
+            {isEndOfDay 
+              ? "The operating day has ended. Click here to trigger the comprehensive closing summary, audit cash register variances, verify cashier logs, and finalize statistics."
+              : "Business is currently active. Click here to check the real-time sales rundown, audit current registers, and view inventory updates so far today."}
+          </p>
+
+          <div className="flex items-center gap-1.5 text-xs text-sky-400 font-bold group-hover:text-sky-300 transition select-none pt-2 font-display">
+            <span>View Complete {isEndOfDay ? "Day-End Summary" : "Mid-Day Snapshot"}</span>
+            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-all" />
+          </div>
         </div>
       </div>      {/* ===============================================
           SECTION 2: TODAY'S BUSINESS SNAPSHOT (Beautified Layout)
           =============================================== */}
       <div className="text-left font-sans animate-fade-in">
         <div className="flex justify-between items-center mb-3">
-          <h3 className="text-xs uppercase font-medium tracking-widest text-[#111111] pl-1">Today's Business Snapshot</h3>
+          <h3 className="text-xs uppercase font-normal tracking-widest text-black pl-1">Today's Business Snapshot</h3>
           <span className="text-[10px] text-sky-700 font-medium font-mono px-2 py-0.5 bg-sky-50 border border-sky-200/40 rounded-full">Real-time Metrics</span>
         </div>
         
@@ -497,7 +518,7 @@ export default function Dashboard({
           SECTION 3: QUICK ACTIONS
           =============================================== */}
       <div className="text-left font-sans animate-fade-in">
-        <h3 className="text-xs uppercase font-medium tracking-widest text-[#111111] mb-2.5 pl-1">Quick Actions</h3>
+        <h3 className="text-xs uppercase font-normal tracking-widest text-black mb-2.5 pl-1">Quick Actions</h3>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
           
           <button
@@ -653,32 +674,37 @@ export default function Dashboard({
           SECTION 4: ATTENTION NEEDED
           =============================================== */}
       <div className="text-left font-sans animate-fade-in" id="dashboard-attention-section">
-        <h3 className="text-xs uppercase font-medium tracking-widest text-[#111111] mb-2.5 pl-1">Attention Needed</h3>
+        <h3 className="text-xs uppercase font-normal tracking-widest text-black mb-2.5 pl-1">Attention Needed</h3>
         <div className="bg-white border border-neutral-150 rounded-[28px] p-5 shadow-xs space-y-3">
-          {[
-            { tag: <AlertCircle className="w-4 h-4 text-rose-500 shrink-0" />, priority: "High Priority", text: "Stock running low", detail: "Peak Milk will run out in 2 days at current velocity.", action: () => setActiveSection('inventory') },
-            { tag: <AlertCircle className="w-4 h-4 text-rose-500 shrink-0" />, priority: "High Priority", text: "Debtor overdue", detail: "John is overdue by 5 days on credit sales.", action: () => setActiveSection('debtor') },
-            { tag: <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0" />, priority: "Medium Priority", text: "Revenue declining", detail: "Hourly sales velocity is 12% lower than standard weekend average.", action: () => onNavigateToAssistant("Why is revenue declining?") },
-            { tag: <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0" />, priority: "Medium Priority", text: "Customer churn risk", detail: "3 regular merchants have not re-logged inside 14 days.", action: () => setActiveSection('debtor') }
-          ].map((item, i) => (
-            <div 
-              key={i} 
-              onClick={item.action}
-              className="flex items-start justify-between p-3 border border-neutral-100 rounded-[20px] bg-neutral-50/50 hover:bg-neutral-50 transition cursor-pointer"
-            >
-              <div className="flex gap-2.5 items-start">
-                <span className="shrink-0 mt-0.5">{item.tag}</span>
-                <div>
-                  <div className="flex items-center gap-1.5">
-                    <h4 className="text-xs font-medium text-black leading-none">{item.text}</h4>
-                    <span className="text-[8px] font-medium font-mono text-neutral-900 uppercase">{item.priority}</span>
-                  </div>
-                  <p className="text-[11px] text-black font-normal mt-1 font-sans">{item.detail}</p>
-                </div>
-              </div>
-              <ChevronRight className="w-4 h-4 text-neutral-500 align-middle self-center animate-fade-in" />
+          {attentionItems.length === 0 ? (
+            <div className="text-center py-6 text-neutral-400 font-sans">
+              <CheckCircle2 className="w-8 h-8 text-neutral-250 mx-auto mb-2" />
+              <p className="text-xs font-semibold text-neutral-700">All systems clear</p>
+              <p className="text-[10px] text-neutral-400 mt-1 max-w-md mx-auto leading-relaxed">
+                Add products in your inventory, capture sales receipts, or record debtor tabs under your account to activate AI guardian alarms.
+              </p>
             </div>
-          ))}
+          ) : (
+            attentionItems.map((item, i) => (
+              <div 
+                key={i} 
+                onClick={item.action}
+                className="flex items-start justify-between p-3 border border-neutral-100 rounded-[20px] bg-neutral-50/50 hover:bg-neutral-50 transition cursor-pointer"
+              >
+                <div className="flex gap-2.5 items-start">
+                  <span className="shrink-0 mt-0.5">{item.tag}</span>
+                  <div>
+                    <div className="flex items-center gap-1.5">
+                      <h4 className="text-xs font-medium text-black leading-none">{item.text}</h4>
+                      <span className="text-[8px] font-medium font-mono text-[#111111] bg-neutral-100 border border-neutral-200 px-1.5 py-0.5 rounded-sm uppercase tracking-wide">{item.priority}</span>
+                    </div>
+                    <p className="text-[11px] text-black font-normal mt-1 font-sans leading-snug">{item.detail}</p>
+                  </div>
+                </div>
+                <ChevronRight className="w-4 h-4 text-neutral-500 align-middle self-center animate-fade-in" />
+              </div>
+            ))
+          )}
         </div>
       </div>
 
@@ -687,7 +713,7 @@ export default function Dashboard({
           =============================================== */}
       <div className="text-left font-sans">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2 px-1">
-          <h3 className="text-xs uppercase font-black tracking-widest text-neutral-400">Performance Trend</h3>
+          <h3 className="text-xs uppercase font-normal tracking-widest text-black">Performance Trend</h3>
           
           <div className="flex bg-neutral-100 p-0.5 rounded-full border border-neutral-150 self-start" id="chart-toggle">
             <button
@@ -766,62 +792,7 @@ export default function Dashboard({
         </div>
       </div>
 
-      {/* ===============================================
-          SECTION 6: SMART RECOMMENDATIONS
-          =============================================== */}
-      <div className="text-left font-sans select-none animate-fade-in">
-        <h3 className="text-xs uppercase font-medium tracking-widest text-[#111111] mb-2.5 pl-1">Smart Recommendations</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {recommendations.filter(r => r.state !== 'dismissed').map((rec) => (
-            <div 
-              key={rec.id}
-              className={`bg-white border border-neutral-150 rounded-[28px] p-5 shadow-xs flex flex-col justify-between space-y-4 transition ${
-                rec.state === 'approved' ? 'opacity-60 bg-emerald-50/20 border-emerald-200' : ''
-              }`}
-            >
-              <div className="space-y-1.5">
-                <span className="text-[9px] bg-sky-50 text-sky-850 font-medium uppercase px-2 py-0.5 rounded-full inline-block tracking-widest">
-                  {rec.action}
-                </span>
-                <p className="text-xs font-medium text-black leading-normal">
-                  {rec.text}
-                </p>
-              </div>
-
-              <div className="flex gap-2">
-                {rec.state === 'approved' ? (
-                  <span className="text-emerald-800 text-xs font-medium font-sans flex items-center gap-1">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                    <span>Approved & Applied</span>
-                  </span>
-                ) : (
-                  <>
-                    <button
-                      type="button"
-                      onClick={() => handleApproveRec(rec.id, rec.text)}
-                      className="bg-[#1e40af] hover:bg-[#1a368f] text-white font-medium px-4 py-2 rounded-full text-[11px] uppercase tracking-wide cursor-pointer transition shadow-xs"
-                    >
-                      Approve
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleDismissRec(rec.id)}
-                      className="border border-neutral-350 hover:bg-neutral-50 text-neutral-900 font-medium px-4 py-2 rounded-full text-[11px] uppercase tracking-wide cursor-pointer transition"
-                    >
-                      Dismiss
-                    </button>
-                  </>
-                )}
-              </div>
-            </div>
-          ))}
-          {recommendations.filter(r => r.state !== 'dismissed').length === 0 && (
-            <div className="col-span-2 text-center text-xs text-neutral-950 py-6 font-normal">
-              All recommendations processed. Check back tonight for refreshed insights.
-            </div>
-          )}
-        </div>
-      </div>
+      {/* Smart Recommendations section deleted */}
 
       {/* PERSISTENT SLIDE UP BOTTOM SHEET FOR 'MORE' BUTTON */}
       {showMoreMenu && (
@@ -918,6 +889,128 @@ export default function Dashboard({
             >
               Close Menu
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Dynamic Rundown Modal (Daily Business Rundown) */}
+      {showRundownModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-neutral-950/75 backdrop-blur-md animate-fade-in-shorter">
+          <div className="bg-white rounded-[32px] w-full max-w-xl border border-slate-200 overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+            {/* Header */}
+            <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50">
+              <div className="flex items-center gap-2.5">
+                <Clock className="w-5 h-5 text-sky-600 stroke-[1.5]" />
+                <div>
+                  <h3 className="font-sans font-normal text-black text-xs uppercase tracking-wide">Daily Operational Rundown</h3>
+                  <p className="text-[10px] text-zinc-500 font-sans tracking-wide mt-0.5">
+                    Operating Schedule: {openTimeStr} - {closeTimeStr}
+                  </p>
+                </div>
+              </div>
+              <button 
+                onClick={() => setShowRundownModal(false)}
+                className="p-1.5 rounded-full hover:bg-slate-200 text-zinc-400 hover:text-zinc-700 transition cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Scrollable Content */}
+            <div className="p-6 overflow-y-auto space-y-5 text-left select-none">
+              {/* Op Hours / Status Banner */}
+              <div className="flex items-center justify-between p-3.5 rounded-2xl bg-neutral-50 border border-slate-150">
+                <div className="flex items-center gap-2 text-xs font-semibold text-slate-800">
+                  <Activity className="w-4 h-4 text-sky-500" />
+                  <span>Current Status Summary</span>
+                </div>
+                {isEndOfDay ? (
+                  <span className="text-[10px] bg-rose-50 text-rose-700 font-bold px-3 py-1 rounded-full border border-rose-200 uppercase tracking-wider font-mono">
+                    End-of-day Summary (Full Close)
+                  </span>
+                ) : (
+                  <span className="text-[10px] bg-emerald-50 text-emerald-700 font-bold px-3 py-1 rounded-full border border-emerald-200 uppercase tracking-wider font-mono">
+                    Mid-day Auditing (So Far Today)
+                  </span>
+                )}
+              </div>
+
+              {/* Statistics Panel */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-slate-50 p-4 border border-slate-150/80 rounded-2xl">
+                  <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider block font-sans">Turnover Registered</span>
+                  <span className="text-lg font-normal text-slate-900 mt-1 block font-mono">{formatCurrency(expectedToday, currency)}</span>
+                  <span className="text-[9px] text-[#757a7f] block mt-0.5">Through {totalTransactions} sales transactions</span>
+                </div>
+                <div className="bg-slate-50 p-4 border border-slate-150/80 rounded-2xl">
+                  <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider block font-sans">Estimated Profit</span>
+                  <span className="text-lg font-normal text-emerald-700 mt-1 block font-mono">{formatCurrency(todayProfit, currency)}</span>
+                  <span className="text-[9px] text-[#757a7f] block mt-0.5">Based on default 15% retail margin</span>
+                </div>
+              </div>
+
+              {/* Sales/Inventory detailed log */}
+              <div className="space-y-2.5">
+                <h4 className="text-[10px] uppercase font-bold text-slate-500 tracking-wider">Daily Operations &amp; Cash Desk</h4>
+                <div className="p-4 bg-slate-50/50 rounded-2xl border border-slate-100 space-y-3 text-xs leading-relaxed text-slate-600">
+                  <div className="flex justify-between border-b border-dashed border-slate-200 pb-2">
+                    <span className="font-medium text-slate-700">Cashier Safe Target:</span>
+                    <span className="font-mono text-slate-900 font-bold">{formatCurrency(expectedToday, currency)}</span>
+                  </div>
+                  <div className="flex justify-between border-b border-dashed border-slate-200 pb-2">
+                    <span className="font-medium text-slate-700">Stock Levels Tracked:</span>
+                    <span className="font-mono text-slate-900 font-bold">{inventory.length} dynamic SKUs</span>
+                  </div>
+                  <div>
+                    <span className="font-medium text-slate-700">Overdue Balances Owed:</span>
+                    <span className="font-mono text-rose-600 font-bold float-right">
+                      {formatCurrency(debtors.reduce((sum, d) => sum + d.amountOwed, 0), currency)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Active warning block */}
+              {isEndOfDay ? (
+                <div className="p-4 bg-amber-50 border border-amber-200 rounded-2xl flex gap-3 text-xs text-amber-900 leading-relaxed">
+                  <ShieldAlert className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+                  <div>
+                    <span className="font-bold block">Closing Audits Required</span>
+                    To guarantee absolute financial protection and accountability, run a **Truth Check** on the cash register to verify terminal differences and lock today's logs.
+                  </div>
+                </div>
+              ) : (
+                <div className="p-4 bg-sky-50 border border-sky-100 rounded-2xl flex gap-3 text-xs text-sky-900 leading-relaxed">
+                  <CheckCircle2 className="w-5 h-5 text-sky-650 shrink-0 mt-0.5" />
+                  <div>
+                    <span className="font-bold block">Active Hours Protection</span>
+                    Accountability monitoring is online. All receipt alterations or cashier terminal deletions are permanently logged to the immutable ledger.
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Footer */}
+            <div className="p-4 bg-slate-50 border-t border-slate-100 flex gap-2.5 justify-end">
+              <button 
+                onClick={() => setShowRundownModal(false)}
+                className="px-5 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs font-bold rounded-full transition cursor-pointer"
+              >
+                Dismiss View
+              </button>
+              {isEndOfDay && (
+                <button 
+                  onClick={() => {
+                    setShowRundownModal(false);
+                    setShowReconciliationInline(true);
+                  }}
+                  className="px-5 py-2.5 bg-[#1e40af] hover:bg-[#1a368f] text-white text-xs font-bold rounded-full transition cursor-pointer flex items-center gap-1.5 shadow-sm font-sans uppercase tracking-wider"
+                >
+                  <Coins className="w-3.5 h-3.5" />
+                  Run Cash Truth Check
+                </button>
+              )}
+            </div>
           </div>
         </div>
       )}

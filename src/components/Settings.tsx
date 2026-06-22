@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
   ShieldCheck, Store, Key, Phone, CreditCard, Sparkles, Save,
-  ToggleLeft, ToggleRight, ArrowLeft
+  ToggleLeft, ToggleRight, ArrowLeft, Clock
 } from 'lucide-react';
 import EenvoqIcon from './EenvoqIcon';
 import { UserSession } from '../types';
@@ -27,6 +27,26 @@ export default function Settings({ user, onUpdateUser, showConfirm, currency, on
   const [waIntegration, setWaIntegration] = useState(true);
   const [autoBillingLock, setAutoBillingLock] = useState(true);
   const [realtimeNotify, setRealtimeNotify] = useState(true);
+
+  // Set up default weekly hours
+  const defaultHours = {
+    Monday: { open: true, openTime: "08:00", closeTime: "18:00" },
+    Tuesday: { open: true, openTime: "08:00", closeTime: "18:00" },
+    Wednesday: { open: true, openTime: "08:00", closeTime: "18:00" },
+    Thursday: { open: true, openTime: "08:00", closeTime: "18:00" },
+    Friday: { open: true, openTime: "08:00", closeTime: "18:00" },
+    Saturday: { open: true, openTime: "09:00", closeTime: "16:00" },
+    Sunday: { open: false, openTime: "12:00", closeTime: "16:00" }
+  };
+
+  const storedHoursKey = 'eenvoq_hours_settings';
+  const [weeklyHours, setWeeklyHours] = useState(() => {
+    try {
+      const saved = localStorage.getItem(storedHoursKey);
+      if (saved) return JSON.parse(saved);
+    } catch (e) {}
+    return defaultHours;
+  });
   
   const handleSaveSettingsSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,6 +58,11 @@ export default function Settings({ user, onUpdateUser, showConfirm, currency, on
       role: user.role
     });
     
+    // Save work hours as well if user is Owner
+    if (user.role === 'Owner') {
+      localStorage.setItem('eenvoq_hours_settings', JSON.stringify(weeklyHours));
+    }
+
     const title = "Settings Synced";
     const msg = "[eenvoq Settings Simulator]: Merchant profile synced successfully on local database nodes!";
     if (showConfirm) {
@@ -161,6 +186,72 @@ export default function Settings({ user, onUpdateUser, showConfirm, currency, on
               Save Configuration
             </button>
           </form>
+
+          {user.role === 'Owner' && (
+            <div className="bg-white rounded-[24px] p-6 border border-slate-150 shadow-xs space-y-4">
+              <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
+                <Clock className="w-5 h-5 text-sky-600 stroke-[1.5]" />
+                <h4 className="font-sans font-normal text-black text-sm">Store Opening & Closing Hours</h4>
+              </div>
+              <p className="text-[11px] text-[#757575] font-sans font-semibold leading-relaxed">
+                Set weekly operational schedule to control active sales rundown alerts and day-end performance calculations.
+              </p>
+              
+              <div className="space-y-3 font-sans mt-3">
+                {Object.keys(weeklyHours).map((day) => {
+                  const d = day as keyof typeof weeklyHours;
+                  return (
+                    <div key={day} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-3 bg-slate-50/50 hover:bg-slate-50 border border-slate-100 rounded-xl transition">
+                      <div className="flex items-center gap-3">
+                        <input
+                          type="checkbox"
+                          checked={weeklyHours[d].open}
+                          onChange={(e) => setWeeklyHours({
+                            ...weeklyHours,
+                            [d]: { ...weeklyHours[d], open: e.target.checked }
+                          })}
+                          className="w-4 h-4 text-sky-600 border-gray-300 rounded focus:ring-sky-500 cursor-pointer"
+                        />
+                        <span className="text-xs font-bold text-slate-800 w-24">{day}</span>
+                      </div>
+                      
+                      {weeklyHours[d].open ? (
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <span className="text-[10px] text-slate-400 font-bold font-mono">OPEN:</span>
+                            <input
+                              type="time"
+                              value={weeklyHours[d].openTime}
+                              onChange={(e) => setWeeklyHours({
+                                ...weeklyHours,
+                                [d]: { ...weeklyHours[d], openTime: e.target.value }
+                              })}
+                              className="bg-white border border-slate-200 px-2 py-1 rounded-lg text-xs font-bold text-slate-700 focus:outline-none focus:ring-1 focus:ring-sky-500 cursor-pointer"
+                            />
+                          </div>
+                          <span className="text-slate-300 text-xs">-</span>
+                          <div className="flex items-center gap-1">
+                            <span className="text-[10px] text-slate-400 font-bold font-mono">CLOSE:</span>
+                            <input
+                              type="time"
+                              value={weeklyHours[d].closeTime}
+                              onChange={(e) => setWeeklyHours({
+                                ...weeklyHours,
+                                [d]: { ...weeklyHours[d], closeTime: e.target.value }
+                              })}
+                              className="bg-white border border-slate-200 px-2 py-1 rounded-lg text-xs font-bold text-slate-700 focus:outline-none focus:ring-1 focus:ring-sky-500 cursor-pointer"
+                            />
+                          </div>
+                        </div>
+                      ) : (
+                        <span className="text-xs text-rose-500 font-bold uppercase tracking-wider font-mono">Closed &bull; Day Off</span>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
         </div>
 

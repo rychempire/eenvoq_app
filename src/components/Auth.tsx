@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Sparkles, User, Mail, Store, MapPin, Key, ArrowRight, CornerDownRight, ArrowLeft, ShieldCheck, Users } from 'lucide-react';
 import { UserSession, TeamMember } from '../types';
 import EenvoqIcon from './EenvoqIcon';
+import { supabase, isSupabaseConfigured, fetchStoreTeam } from '../lib/supabase';
 
 interface AuthProps {
   onLogin: (session: UserSession, operatorId: string) => void;
@@ -34,15 +35,15 @@ export default function Auth({ onLogin, onBackToLanding }: AuthProps) {
     }
   }, [mode, registerStep]);
   
-  // Captures
-  const [name, setName] = useState('Chinedu Okafor');
+  // Captures (Emptied for authentic login/registration as required)
+  const [name, setName] = useState('');
   const [gender, setGender] = useState('Male');
-  const [email, setEmail] = useState('chinedu@grocerygate.ng');
-  const [password, setPassword] = useState('password123');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   
-  // Business Context
-  const [storeName, setStoreName] = useState('GroceryGate Mega Stores');
-  const [storeLocation, setStoreLocation] = useState('14 Broad Street, Lagos Island, Lagos');
+  // Business Context (Emptied for authentic registration)
+  const [storeName, setStoreName] = useState('');
+  const [storeLocation, setStoreLocation] = useState('');
   const [businessCategory, setBusinessCategory] = useState('Retail Store');
   const [customCategory, setCustomCategory] = useState('');
 
@@ -50,58 +51,6 @@ export default function Auth({ onLogin, onBackToLanding }: AuthProps) {
   const [otpCode, setOtpCode] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-
-  // Directly bypasses for instant developer auditing
-  const triggerBypass = (profileType: string) => {
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      let sessionRole = profileType;
-      let pName = "Chinedu Okafor";
-      let pStore = "GroceryGate Mega Stores";
-      let pEmail = "chinedu@grocerygate.ng";
-      let pLoc = "14 Broad Street, Lagos Island, Lagos";
-
-      if (profileType === 'School Owner') {
-        pName = "Principal Florence Ademola";
-        pStore = "Grace Heights Academy";
-        pEmail = "florence@graceheights.edu.ng";
-        pLoc = "22 Admiralty Way, Lekki Phase 1, Lagos";
-      } else if (profileType === 'Church/Ministry') {
-        pName = "Pastor Isaac Johnson";
-        pStore = "The Redeemer Congregation";
-        pEmail = "isaac@thecongregation.org";
-        pLoc = "Gbagada Expressway, Gbagada, Lagos";
-      } else if (profileType === 'Pharmacy') {
-        pName = "Dr. Halima Yusuf";
-        pStore = "Halima Care Pharmacy";
-        pEmail = "halima@carerx.ng";
-        pLoc = "90 Herbert Macaulay Way, Yaba, Kano";
-      } else if (profileType === 'Subscription SaaS') {
-        pName = "Nduka Nwosu";
-        pStore = "Payflow Technologies Ltd";
-        pEmail = "nduka@payflow.io";
-        pLoc = "Digital Hub Workspace, Victoria Island, Lagos";
-      }
-
-      onLogin({
-        name: pName,
-        email: pEmail,
-        storeName: pStore,
-        role: sessionRole,
-        storeLocation: pLoc,
-      }, 'creator-primary');
-    }, 450);
-  };
-
-  const handlePrefillType = (selectedRole: string, selectedName: string, selectedStore: string, preEmail: string) => {
-    setName(selectedName);
-    setStoreName(selectedStore);
-    setBusinessCategory(selectedRole);
-    setEmail(preEmail);
-    setStoreLocation("90 Herbert Macaulay Way, Yaba, Lagos");
-    setError("");
-  };
 
   const handleNextStep = (e: React.FormEvent) => {
     e.preventDefault();
@@ -133,147 +82,391 @@ export default function Auth({ onLogin, onBackToLanding }: AuthProps) {
     }
     // Fallback default operators matched to business
     return [
-      { id: 'creator-primary', name: name || "System Owner", role: 'Owner', email: email || 'chinedu@grocerygate.ng', isCreator: true },
-      { id: 'member-1', name: 'Amadi Kalu', role: 'Supervisor', email: 'amadi@grocerygate.ng' },
-      { id: 'member-2', name: 'Funmi Alao', role: 'Cashier', email: 'funmi@grocerygate.ng' },
-      { id: 'member-3', name: 'Ibrahim Musa', role: 'Auditor', email: 'ibrahim@grocerygate.ng' }
+      { id: 'creator-primary', name: name || "System Owner", role: 'Owner', email: email || 'chinedu@grocerygate.ng', isCreator: true }
     ];
   };
 
-  const handleAuthSubmit = (e: React.FormEvent) => {
+  const handleAuthSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError('');
 
-    setTimeout(() => {
-      setLoading(false);
-      
-      const finalRole = businessCategory === 'Other' ? (customCategory.trim() || 'Custom Business') : businessCategory;
+    const finalRole = businessCategory === 'Other' ? (customCategory.trim() || 'Custom Business') : businessCategory;
 
-      if (mode === 'login') {
-        if (!email.includes('@') || password.length < 4) {
-          setError('Invalid email or password credentials.');
-          return;
-        }
-        
-        // Load target operators list of the business
-        const ops = getOperators();
-        setOperatorsList(ops);
-        setSelectedOperatorId(ops[0]?.id || 'creator-primary');
-        setOperatorPin('');
-        setNewOperatorPinConfirm('');
-        setPinError('');
-        
-        // Slide to Intermediate Operator & Secret PIN confirmation step
-        setMode('operator-select');
-      } else if (mode === 'register') {
-        if (!storeName.trim()) {
-          setError("Please define your Business or Organization Name.");
-          return;
-        }
-        setMode('otp');
-      } else if (mode === 'otp') {
-        if (otpCode !== '1234' && otpCode !== '') {
-          setError('Incorrect verification code. Please write 1234 or leave empty.');
-          return;
-        }
-        
-        // Initialize default operator lock setup
-        const ops = [
-          { id: 'creator-primary', name: name || "System Owner", role: 'Owner', email: email || 'chinedu@grocerygate.ng', isCreator: true },
-          { id: 'member-1', name: 'Amadi Kalu', role: 'Supervisor', email: 'amadi@grocerygate.ng' },
-          { id: 'member-2', name: 'Funmi Alao', role: 'Cashier', email: 'funmi@grocerygate.ng' },
-          { id: 'member-3', name: 'Ibrahim Musa', role: 'Auditor', email: 'ibrahim@grocerygate.ng' }
-        ];
-        localStorage.setItem('eenvoq_team_members', JSON.stringify(ops));
-        setOperatorsList(ops);
-        setSelectedOperatorId('creator-primary');
-        setOperatorPin('');
-        setNewOperatorPinConfirm('');
-        setPinError('');
-        
-        setMode('operator-select');
-      } else if (mode === 'forgot') {
-        setMode('login');
+    if (mode === 'login') {
+      if (!email.trim() || !password.trim()) {
+        setError('Please fill in both email and password.');
+        setLoading(false);
+        return;
       }
-    }, 850);
+
+      // 1. SUPABASE LOGIN FLOW
+      if (isSupabaseConfigured) {
+        try {
+          const { data: authData, error: authErr } = await supabase!.auth.signInWithPassword({
+            email,
+            password
+          });
+
+          if (authErr) {
+            setError(`Authentication failed: ${authErr.message} (Code: ${authErr.status || 'AUTH_ERROR'})`);
+            setLoading(false);
+            return;
+          }
+
+          if (!authData.user) {
+            setError('Auth succeeded but user object is missing.');
+            setLoading(false);
+            return;
+          }
+
+          // Fetch profile and store from Supabase
+          const { data: profile, error: profileErr } = await supabase!
+            .from('profiles')
+            .select('*, store:stores(*)')
+            .eq('id', authData.user.id)
+            .single();
+
+          if (profileErr || !profile) {
+            setError(`Account found but locked: Your profile does not exist in the profiles table. Profile Error: ${profileErr?.message || 'NOT_FOUND'}`);
+            setLoading(false);
+            return;
+          }
+
+          // Fetch or prepare operator lists
+          const ops = await fetchStoreTeam(profile.store_id || '');
+          setOperatorsList(ops.length > 0 ? ops : [
+            { id: profile.id, name: profile.name, role: profile.role, email: profile.email, pin: profile.pin || undefined, isCreator: true }
+          ]);
+          setSelectedOperatorId(profile.id);
+          setOperatorPin('');
+          setNewOperatorPinConfirm('');
+          setPinError('');
+          setMode('operator-select');
+
+        } catch (err: any) {
+          setError(`Database query error: ${err.message || err}`);
+        } finally {
+          setLoading(false);
+        }
+      } else {
+        // 2. OFFLINE SIMULATED BACKEND
+        try {
+          const savedProfilesStr = localStorage.getItem('eenvoq_sim_profiles') || '[]';
+          const profilesList: any[] = JSON.parse(savedProfilesStr);
+
+          const matchedProfile = profilesList.find(p => p.email.toLowerCase() === email.toLowerCase());
+
+          if (!matchedProfile) {
+            setError(`Login failed: No profile with email "${email}" was found in the simulated profiles table. Error Code: USER_NOT_FOUND.`);
+            setLoading(false);
+            return;
+          }
+
+          if (matchedProfile.password !== password) {
+            setError('Error Code: INVALID_PASSWORD - Password verification credentials did not match secure profile hashes.');
+            setLoading(false);
+            return;
+          }
+
+          const team = profilesList.filter(p => p.store_id === matchedProfile.store_id);
+          setOperatorsList(team.length > 0 ? team : [matchedProfile]);
+          setSelectedOperatorId(matchedProfile.id);
+          setOperatorPin('');
+          setNewOperatorPinConfirm('');
+          setPinError('');
+          setMode('operator-select');
+
+        } catch (err: any) {
+          setError(`Simulated DB Error: ${err.message || err}`);
+        } finally {
+          setLoading(false);
+        }
+      }
+
+    } else if (mode === 'register') {
+      if (!storeName.trim() || !storeLocation.trim()) {
+        setError("Please supply both a Business Name and Location.");
+        setLoading(false);
+        return;
+      }
+
+      // 1. SUPABASE REGISTER FLOW
+      if (isSupabaseConfigured) {
+        try {
+          const { data: signUpData, error: signUpErr } = await supabase!.auth.signUp({
+            email,
+            password,
+            options: {
+              data: {
+                name,
+                role: 'Owner',
+                pin: '1234'
+              }
+            }
+          });
+
+          if (signUpErr) {
+            setError(`Onboarding failed: ${signUpErr.message} (Code: ${signUpErr.status || 'SIGNUP_ERROR'})`);
+            setLoading(false);
+            return;
+          }
+
+          const user = signUpData.user;
+          if (!user) {
+            setError('Account verification pending/created but user session empty.');
+            setLoading(false);
+            return;
+          }
+
+          // Create the store record
+          const { data: storeData } = await supabase!
+            .from('stores')
+            .select()
+            .eq('owner_id', user.id);
+
+          let storeId = '';
+          if (storeData && storeData.length > 0) {
+            storeId = storeData[0].id;
+          } else {
+            const { data: newStore, error: insertStoreErr } = await supabase!
+              .from('stores')
+              .insert([{
+                name: storeName,
+                location: storeLocation,
+                currency: 'NGN',
+                owner_id: user.id
+              }])
+              .select()
+              .single();
+
+            if (insertStoreErr) {
+              setError(`Failed to lock business store: ${insertStoreErr.message}`);
+              setLoading(false);
+              return;
+            }
+            storeId = newStore.id;
+          }
+
+          // Update profiles relation
+          await supabase!
+            .from('profiles')
+            .update({ store_id: storeId })
+            .eq('id', user.id);
+
+          setOperatorsList([{
+            id: user.id,
+            name: name,
+            role: 'Owner',
+            email: email,
+            pin: undefined,
+            isCreator: true
+          }]);
+          setSelectedOperatorId(user.id);
+          setOperatorPin('');
+          setNewOperatorPinConfirm('');
+          setPinError('');
+          setMode('operator-select');
+
+        } catch (err: any) {
+          setError(`Database flow connection failure: ${err.message || err}`);
+        } finally {
+          setLoading(false);
+        }
+      } else {
+        // 2. SIMULATED REGISTRATION OFFLINE
+        try {
+          const savedProfilesStr = localStorage.getItem('eenvoq_sim_profiles') || '[]';
+          const savedStoresStr = localStorage.getItem('eenvoq_sim_stores') || '[]';
+          const profilesList: any[] = JSON.parse(savedProfilesStr);
+          const storesList: any[] = JSON.parse(savedStoresStr);
+
+          if (profilesList.some(p => p.email.toLowerCase() === email.toLowerCase())) {
+            setError(`Error Code: EMAIL_ALREADY_EXISTS - The email "${email}" has already been locked in our simulated database.`);
+            setLoading(false);
+            return;
+          }
+
+          const mockUserId = `usr-${Date.now()}`;
+          const mockStoreId = `str-${Date.now()}`;
+
+          const newSimProfile = {
+            id: mockUserId,
+            name,
+            email,
+            password,
+            role: 'Owner',
+            pin: null,
+            is_creator: true,
+            store_id: mockStoreId
+          };
+
+          const newSimStore = {
+            id: mockStoreId,
+            name: storeName,
+            location: storeLocation,
+            currency: 'NGN',
+            owner_id: mockUserId
+          };
+
+          profilesList.push(newSimProfile);
+          storesList.push(newSimStore);
+
+          localStorage.setItem('eenvoq_sim_profiles', JSON.stringify(profilesList));
+          localStorage.setItem('eenvoq_sim_stores', JSON.stringify(storesList));
+
+          setOperatorsList([{
+            id: mockUserId,
+            name,
+            role: 'Owner',
+            email,
+            pin: undefined,
+            isCreator: true
+          }]);
+          setSelectedOperatorId(mockUserId);
+          setOperatorPin('');
+          setNewOperatorPinConfirm('');
+          setPinError('');
+          setMode('operator-select');
+
+        } catch (err: any) {
+          setError(`Offline DB failure: ${err.message || err}`);
+        } finally {
+          setLoading(false);
+        }
+      }
+    } else if (mode === 'forgot') {
+      setMode('login');
+    }
   };
 
-  const handleOperatorLoginSubmit = (e: React.FormEvent) => {
+  const handleOperatorLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setPinError('');
     setLoading(true);
 
-    setTimeout(() => {
+    const selectedOperator = operatorsList.find(m => m.id === selectedOperatorId) || operatorsList[0];
+    if (!selectedOperator) {
+      setPinError("Could not resolve operator profile.");
       setLoading(false);
-      const selectedOperator = operatorsList.find(m => m.id === selectedOperatorId) || operatorsList[0];
-      if (!selectedOperator) {
-        setPinError("Could not resolve operator profile.");
+      return;
+    }
+
+    const lockStr = localStorage.getItem('eenvoq_concurrent_active_operator_session');
+    if (lockStr) {
+      try {
+        const activeLock = JSON.parse(lockStr);
+        if (activeLock && activeLock.id !== selectedOperator.id) {
+          setPinError(`⚠️ Concurrent Access Blocked: Operator "${activeLock.name}" (${activeLock.role}) is currently active on this terminal. Only one operator session is permitted.`);
+          setLoading(false);
+          return;
+        }
+      } catch (err) {}
+    }
+
+    if (selectedOperator.pin) {
+      if (operatorPin !== selectedOperator.pin) {
+        setPinError("Incorrect 6-digit access PIN. Please try again.");
+        setLoading(false);
+        return;
+      }
+    } else {
+      if (operatorPin.length !== 6 || !/^\d+$/.test(operatorPin)) {
+        setPinError("Your new secret PIN must be exactly 6 digits.");
+        setLoading(false);
+        return;
+      }
+      if (operatorPin !== newOperatorPinConfirm) {
+        setPinError("PIN inputs do not match. Please verify.");
+        setLoading(false);
         return;
       }
 
-      // Check Concurrent Login sessions lock!
-      // ONLY one operator can be logged in at a time.
-      const lockStr = localStorage.getItem('eenvoq_concurrent_active_operator_session');
-      if (lockStr) {
+      if (isSupabaseConfigured) {
         try {
-          const activeLock = JSON.parse(lockStr);
-          if (activeLock && activeLock.id !== selectedOperator.id) {
-            setPinError(`⚠️ Concurrent Access Blocked: Operator "${activeLock.name}" (${activeLock.role}) is currently active on this terminal. Only one operator session is permitted. You must wait for them to log out first.`);
+          const { error: pinUpdateErr } = await supabase!
+            .from('profiles')
+            .update({ pin: operatorPin })
+            .eq('id', selectedOperator.id);
+
+          if (pinUpdateErr) {
+            setPinError(`Failed to save PIN: ${pinUpdateErr.message}`);
+            setLoading(false);
             return;
+          }
+        } catch (err: any) {
+          setPinError(`Database PIN Sync error: ${err.message || err}`);
+          setLoading(false);
+          return;
+        }
+      } else {
+        try {
+          const savedProfilesStr = localStorage.getItem('eenvoq_sim_profiles') || '[]';
+          const profilesList: any[] = JSON.parse(savedProfilesStr);
+          const idx = profilesList.findIndex(p => p.id === selectedOperator.id);
+          if (idx !== -1) {
+            profilesList[idx].pin = operatorPin;
+            localStorage.setItem('eenvoq_sim_profiles', JSON.stringify(profilesList));
           }
         } catch (err) {}
       }
 
-      // If they have a pin set
-      if (selectedOperator.pin) {
-        if (operatorPin !== selectedOperator.pin) {
-          setPinError("Incorrect 6-digit access PIN. Please try again.");
-          return;
-        }
-      } else {
-        // First-time setup, require them to setup the pin
-        if (operatorPin.length !== 6) {
-          setPinError("Your new secret PIN must be exactly 6 digits.");
-          return;
-        }
-        if (operatorPin !== newOperatorPinConfirm) {
-          setPinError("PIN inputs do not match. Please verify.");
-          return;
-        }
+      selectedOperator.pin = operatorPin;
+    }
 
-        // Save PIN for this operator
-        const updatedOps = operatorsList.map(m => {
-          if (m.id === selectedOperator.id) {
-            return { ...m, pin: operatorPin };
+    const concurrentLock = {
+      id: selectedOperator.id,
+      name: selectedOperator.name,
+      role: selectedOperator.role,
+      timestamp: Date.now()
+    };
+    localStorage.setItem('eenvoq_concurrent_active_operator_session', JSON.stringify(concurrentLock));
+    localStorage.setItem('eenvoq_active_operator_id', selectedOperator.id);
+
+    let resolvedStoreName = storeName;
+    let resolvedStoreLoc = storeLocation;
+
+    if (isSupabaseConfigured) {
+      try {
+        const { data: profile } = await supabase!
+          .from('profiles')
+          .select('store_id, store:stores(*)')
+          .eq('id', selectedOperator.id)
+          .single();
+
+        if (profile?.store) {
+          resolvedStoreName = (profile.store as any).name;
+          resolvedStoreLoc = (profile.store as any).location || '';
+        }
+      } catch (e) {}
+    } else {
+      try {
+        const savedProfilesStr = localStorage.getItem('eenvoq_sim_profiles') || '[]';
+        const savedStoresStr = localStorage.getItem('eenvoq_sim_stores') || '[]';
+        const profilesList: any[] = JSON.parse(savedProfilesStr);
+        const storesList: any[] = JSON.parse(savedStoresStr);
+        const thisProfile = profilesList.find(p => p.id === selectedOperator.id);
+        if (thisProfile) {
+          const thisStore = storesList.find(s => s.id === thisProfile.store_id);
+          if (thisStore) {
+            resolvedStoreName = thisStore.name;
+            resolvedStoreLoc = thisStore.location;
           }
-          return m;
-        });
-        localStorage.setItem('eenvoq_team_members', JSON.stringify(updatedOps));
-        setOperatorsList(updatedOps);
-      }
+        }
+      } catch (e) {}
+    }
 
-      // Lock concurrent session
-      const concurrentLock = {
-        id: selectedOperator.id,
-        name: selectedOperator.name,
-        role: selectedOperator.role,
-        timestamp: Date.now()
-      };
-      localStorage.setItem('eenvoq_concurrent_active_operator_session', JSON.stringify(concurrentLock));
-      localStorage.setItem('eenvoq_active_operator_id', selectedOperator.id);
-
-      // Perform actual business entry
-      const finalRole = businessCategory === 'Other' ? (customCategory.trim() || 'Custom Business') : businessCategory;
-      onLogin({
-        name: selectedOperator.name,
-        email: selectedOperator.email,
-        storeName: storeName || "GroceryGate Mega Stores",
-        role: selectedOperator.role,
-        storeLocation: storeLocation || "14 Broad Street, Lagos Island, Lagos",
-      }, selectedOperator.id);
-    }, 600);
+    setLoading(false);
+    onLogin({
+      name: selectedOperator.name,
+      email: selectedOperator.email,
+      storeName: resolvedStoreName || "GroceryGate Mega Stores",
+      role: selectedOperator.role,
+      storeLocation: resolvedStoreLoc || "14 Broad Street, Lagos",
+      storeId: isSupabaseConfigured ? (selectedOperator as any).store_id || null : null
+    }, selectedOperator.id);
   };
+
 
   return (
     <div className="min-h-screen bg-white flex items-center justify-center p-4 relative overflow-hidden border-t-[6px] border-[#0ea5e9]" id="login-screen-root">
@@ -282,15 +475,38 @@ export default function Auth({ onLogin, onBackToLanding }: AuthProps) {
         
         {/* Universal brand logo block */}
 
-        <div className="flex items-center gap-1 cursor-pointer" onClick={onBackToLanding}>
-  {/* Logo Image (Solid logo with background removed via Cloudinary AI) */}
-      <img 
-        src="https://res.cloudinary.com/dee01jm0p/image/upload/e_bgremoval/f_auto,q_auto/1001135527_ij6c4q" 
-        alt="eenvoq icon" 
-        className="w-14 h-full object-contain [filter:drop-shadow(1px_0_0_#000)_drop-shadow(-1px_0_0_#000)_drop-shadow(0_1px_0_0_#000)_drop-shadow(0_-1px_0_0_#000)]" 
-      />
-</div>
+        <div className="flex items-center gap-2 justify-between mb-6">
+          <div className="flex items-center gap-1 cursor-pointer" onClick={onBackToLanding}>
+            {/* Logo Image (Solid logo with background removed via Cloudinary AI) */}
+            <img 
+              src="https://res.cloudinary.com/dee01jm0p/image/upload/e_bgremoval/f_auto,q_auto/1001135527_ij6c4q" 
+              alt="eenvoq icon" 
+              className="w-14 h-full object-contain [filter:drop-shadow(1px_0_0_#000)_drop-shadow(-1px_0_0_#000)_drop-shadow(0_1px_0_0_#000)_drop-shadow(0_-1px_0_0_#000)]" 
+            />
+          </div>
+          <div>
+            {isSupabaseConfigured ? (
+              <span className="text-[9px] bg-emerald-100 text-emerald-800 font-mono font-bold uppercase rounded-full px-2.5 py-1 select-none">Live DB</span>
+            ) : (
+              <span className="text-[9px] bg-amber-100 text-amber-800 font-mono font-bold uppercase rounded-full px-2.5 py-1 select-none">Sandbox Mode</span>
+            )}
+          </div>
+        </div>
 
+        {/* Database Status Info Banners */}
+        <div className="mb-4">
+          {isSupabaseConfigured ? (
+            <div className="py-2 px-3 bg-emerald-50 text-emerald-800 text-[10px] rounded-2xl border border-emerald-100 flex items-center gap-1.5 font-sans justify-center">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <strong>Production Live:</strong> Linked against your cloud tables securely!
+            </div>
+          ) : (
+            <div className="py-2 px-3 bg-[#FCFBF9] text-amber-800 text-[10px] rounded-2xl border border-amber-100 flex items-center gap-1.5 font-sans justify-center">
+              <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
+              <strong>Sandbox Active:</strong> Registers profiles inside a localized offline ledger.
+            </div>
+          )}
+        </div>
 
         {error && (
           <div className="p-3.5 bg-red-50 text-red-700 text-xs rounded-full border border-red-100 font-sans mb-4 text-center" id="login-error-toast">
@@ -759,74 +975,6 @@ export default function Auth({ onLogin, onBackToLanding }: AuthProps) {
               Reset Password <ArrowRight className="w-4 h-4 stroke-[1.5]" />
             </button>
           </form>
-        )}
-
-        {/* Fully Functional Mock Sign-In Bypass Framework for Quick Dev Auditing */}
-        {(mode === 'login' || mode === 'register') && (
-          <div className="mt-8 pt-6 border-t border-[#E3E3E3]" id="auth-demo-preselect">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-[10px] font-bold text-[#757575] uppercase tracking-wider">⚡ Dev Testing Bypasses</h3>
-              <span className="text-[8px] bg-neutral-100 text-[#1F1F1F] font-mono px-1.5 py-0.5 rounded-full select-none">Fully Functional</span>
-            </div>
-            
-            <div className="grid grid-cols-2 gap-2" id="prefill-list">
-              <button
-                type="button"
-                onClick={() => triggerBypass("School Owner")}
-                className="p-3 border border-[#E3E3E3] rounded-[24px] text-left bg-white hover:bg-[#F0F4F9] transition-all cursor-pointer group active:scale-95"
-              >
-                <div className="font-semibold text-xs text-[#1F1F1F] flex items-center justify-between">
-                  <span>School Admin</span>
-                  <CornerDownRight className="w-3 h-3 text-[#757575] stroke-[1.5] transition-transform group-hover:translate-x-0.5" />
-                </div>
-                <span className="text-[9px] text-[#757575] font-normal block mt-1">Florence (Grace Acad.)</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => triggerBypass("Church/Ministry")}
-                className="p-3 border border-[#E3E3E3] rounded-[24px] text-left bg-white hover:bg-[#F0F4F9] transition-all cursor-pointer group active:scale-95"
-              >
-                <div className="font-semibold text-xs text-[#1F1F1F] flex items-center justify-between">
-                  <span>Ministry</span>
-                  <CornerDownRight className="w-3 h-3 text-[#757575] stroke-[1.5] transition-transform group-hover:translate-x-0.5" />
-                </div>
-                <span className="text-[9px] text-[#757575] font-normal block mt-1">Pastor Isaac (Redeemer)</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => triggerBypass("Pharmacy")}
-                className="p-3 border border-[#E3E3E3] rounded-[24px] text-left bg-white hover:bg-[#F0F4F9] transition-all cursor-pointer group active:scale-95"
-              >
-                <div className="font-semibold text-xs text-[#1F1F1F] flex items-center justify-between">
-                  <span>Pharmacy</span>
-                  <CornerDownRight className="w-3 h-3 text-[#757575] stroke-[1.5] transition-transform group-hover:translate-x-0.5" />
-                </div>
-                <span className="text-[9px] text-[#757575] font-normal block mt-1">Dr. Halima CareRx</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => triggerBypass("Subscription SaaS")}
-                className="p-3 border border-[#E3E3E3] rounded-[24px] text-left bg-white hover:bg-[#F0F4F9] transition-all cursor-pointer group active:scale-95"
-              >
-                <div className="font-semibold text-xs text-[#1F1F1F] flex items-center justify-between">
-                  <span>SaaS System</span>
-                  <CornerDownRight className="w-3 h-3 text-[#757575] stroke-[1.5] transition-transform group-hover:translate-x-0.5" />
-                </div>
-                <span className="text-[9px] text-[#757575] font-normal block mt-1">Nduka Payflow</span>
-              </button>
-            </div>
-            
-            <button
-              type="button"
-              onClick={() => triggerBypass("Retail Store")}
-              className="w-full mt-3 py-2.5 px-4 text-xs font-semibold text-black hover:text-white bg-transparent hover:bg-[#000000] border border-[#E3E3E3] rounded-full transition-all duration-150 text-center cursor-pointer active:scale-98"
-            >
-              Direct Bypass (Lagos Retailer)
-            </button>
-          </div>
         )}
       </div>
     </div>

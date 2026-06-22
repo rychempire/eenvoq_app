@@ -5,7 +5,7 @@ import {
   TrendingUp, Users, BookOpen, AlertCircle, Settings2, 
   LogOut, Menu, ChevronLeft, ChevronRight, Activity, BellRing
 } from 'lucide-react';
-import EenvoqIcon from './EenvoqIcon';
+
 import { UserSession, Alert } from '../types';
 
 interface SidebarProps {
@@ -22,11 +22,10 @@ export default function Sidebar({ activeSection, setActiveSection, user, alerts,
   
   const unreadAlertsCount = alerts.filter(a => !a.read).length;
 
-  const mainNavItems = [
+  const mainNavItems: { id: string; label: string; icon: any; highlight?: boolean }[] = [
     { id: 'dashboard', label: 'Home', icon: LayoutDashboard },
     { id: 'receipts', label: 'Sales & Receipts', icon: FileCheck },
     { id: 'inventory', label: 'Inventory', icon: ShoppingCart },
-    { id: 'assistant', label: 'Eenvoq', icon: EenvoqIcon, highlight: true },
     { id: 'retention', label: 'Customers', icon: Users },
     { id: 'debtor', label: 'Debtors', icon: BookOpen },
     { id: 'truthcheck', label: 'Truth Check', icon: Activity },
@@ -59,12 +58,7 @@ export default function Sidebar({ activeSection, setActiveSection, user, alerts,
                 panel.scrollTo({ top: 0, behavior: 'smooth' });
               }
             }}>
-              {/* Logo Image (Solid logo with background removed via Cloudinary AI) */}
-              <img 
-                src="https://res.cloudinary.com/dee01jm0p/image/upload/e_bgremoval/f_auto,q_auto/1001135527_ij6c4q" 
-                alt="Eenvoq logo" 
-                className="h-7 w-auto object-contain select-none translate-y-0.5 [filter:drop-shadow(1px_0_0_#000)_drop-shadow(-1px_0_0_#000)_drop-shadow(0_1px_0_0_#000)_drop-shadow(0_-1px_0_0_#000)]" 
-              />
+              <span className="font-sans font-extrabold text-neutral-900 uppercase tracking-widest text-sm">Eenvoq Menu</span>
             </div>
           ) : (
             <div className="flex items-center justify-center w-full cursor-pointer" onClick={() => {
@@ -75,11 +69,7 @@ export default function Sidebar({ activeSection, setActiveSection, user, alerts,
                 panel.scrollTo({ top: 0, behavior: 'smooth' });
               }
             }}>
-              <img 
-                src="https://res.cloudinary.com/dee01jm0p/image/upload/e_bgremoval/f_auto,q_auto/1001135527_ij6c4q" 
-                alt="Eenvoq logo animate-fade-in" 
-                className="h-7 w-auto object-contain select-none [filter:drop-shadow(1px_0_0_#000)_drop-shadow(-1px_0_0_#000)_drop-shadow(0_1px_0_0_#000)_drop-shadow(0_-1px_0_0_#000)]" 
-              />
+              <span className="font-sans font-extrabold text-neutral-900 uppercase tracking-widest text-xs">EM</span>
             </div>
           )}
         </div>
@@ -184,13 +174,7 @@ export default function Sidebar({ activeSection, setActiveSection, user, alerts,
         })}
       </nav>
 
-      {/* Guardian Status widget added for Editorial Theme */}
-      {!collapsed && (
-        <div className="mx-4 my-2.5 p-4 bg-[#F9FAFB] rounded-[24px] border border-[#E3E3E3] select-none shrink-0">
-          <p className="text-[10px] font-semibold text-[#757575] uppercase tracking-wider leading-none font-display">Status</p>
-          <p className="text-xs font-medium text-[#1F1F1F] mt-1.5 font-sans">Accuracy: 98.2%</p>
-        </div>
-      )}
+      {/* Status widget removed */}
 
       {/* Authenticated user segment block / permanent bottom logout panel */}
       <div className="p-4 border-t border-[#E3E3E3] bg-white select-none shrink-0" id="sidebar-bottom-panel">

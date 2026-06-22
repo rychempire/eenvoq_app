@@ -95,6 +95,8 @@ export interface UserSession {
   storeName: string;
   role: string;
   storeLocation: string;
+  storeId?: string | null;
+  uid?: string | null;
 }
 
 export interface ChatMessage {

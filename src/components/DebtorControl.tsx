@@ -3,7 +3,7 @@ import {
   BookOpen, Lock, Unlock, Sparkles, MessageSquare, 
   Search, Sliders, ArrowLeft, CheckSquare, 
   User, Check, DollarSign, Calendar, AlertTriangle, ChevronRight, 
-  Activity, Award, FileText, Download, Play, PlusCircle, AlertCircle, Phone, Smartphone, Trash2, ShieldCheck, Mail
+  Activity, Award, FileText, Download, Play, PlusCircle, AlertCircle, Phone, Smartphone, Trash2, ShieldCheck, Mail, X
 } from 'lucide-react';
 import { Debtor, PaymentItem } from '../types';
 import { formatCurrency } from '../utils/currency';
@@ -11,6 +11,7 @@ import { formatCurrency } from '../utils/currency';
 interface DebtorControlProps {
   debtors: Debtor[];
   onToggleLock: (debtorId: string) => void;
+  onUpdateDebtors?: (debtors: Debtor[]) => void;
   showConfirm?: (title: string, message: string, onConfirm: () => void, confirmLabel?: string, cancelLabel?: string) => void;
   currency: string;
 }
@@ -40,11 +41,12 @@ interface PaymentPlan {
 export default function DebtorControl({ 
   debtors: initialDebtors, 
   onToggleLock, 
+  onUpdateDebtors, 
   showConfirm, 
   currency 
 }: DebtorControlProps) {
   // Use local state synchronized with props so that payments, limits, write-offs update immediately on clicking
-  const [localDebtors, setLocalDebtors] = useState<Debtor[]>(initialDebtors);
+  const [localDebtors, setLocalDebtors] = React.useState<Debtor[]>(initialDebtors);
   const [selectedDebtor, setSelectedDebtor] = useState<Debtor | null>(initialDebtors[0] || null);
   
   // Tab Navigation: Overview, Debtors, Collections, Risk Analysis
@@ -63,10 +65,61 @@ export default function DebtorControl({
   const [paymentAmount, setPaymentAmount] = useState('');
   const [paymentMethod, setPaymentMethod] = useState<'Cash' | 'Bank Transfer' | 'Card'>('Cash');
 
+  // New Debtor Creation Modal states
+  const [showAddDebtorModal, setShowAddDebtorModal] = useState(false);
+  const [newDebtorName, setNewDebtorName] = useState('');
+  const [newDebtorPhone, setNewDebtorPhone] = useState('');
+  const [newDebtorAmount, setNewDebtorAmount] = useState('');
+  const [newDebtorDueDate, setNewDebtorDueDate] = useState('');
+
   // Credit Management
   const [editLimits, setEditLimits] = useState(false);
   const [customCreditLimit, setCustomCreditLimit] = useState<'150000' | '300000' | '500000'>('300000');
   const [extendDays, setExtendDays] = useState('');
+
+  // Propagate local state change back up to main App.tsx (for database / localStorage mirroring)
+  React.useEffect(() => {
+    setLocalDebtors(initialDebtors);
+  }, [initialDebtors]);
+
+  React.useEffect(() => {
+    if (onUpdateDebtors) {
+      onUpdateDebtors(localDebtors);
+    }
+  }, [localDebtors, onUpdateDebtors]);
+
+  const handleRegisterDebtor = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newDebtorName.trim()) return;
+
+    const amt = parseFloat(newDebtorAmount) || 0;
+    const defaultDate = newDebtorDueDate || new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+
+    const newDeb: Debtor = {
+      id: `debt-${Date.now()}`,
+      name: newDebtorName,
+      phone: newDebtorPhone || '08000000000',
+      amountOwed: amt,
+      dueDate: defaultDate,
+      creditScore: amt > 150000 ? 55 : 85,
+      riskRating: amt > 150000 ? 'high' : amt > 50000 ? 'medium' : 'low',
+      locked: false,
+      paymentHistory: []
+    };
+
+    const updated = [newDeb, ...localDebtors];
+    setLocalDebtors(updated);
+    setSelectedDebtor(newDeb);
+
+    // Reset Form fields
+    setNewDebtorName('');
+    setNewDebtorPhone('');
+    setNewDebtorAmount('');
+    setNewDebtorDueDate('');
+    setShowAddDebtorModal(false);
+
+    triggerNotification(`Created Account: Successful overdraft ledger opened for ${newDebtorName}!`);
+  };
 
   // Payment Plan form
   const [planInstallments, setPlanInstallments] = useState(3);
@@ -665,6 +718,18 @@ export default function DebtorControl({
             {/* LEFT: MASTER LIST WITH INTERACTIVE FILTERS */}
             <div className="lg:col-span-2 bg-white rounded-2xl border border-neutral-200 shadow-2xs overflow-hidden flex flex-col">
               
+              {/* LEDGER HEADER LINE */}
+              <div className="p-4 border-b border-neutral-150 flex items-center justify-between bg-neutral-50/20">
+                <span className="text-xs font-bold text-neutral-800">Debtor Ledger Accounts ({filteredDebtors.length})</span>
+                <button
+                  type="button"
+                  onClick={() => setShowAddDebtorModal(true)}
+                  className="px-3.5 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-[10px] uppercase rounded-full flex items-center gap-1 cursor-pointer transition shadow-2xs"
+                >
+                  <PlusCircle className="w-3.5 h-3.5 shrink-0" /> Register Debtor
+                </button>
+              </div>
+
               {/* FILTERS TOOLBAR */}
               <div className="p-4 border-b border-gray-150 grid grid-cols-1 md:grid-cols-2 gap-3.5 select-none bg-neutral-50/40">
                 <div className="relative">
@@ -1479,6 +1544,101 @@ export default function DebtorControl({
         )}
 
       </div>
+
+      {/* REGISTER NEW DEBTOR MODAL OVERLAY */}
+      {showAddDebtorModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 animate-fade-in" id="add-debtor-modal-container">
+          <div className="bg-white rounded-[32px] border border-neutral-150 shadow-2xl p-6 w-full max-w-md animate-scale-up" id="add-debtor-modal-inner">
+            <div className="flex items-center justify-between mb-5 select-none">
+              <h2 className="text-base font-sans font-bold text-neutral-900 tracking-tight flex items-center gap-2">
+                <PlusCircle className="w-5 h-5 text-emerald-600" />
+                <span>Register New Debtor Profile</span>
+              </h2>
+              <button 
+                type="button"
+                onClick={() => setShowAddDebtorModal(false)}
+                className="p-1.5 hover:bg-neutral-100 rounded-full transition text-neutral-400 hover:text-neutral-950 cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleRegisterDebtor} className="space-y-4">
+              <div>
+                <label className="text-[10px] font-bold text-neutral-600 uppercase tracking-wider block mb-1">Customer Full Name *</label>
+                <div className="relative">
+                  <User className="absolute left-3.5 top-3 w-4 h-4 text-neutral-400" />
+                  <input
+                    type="text"
+                    required
+                    value={newDebtorName}
+                    onChange={(e) => setNewDebtorName(e.target.value)}
+                    placeholder="e.g. Alhaji Mansur"
+                    className="w-full bg-white border border-[#E3E3E3] rounded-xl py-2.5 pl-10 pr-4 text-xs font-semibold placeholder:text-gray-400 focus:outline-[#111] focus:ring-1 focus:ring-[#111]"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="text-[10px] font-bold text-neutral-600 uppercase tracking-wider block mb-1">Phone Number</label>
+                <div className="relative">
+                  <Smartphone className="absolute left-3.5 top-3 w-4 h-4 text-neutral-400" />
+                  <input
+                    type="tel"
+                    value={newDebtorPhone}
+                    onChange={(e) => setNewDebtorPhone(e.target.value)}
+                    placeholder="e.g. 08031234567"
+                    className="w-full bg-white border border-[#E3E3E3] rounded-xl py-2.5 pl-10 pr-4 text-xs font-semibold placeholder:text-gray-400 focus:outline-[#111] focus:ring-1 focus:ring-[#111]"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="text-[10px] font-bold text-neutral-600 uppercase tracking-wider block mb-1">Initial Outstanding Debt ({currency})</label>
+                <div className="relative">
+                  <span className="absolute left-3.5 top-2.5 text-slate-500 font-mono text-xs font-bold">{currency}</span>
+                  <input
+                    type="number"
+                    value={newDebtorAmount}
+                    onChange={(e) => setNewDebtorAmount(e.target.value)}
+                    placeholder="e.g. 75000"
+                    className="w-full bg-white border border-[#E3E3E3] rounded-xl py-2.5 pl-10 pr-4 text-xs font-semibold placeholder:text-gray-400 focus:outline-[#111] focus:ring-1 focus:ring-[#111] font-mono"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="text-[10px] font-bold text-neutral-600 uppercase tracking-wider block mb-1">Payment Due Date</label>
+                <div className="relative">
+                  <Calendar className="absolute left-3.5 top-3 w-4 h-4 text-neutral-400" />
+                  <input
+                    type="date"
+                    value={newDebtorDueDate}
+                    onChange={(e) => setNewDebtorDueDate(e.target.value)}
+                    className="w-full bg-white border border-[#E3E3E3] rounded-xl py-2.5 pl-10 pr-4 text-xs font-semibold placeholder:text-gray-400 focus:outline-[#111] focus:ring-1 focus:ring-[#111] font-semibold"
+                  />
+                </div>
+              </div>
+
+              <div className="pt-2 flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => setShowAddDebtorModal(false)}
+                  className="flex-1 py-3 text-xs font-bold text-neutral-600 hover:text-black bg-neutral-100 hover:bg-neutral-200 rounded-full transition cursor-pointer text-center"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 py-3 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-full transition cursor-pointer text-center shadow-xs"
+                >
+                  Confirm Registration
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
     </div>
   );

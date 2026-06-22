@@ -348,8 +348,156 @@ Welcome to **Eenvoq AI**, your local sales and inventory operations specialist. 
     };
   }, []);
 
+  // Synchronize local messages with parent chatLogs while preserving simulated ones
+  useEffect(() => {
+    if (chatLogs && chatLogs.length > 0) {
+      const synced = chatLogs.map(log => {
+        const existing = messages.find(m => m.id === log.id || m.text === log.text);
+        if (existing) return existing;
+
+        if (log.role === 'model') {
+          const hasSections = log.text.includes("Executive Summary") || log.text.includes("Key Findings") || log.text.includes("Recommendations");
+          
+          if (hasSections) {
+            let evidence: string[] = [];
+            let actions: any[] = [];
+
+            if (log.text.toLowerCase().includes("stock") || log.text.toLowerCase().includes("reorder")) {
+              evidence = inventory.filter(p => p.stockLevel <= p.safeMin).map(p => `Stock Warning: ${p.name} at ${p.stockLevel} units.`);
+              actions = [
+                { type: 'restock_peak', label: 'Draft Overdue Reorder', value: 'Draft restocks' },
+                { type: 'adjust_safe_limits', label: 'Modify Thresholds', value: 'Edit boundaries' }
+              ];
+            } else if (log.text.toLowerCase().includes("debt") || log.text.toLowerCase().includes("baba sadiq")) {
+              evidence = debtors.filter(d => d.amountOwed > 0).map(d => `Outstanding Owed: ${d.name} is past due for ${formatCurrency(d.amountOwed, currency)}`);
+              actions = [
+                { type: 'sms_push_reminders', label: 'Dispatch Reminders', value: 'Auto-messaging B2B ledger' },
+                { type: 'credit_suspend_highs', label: 'Suspend Credit', value: 'Debit locking' }
+              ];
+            } else {
+              evidence = [`Real-time business audit scanned successfully.`];
+              actions = [
+                { type: 'forecast_demand', label: 'Forecast next week\'s product demand', value: 'Predict trends' }
+              ];
+            }
+
+            return {
+              ...log,
+              structured: {
+                answer: log.text,
+                evidence,
+                actions
+              }
+            };
+          }
+        }
+        return log;
+      });
+
+      setMessages(synced);
+    }
+  }, [chatLogs, inventory, debtors, currency]);
+
+  // Plain English & Markdown custom parser
+  const renderFormattedText = (text: string) => {
+    if (!text) return null;
+    return text.split('\n').map((line, lineIdx) => {
+      const h3Match = line.match(/^###\s*(.*)/);
+      const h2Match = line.match(/^##\s*(.*)/);
+      const h1Match = line.match(/^#\s*(.*)/);
+      
+      const isBullet = line.trim().startsWith('* ') || line.trim().startsWith('- ');
+      const isNumbered = /^\d+\.\s*(.*)/.test(line.trim());
+      
+      let parsedLine = line;
+      if (h3Match) parsedLine = h3Match[1];
+      else if (h2Match) parsedLine = h2Match[1];
+      else if (h1Match) parsedLine = h1Match[1];
+      else if (isBullet) parsedLine = line.trim().replace(/^[\*\-]\s+/, '');
+      else if (isNumbered) parsedLine = line.trim().replace(/^\d+\.\s+/, '');
+
+      // Parse inline strong/em nestedly
+      const parts: React.ReactNode[] = [];
+      let currentIdx = 0;
+      const regex = /(\*\*|__)(.*?)\1|(\*|_)(.*?)\3/g;
+      let match;
+
+      while ((match = regex.exec(parsedLine)) !== null) {
+        if (match.index > currentIdx) {
+          parts.push(parsedLine.substring(currentIdx, match.index));
+        }
+
+        if (match[1]) {
+          parts.push(
+            <strong key={match.index} className="font-extrabold text-neutral-900 bg-sky-50 px-1 py-0.5 rounded border border-sky-100/30">
+              {match[2]}
+            </strong>
+          );
+        } else if (match[3]) {
+          parts.push(
+            <em key={match.index} className="font-semibold italic text-neutral-800">
+              {match[4]}
+            </em>
+          );
+        }
+
+        currentIdx = regex.lastIndex;
+      }
+
+      if (currentIdx < parsedLine.length) {
+        parts.push(parsedLine.substring(currentIdx));
+      }
+
+      // Render headings or lists or default paragraphs
+      if (h1Match) {
+         return (
+           <h1 key={lineIdx} className="text-base font-black tracking-tight text-neutral-900 mt-3 mb-1.5 border-b border-neutral-100 pb-1">
+             {parts}
+           </h1>
+         );
+      }
+      if (h2Match) {
+         return (
+           <h2 key={lineIdx} className="text-sm font-extrabold tracking-tight text-neutral-900 mt-2.5 mb-1">
+             {parts}
+           </h2>
+         );
+      }
+      if (h3Match) {
+         return (
+           <h3 key={lineIdx} className="text-[10px] uppercase font-mono tracking-wider text-sky-600 font-bold mt-2.5 mb-1">
+             {parts}
+           </h3>
+         );
+      }
+      if (isBullet) {
+         return (
+           <div key={lineIdx} className="flex items-start gap-2 pl-3 my-1 leading-relaxed">
+             <span className="shrink-0 text-sky-500 font-bold text-sm select-none">&bull;</span>
+             <span className="text-neutral-700 text-xs sm:text-sm font-normal">{parts.length > 0 ? parts : " "}</span>
+           </div>
+         );
+      }
+      if (isNumbered) {
+         const num = line.trim().match(/^(\d+)\./)?.[1] || "1";
+         return (
+           <div key={lineIdx} className="flex items-start gap-2 pl-3 my-1 leading-relaxed">
+             <span className="shrink-0 text-sky-500 font-bold font-mono text-xs select-none">{num}.</span>
+             <span className="text-neutral-700 text-xs sm:text-sm font-normal">{parts.length > 0 ? parts : " "}</span>
+           </div>
+         );
+      }
+
+      return (
+        <p key={lineIdx} className="min-h-[1.25rem] my-1 leading-relaxed text-neutral-700 text-xs sm:text-sm font-normal select-text">
+          {parts.length > 0 ? parts : " "}
+        </p>
+      );
+    });
+  };
+
   // --- CORE CONVERSATION GENERATOR (Answers / Evidence / Actions separation) ---
-  const handleVoiceOrTextSend = (e?: React.FormEvent) => {
+  const handleVoiceOrTextSend = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     if (!inputText.trim()) return;
 
@@ -366,7 +514,21 @@ Welcome to **Eenvoq AI**, your local sales and inventory operations specialist. 
 
     setMessages(prev => [...prev, userMsg]);
 
-    // Fast timer simulation
+    if (onSendMessage) {
+      try {
+        await onSendMessage(userText, attachedFiles.length > 0 ? attachedFiles : undefined);
+        setAttachedFiles([]);
+        setSending(false);
+      } catch (err) {
+        console.warn("Live chat API returned error, operating in local fallback advisor mode:", err);
+        runOfflineSimulation(userText);
+      }
+    } else {
+      runOfflineSimulation(userText);
+    }
+  };
+
+  const runOfflineSimulation = (userText: string) => {
     setTimeout(() => {
       setSending(false);
       const lowercaseQuery = userText.toLowerCase();
@@ -379,30 +541,30 @@ Welcome to **Eenvoq AI**, your local sales and inventory operations specialist. 
       if (lowercaseQuery.includes('stock') || lowercaseQuery.includes('reorder') || lowercaseQuery.includes('depletion') || lowercaseQuery.includes('run out')) {
         const lowStockItems = inventory.filter(p => p.stockLevel <= p.safeMin);
         answerTxt = `### Executive Summary
-Inventory scanning completed under system criteria on **Qwen 3**. I detected **${lowStockItems.length} core products** running lower than safe baseline margins. Action is recommended to prevent direct stockouts and lost business revenue.
+I scanned our shelves and found some items are running low. We should order these soon so we do not run out of things for our customers to buy.
 
 ### Key Findings
-* Specified stock lines have broken beneath their safety levels due to accelerated daily purchase velocities.
-* Prompt stock replenishment orders are assigned to maintain continuous grocery/beverage shelves.
+* We are running very low on some products because customers are buying them quickly today.
+* We need to get more of these items right away to keep our shop shelves happy.
 
 ### Metrics
-* **Critical Stock-outs**: ${lowStockItems.length} items flagged
-* **Forecasted Depletion**: 1.5 days average
-* **Safety Margin Baseline**: ${lowStockItems[0]?.safeMin || 10} minimum unit count limit
+* **Items to order:** ${lowStockItems.length} products flagged
+* **Stock remaining:** About 1 to 2 days average
+* **Safety limit:** ${lowStockItems[0]?.safeMin || 10} minimum units
 
 ### Recommendations
-* Distribute immediate replenishment purchase requests to registered suppliers.
-* Increment safety reserve coefficients during seasonal demand spikes.
+* Send a message to our regular suppliers to bring more items quickly.
+* Keep more helper items on hand during busy times on weekends.
 
 ### Next Actions
-1. Authorize immediate restock requests to restore inventory safety bounds.
-2. Alert cashier operations about immediate limit changes.`;
+1. Approve a restock request to bring more Indomie and beverages.
+2. Tell our cashier team about the minimum amounts.`;
 
-        evidenceList = lowStockItems.map(p => `Stock Alert: ${p.name} - Count ${p.stockLevel} units (Minimum Margin Limit: ${p.safeMin})`);
+        evidenceList = lowStockItems.map(p => `Stock Warning: ${p.name} has only ${p.stockLevel} left (Safety goal: ${p.safeMin} units)`);
         
         actionsList = [
-          { type: 'restock_peak', label: 'Approve Restock PO (All Overdues)', value: 'Draft restocks instantly' },
-          { type: 'adjust_safe_limits', label: 'Modify Critical Depletion Thresholds', value: 'Edit inventory numbers' }
+          { type: 'restock_peak', label: 'Send Restock Request to Suppliers', value: 'Draft restocks instantly' },
+          { type: 'adjust_safe_limits', label: 'Change Minimum Safety Limits', value: 'Edit inventory numbers' }
         ];
       } 
       // --- 2. DEBT / DEBTOR / OVERDUE ---
@@ -410,30 +572,30 @@ Inventory scanning completed under system criteria on **Qwen 3**. I detected **$
         const outstanding = debtors.filter(d => d.amountOwed > 0);
         const outstandingSum = outstanding.reduce((sum, d) => sum + d.amountOwed, 0);
         answerTxt = `### Executive Summary
-Liquid ledger audits completed on **Qwen 3**. Accounts receivable list indicates **${outstanding.length} customer accounts** operating outside of standard credit maturity lines. Immediate payment reminders are recommended.
+I looked over our sales history and found that a few clients owe us money for items they bought on trust. We should reach out to them kindly to collect these funds.
 
 ### Key Findings
-* Liquidity margins are constrained due to uncollected consumer invoice sheets.
-* High-risk segments are localized to standard high margin profiles.
+* We have some cash tied up in unpaid customer tabs.
+* Most of these unpaid bills come from our trusted local partners.
 
 ### Metrics
-* **Total Overdue Ledger**: ${formatCurrency(outstandingSum, currency)}
-* **Risk Classifications**: ${outstanding.filter(d => d.riskRating === 'high').length} high risk, ${outstanding.filter(d => d.riskRating === 'medium').length} medium risk accounts
-* **Average Overdue Period**: 16 calendar days past maturity limits
+* **Total unpaid cash:** ${formatCurrency(outstandingSum, currency)}
+* **Active debits:** ${outstanding.filter(d => d.riskRating === 'high').length} high risk, ${outstanding.filter(d => d.riskRating === 'medium').length} medium risk profiles
+* **Days overdue:** Usually around 16 days past agreement
 
 ### Recommendations
-* Restrict additional cashier credit checkout permissions for accounts holding overdue credit sheets.
-* Broadcast automated payment requests directly to customer terminals.
+* Gently remind our cashiers not to allow more items on credit for people with pending tabs.
+* Send a friendly reminder note to their contact numbers.
 
 ### Next Actions
-1. Issue automated payment reminder alerts to debtor accounts.
-2. Freeze cash register credit permissions on accounts exceeding grace windows.`;
+1. Send automated WhatsApp and SMS reminders to pending customer names.
+2. Lock credit tab permissions for cashiers on registers.`;
 
-        evidenceList = outstanding.map(d => `Outstanding Trace: ${d.name} owes ${formatCurrency(d.amountOwed, currency)} (DueDate: ${d.dueDate} - risk index: ${d.riskRating.toUpperCase()})`);
+        evidenceList = outstanding.map(d => `Unpaid bills: ${d.name} outstanding amount: ${formatCurrency(d.amountOwed, currency)} (Agreed date: ${d.dueDate})`);
         
         actionsList = [
-          { type: 'sms_push_reminders', label: 'Dispatch Automated SMS Reminders', value: 'Launch reminder queue' },
-          { type: 'credit_suspend_highs', label: 'Suspend Credit for High-Risk Accounts', value: 'Apply debit locks' }
+          { type: 'sms_push_reminders', label: 'Send Kind Reminders via SMS', value: 'Launch reminder queue' },
+          { type: 'credit_suspend_highs', label: 'Freeze Tab Options on Register', value: 'Apply debit locks' }
         ];
       }
       // --- 3. PROFIT / REVENUE / LOSS ---
@@ -442,95 +604,92 @@ Liquid ledger audits completed on **Qwen 3**. Accounts receivable list indicates
         const totalSalesToday = todayReceipts.reduce((sum, r) => sum + r.totalAmount, 0);
         const calcRev = totalSalesToday || 218500;
         answerTxt = `### Executive Summary
-Financial revenue checks finished on **Qwen 3**. Today\'s cumulative register values stand at **${formatCurrency(calcRev, currency)}**, demonstrating a 14% deviation drop from general shift averages.
+Today's daily sales totaled **${formatCurrency(calcRev, currency)}**, which is a little lower than our normal daily average. Let us adjust our sales plans for the evening.
 
 ### Key Findings
-* Basket sizes and catalog margins remain highly beneficial (averaging 24.5%).
-* Afternoon cashier connectivity drops restricted full digital ledger accounting synchronization.
+* Customers are still buying our popular snacks at healthy profit margins.
+* Some internet or terminal slowness earlier today delayed virtual syncing.
 
 ### Metrics
-* **Shift Gross Receipts**: ${formatCurrency(calcRev, currency)}
-* **Transaction Index**: ${todayReceipts.length || 18} digital sheets
-* **Performance Deficit**: -14.2% below period targets
+* **Total Sales Today:** ${formatCurrency(calcRev, currency)}
+* **Bills Recorded:** ${todayReceipts.length || 18} verify sessions
+* **Sales deviation:** -14% below ideal goal
 
 ### Recommendations
-* Launch limited high-margin discount coupons to recover missed evening consumer traffic.
-* Re-audit registers to make sure all cash drawers physically match virtual tickets.
+* Run a quick discount promo on drinks to bring in more evening customers.
+* Physically double check the cash drawer against our stored receipts.
 
 ### Next Actions
-1. Initiate automated evening promotion workflows.
-2. Carry out instant physical cash till reconciliation.`;
+1. Set up a special evening soft drink promo.
+2. Confirm the register cash count matches the sales logs.`;
 
         evidenceList = [
-          `Beverage product baskets dropped 22% during afternoon hours.`,
-          `Reconciled Tills show no structural deficits.`,
-          `Calculated gross margins: 24.5% safe baseline.`
+          `Consumer soft-drink basket amounts dropped during afternoon periods.`,
+          `Cash registers show normal baseline matches.`
         ];
         
         actionsList = [
-          { type: 'launch_push_promotion', label: 'Create Evening Soda Promo Push', value: 'Create discount campaign' },
-          { type: 'view_discrepancies', label: 'Verify POS Reconciliations', value: 'Check drawer splits' }
+          { type: 'launch_push_promotion', label: 'Alert Customers of Evening Discounts', value: 'Create discount campaign' },
+          { type: 'view_discrepancies', label: 'Cross-check Virtual Sales Sheets', value: 'Check drawer splits' }
         ];
       }
       // --- 4. SUSPICIOUS / FRAUD ---
       else if (lowercaseQuery.includes('suspicious') || lowercaseQuery.includes('fraud') || lowercaseQuery.includes(' Prince') || lowercaseQuery.includes('leak') || lowercaseQuery.includes('variance')) {
         answerTxt = `### Executive Summary
-Checkout forensic audits completed on **Qwen 3**. Anomaly trackers identified **2 active discrepancies** with checkout supervisor approvals and cash-drawer matches. Immediate review is necessary.
+I analyzed our cashier change-over times and detected a few small differences in the cash drawer balances. We should watch this closely to make sure no cash goes missing.
 
 ### Key Findings
-* Sequential cashier voids occurred inside rapid shift changes.
-* Discrepancies exist between expected ledger receipts and actual physical till hand-overs.
+* A couple of register void actions were processed quickly right around shift handover times.
+* There is a small difference between the physical cash counted and what the computer says we should have.
 
 ### Metrics
-* **Logged Deficits**: ${formatCurrency(1450, currency)} in Register Till 3
-* **Unauthorized Voids**: 2 sequential override sessions
-* **System Trust Rating**: 86% Warning Priority (Yellow Category)
+* **Unaccounted cash gap:** ${formatCurrency(1450, currency)} in Til 3
+* **Unauthorised voids:** 2 rapid cancels during handover
+* **Security score:** Medium priority review advised
 
 ### Recommendations
-* Enforce secondary high-level supervisor approvals on void ledger actions.
-* Input actual cash hand-over sheets directly to the primary Truth Audit spreadsheet to calculate leakage margins.
+* Make sure a supervisor explicitly confirms any cancelled or deleted checkout bills.
+* Match cash handovers strictly before cashiers log out of their shift.
 
 ### Next Actions
-1. Request investigation into Register 3 logs.
-2. Draft a new register reconciliation entry for verification.`;
+1. Start a simple review of cashier log entries in Til 3.
+2. Create a clean shift reconciliation sheet for the records.`;
 
         evidenceList = [
-          `Operator Prince alert: Logged 2 high-value checkout voids within 4 minutes.`,
-          `Discount margins alert: An average 28% coupon was used three times without standard authorization logs.`,
-          `Cash drawer matching discrepancy: Expected cashier balances exceeded actual hand-over by 1,450 naira.`
+          `Cashier Prince logged 2 void ticket actions in quick succession.`,
+          `Under-logged drawer match: Physical drawer is short by 1,450 Naira.`
         ];
         
         actionsList = [
-          { type: 'flag_audit', label: 'Initiate Forensic Inspection on Cashier Prince', value: 'Start auditing investigation' },
-          { type: 'add_reconciliation_audit', label: 'Create New Truth Audit Ledger', value: 'Trace variance' }
+          { type: 'flag_audit', label: 'Inspect handovers for Operator Prince', value: 'Start auditing investigation' },
+          { type: 'add_reconciliation_audit', label: 'Start standard reconciliation shift sheet', value: 'Trace variance' }
         ];
       }
       // --- DEFAULT AI ASSISTANCE ---
       else {
         answerTxt = `### Executive Summary
-Ollama **Qwen 3** is online. I am optimized for store diagnostics, sales records analysis, and inventory optimization under your dedicated system parameters.
+Hello! I am your sales and stock advisor. I am online and ready to help you analyze sales trends, double check stock health, and make smart decisions for our shop.
 
 ### Key Findings
-* Active workspace catalog datasets and ledger logs are mapped perfectly.
-* Operational safety threshold rules are active and stable.
+* All catalog files, product price lists, and team shift parameters are fully matched.
+* Operational safety checks are active and running quietly.
 
 ### Metrics
-* **Tracked Products**: ${inventory.length} items logged
-* **Assigned Personnel**: 7 active profiles
-* **Operations Priority**: High margin preservation
+* **Products tracked:** ${inventory.length} items catalogued
+* **Active employees:** 7 crew profiles
+* **Task severity:** Standard margin protection
 
 ### Recommendations
-* Request a review of understocked items to prevent catalog out-of-stocks.
-* Ask me about client overdue credit lists to reclaim liquidity.
+* Check which products are running low to prevent empty shelves.
+* Ask me about unpaid client bills to reclaim outstanding cash.
 
 ### Next Actions
-1. Inquire about current safety limits to forecast next reorder schedules.
-2. Check active alerts to check for store operation variances.`;
+1. Check stock safety levels to plan your next orders.
+2. Review active alerts to make sure cash registers match.`;
 
         evidenceList = [
-          `26 active inventory records registered.`,
-          `7 operators verified within team rosters.`,
-          `Core system security levels are optimal.`
+          `${inventory.length} products logged in the master file.`,
+          `7 crew member profiles are verified.`
         ];
         actionsList = [
           { type: 'forecast_demand', label: 'Forecast next week\'s product demand', value: 'Predict trends' },
@@ -552,7 +711,6 @@ Ollama **Qwen 3** is online. I am optimized for store diagnostics, sales records
           }
         }
       ]);
-
     }, 1100);
   };
 
@@ -670,27 +828,15 @@ Ollama **Qwen 3** is online. I am optimized for store diagnostics, sales records
               <span className="w-1.5 h-1.5 bg-emerald-600 rounded-full animate-ping" />
               AI Synced Live
             </span>
-            <button
-              onClick={() => setShowModelConfig(!showModelConfig)}
-              className={`text-xs px-3.5 h-8.5 rounded-full flex items-center gap-1.5 cursor-pointer transition font-bold border ${
-                showModelConfig 
-                  ? 'bg-sky-505 text-sky-600 bg-sky-50 border-sky-200/80 shadow-2xs' 
-                  : 'text-[#5F6368] hover:text-black hover:bg-slate-50 border-[#E3E3E3]'
-              }`}
-              title="Configure Ollama System Prompt & model selection"
-            >
-              <Sliders className="w-3 h-3" />
-              <span>Ollama Config</span>
-            </button>
             <button 
               onClick={() => {
                 clearChat();
                 setMessages([messages[0]]);
               }}
-              className="text-xs text-[#5F6368] hover:text-black hover:bg-slate-50 border border-[#E3E3E3] h-8.5 rounded-full flex items-center gap-1.5 cursor-pointer transition font-bold"
+              className="text-xs text-[#5F6368] hover:text-black hover:bg-slate-50 border border-[#E3E3E3] h-8.5 rounded-full px-3.5 flex items-center gap-1.5 cursor-pointer transition font-bold"
             >
               <RefreshCcw className="w-3 h-3" />
-              Reset Chat
+              Reset
             </button>
           </div>
         </div>
@@ -744,7 +890,7 @@ Ollama **Qwen 3** is online. I am optimized for store diagnostics, sales records
 
             {/* Scrollable chat messages panel */}
             <div className="flex-1 overflow-y-auto p-6 space-y-6" id="messages-stream">
-              <div className="max-w-2xl mx-auto space-y-5">
+              <div className="max-w-3xl mx-auto space-y-6">
                 
                 {messages.map((msg, i) => {
                   const isAI = msg.role === 'model';
@@ -757,9 +903,9 @@ Ollama **Qwen 3** is online. I am optimized for store diagnostics, sales records
                         </div>
                       )}
 
-                      <div className={`max-w-[92%] sm:max-w-[82%] rounded-[24px] px-6 py-4.5 text-[11px] sm:text-xs md:text-sm ${
+                      <div className={`w-full max-w-[94%] sm:max-w-[88%] md:max-w-[85%] lg:max-w-[82%] rounded-[24px] px-6 py-4.5 text-[11px] sm:text-xs md:text-sm ${
                         isAI 
-                          ? 'bg-sky-50/50 backdrop-blur-xs border border-sky-100/90 text-slate-900 shadow-sm rounded-tl-sm' 
+                          ? 'bg-sky-50/20 backdrop-blur-xs border border-sky-100/90 text-neutral-800 shadow-xs rounded-tl-sm' 
                           : 'bg-slate-900 text-white rounded-tr-sm shadow-xs'
                       }`}>
                         
@@ -780,8 +926,10 @@ Ollama **Qwen 3** is online. I am optimized for store diagnostics, sales records
                             
                             {/* Section 1: Answer block */}
                             <div>
-                              <strong className="text-[10px] uppercase font-mono tracking-widest text-sky-600 block mb-1 font-bold">Answer</strong>
-                              <p className="text-slate-900 font-semibold text-xs sm:text-sm leading-relaxed font-sans">{msg.structured.answer}</p>
+                              <strong className="text-[10px] uppercase font-mono tracking-widest text-sky-600 block mb-1 font-bold">Answer Summary</strong>
+                              <div className="text-slate-900 leading-relaxed font-sans mt-1">
+                                {renderFormattedText(msg.structured.answer)}
+                              </div>
                             </div>
 
                             {/* Section 2: Evidence checklist */}
@@ -819,8 +967,8 @@ Ollama **Qwen 3** is online. I am optimized for store diagnostics, sales records
                           </div>
                         ) : (
                           // Fallback or normal flat plaintext message
-                          <div className="space-y-2 select-text leading-relaxed font-sans whitespace-pre-wrap text-slate-900 font-semibold text-xs sm:text-sm">
-                            <p>{msg.text}</p>
+                          <div className="space-y-2 select-text leading-relaxed font-sans whitespace-pre-wrap text-slate-900 text-xs sm:text-sm font-normal">
+                            {renderFormattedText(msg.text)}
                           </div>
                         )}
 
@@ -878,9 +1026,9 @@ Ollama **Qwen 3** is online. I am optimized for store diagnostics, sales records
 
             {/* Suggested cards at the bottom */}
             {messages.length <= 1 && (
-              <div className="max-w-2xl mx-auto w-full px-6 py-4 select-none" id="starting-prompts-cardboard">
-                <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-3 text-center sm:text-left">Suggested Quick Workflows</p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3" id="suggestions-scroller">
+              <div className="max-w-2xl mx-auto w-full px-6 py-2.5 select-none" id="starting-prompts-cardboard">
+                <p className="text-[10px] font-bold uppercase text-slate-500 tracking-wider mb-2 text-center sm:text-left">Suggestions</p>
+                <div className="flex flex-col sm:flex-row sm:flex-wrap gap-x-5 gap-y-1.5 justify-center sm:justify-start" id="suggestions-scroller">
                   {[
                     { q: "Check Low Stock", d: "Detect stock levels running dry & restock instantly" },
                     { q: "Draft Payment Request", d: "Send friendly reminder alerts to overdue accounts" },
@@ -889,16 +1037,13 @@ Ollama **Qwen 3** is online. I am optimized for store diagnostics, sales records
                   ].map((sg, idx) => (
                     <button
                       key={idx}
+                      type="button"
                       onClick={() => setInputText(sg.q)}
-                      className="flex items-center justify-between p-3.5 bg-white hover:bg-sky-50/40 border border-slate-200 hover:border-sky-350 rounded-2xl text-left transition cursor-pointer text-xs font-sans group shadow-2xs hover:shadow-xs"
+                      className="inline-flex items-center gap-1 text-slate-700 hover:text-sky-600 text-xs font-medium font-sans transition cursor-pointer hover:underline bg-transparent border-0 p-0 text-left group"
+                      title={sg.d}
                     >
-                      <div className="flex flex-col min-w-0 pr-3">
-                        <strong className="text-slate-900 font-bold font-sans text-xs group-hover:text-sky-900 transition truncate">{sg.q}</strong>
-                        <span className="text-slate-500 text-[10px] font-sans leading-normal truncate">{sg.d}</span>
-                      </div>
-                      <div className="w-7 h-7 rounded-xl bg-slate-50 group-hover:bg-sky-100 flex items-center justify-center shrink-0 transition-all">
-                        <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-sky-600 group-hover:translate-x-0.5 transition-all" />
-                      </div>
+                      <span>{sg.q}</span>
+                      <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-sky-600 group-hover:translate-x-0.5 transition-all" />
                     </button>
                   ))}
                 </div>

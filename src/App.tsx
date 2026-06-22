@@ -28,6 +28,20 @@ import NotificationsCenter from './components/NotificationsCenter';
 import Settings from './components/Settings';
 import LandingPage from './components/LandingPage';
 import { getStoredCurrency, setStoredCurrency, formatCurrency } from './utils/currency';
+import { 
+  isSupabaseConfigured, 
+  fetchInventory, 
+  fetchReceipts, 
+  fetchDebtors, 
+  fetchAudits, 
+  fetchAlerts, 
+  fetchStoreTeam, 
+  saveReceipt, 
+  saveInventoryItem, 
+  saveDebtor, 
+  saveAudit, 
+  saveAlert 
+} from './lib/supabase';
 
 export default function App() {
   const [currency, setCurrency] = useState<string>(getStoredCurrency);
@@ -60,7 +74,7 @@ export default function App() {
     const handlePopState = () => {
       const hash = window.location.hash.replace('#', '').split('/')[0];
       const validSections = [
-        'dashboard', 'assistant', 'receipts', 'truthcheck', 'forensic',
+        'dashboard', 'receipts', 'truthcheck', 'forensic',
         'inventory', 'retention', 'debtor', 'reports', 'notifications', 'settings', 'landing'
       ];
       if (hash && validSections.includes(hash)) {
@@ -94,68 +108,14 @@ export default function App() {
     };
   }, [mobileMenuOpen]);
 
-  // Core application states loaded from localStorage dynamically
-  const [receipts, setReceipts] = useState<Receipt[]>(() => {
-    try {
-      const saved = localStorage.getItem('eenvoq_receipts');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed)) return parsed;
-      }
-    } catch (e) {}
-    return INITIAL_RECEIPTS;
-  });
-  const [inventory, setInventory] = useState<InventoryItem[]>(() => {
-    try {
-      const saved = localStorage.getItem('eenvoq_inventory');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed)) return parsed;
-      }
-    } catch (e) {}
-    return INITIAL_INVENTORY;
-  });
-  const [debtors, setDebtors] = useState<Debtor[]>(() => {
-    try {
-      const saved = localStorage.getItem('eenvoq_debtors');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed)) return parsed;
-      }
-    } catch (e) {}
-    return INITIAL_DEBTORS;
-  });
-  const [audits, setAudits] = useState<TruthAudit[]>(() => {
-    try {
-      const saved = localStorage.getItem('eenvoq_audits');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed)) return parsed;
-      }
-    } catch (e) {}
-    return INITIAL_AUDITS;
-  });
-  const [alerts, setAlerts] = useState<Alert[]>(() => {
-    try {
-      const saved = localStorage.getItem('eenvoq_alerts');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed)) return parsed;
-      }
-    } catch (e) {}
-    return INITIAL_ALERTS;
-  });
-  const [aiInsights, setAiInsights] = useState<string[]>(SAMPLE_AI_INSIGHTS);
-  const [retentionCampaigns, setRetentionCampaigns] = useState<RetentionCampaign[]>(() => {
-    try {
-      const saved = localStorage.getItem('eenvoq_retention_campaigns');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed)) return parsed;
-      }
-    } catch (e) {}
-    return INITIAL_RETENTION_CAMPAIGNS;
-  });
+  // Core application states
+  const [receipts, setReceipts] = useState<Receipt[]>([]);
+  const [inventory, setInventory] = useState<InventoryItem[]>([]);
+  const [debtors, setDebtors] = useState<Debtor[]>([]);
+  const [audits, setAudits] = useState<TruthAudit[]>([]);
+  const [alerts, setAlerts] = useState<Alert[]>([]);
+  const [aiInsights, setAiInsights] = useState<string[]>([]);
+  const [retentionCampaigns, setRetentionCampaigns] = useState<RetentionCampaign[]>([]);
   const [chatLogs, setChatLogs] = useState<ChatMessage[]>(() => {
     try {
       const saved = localStorage.getItem('eenvoq_chat_logs');
@@ -234,6 +194,87 @@ export default function App() {
   // Suggested context prompt trigger from elsewhere
   const [prefilledPrompt, setPrefilledPrompt] = useState<string>('');
 
+  // Loaded state tracking
+  const [dataLoaded, setDataLoaded] = useState(false);
+
+  // Dynamic user-profile / store rows loading effect
+  useEffect(() => {
+    async function loadStoreData() {
+      if (!userSession) {
+        setDataLoaded(false);
+        return;
+      }
+      
+      const sessionStoreId = userSession.storeId;
+
+      if (isSupabaseConfigured && sessionStoreId) {
+        try {
+          console.log("Loading live data from Supabase for store:", sessionStoreId);
+          const [dbInv, dbRec, dbDebt, dbAud, dbAl, dbTeam] = await Promise.all([
+            fetchInventory(sessionStoreId),
+            fetchReceipts(sessionStoreId),
+            fetchDebtors(sessionStoreId),
+            fetchAudits(sessionStoreId),
+            fetchAlerts(sessionStoreId),
+            fetchStoreTeam(sessionStoreId)
+          ]);
+
+          setInventory(dbInv);
+          setReceipts(dbRec);
+          setDebtors(dbDebt);
+          setAudits(dbAud);
+          setAlerts(dbAl);
+          setTeamMembers(dbTeam.length > 0 ? dbTeam : [
+            { id: userSession.uid || 'creator-primary', name: userSession.name, role: 'Owner', email: userSession.email, isCreator: true }
+          ]);
+          setDataLoaded(true);
+        } catch (err) {
+          console.error("Failed to fetch fresh data from Supabase:", err);
+          setDataLoaded(true);
+        }
+      } else {
+        // Simulated Offline Database
+        const storeKeySuffix = encodeURIComponent(userSession.storeName + "_" + userSession.email);
+        
+        try {
+          const simInvStr = localStorage.getItem(`eenvoq_sim_inv_${storeKeySuffix}`);
+          const simRecStr = localStorage.getItem(`eenvoq_sim_rec_${storeKeySuffix}`);
+          const simDebtStr = localStorage.getItem(`eenvoq_sim_debt_${storeKeySuffix}`);
+          const simAudStr = localStorage.getItem(`eenvoq_sim_aud_${storeKeySuffix}`);
+          const simAlStr = localStorage.getItem(`eenvoq_sim_al_${storeKeySuffix}`);
+          const savedTeam = localStorage.getItem(`eenvoq_sim_team_${storeKeySuffix}`);
+
+          if (simInvStr) setInventory(JSON.parse(simInvStr)); else setInventory([]);
+          if (simRecStr) setReceipts(JSON.parse(simRecStr)); else setReceipts([]);
+          if (simDebtStr) setDebtors(JSON.parse(simDebtStr)); else setDebtors([]);
+          if (simAudStr) setAudits(JSON.parse(simAudStr)); else setAudits([]);
+          if (simAlStr) setAlerts(JSON.parse(simAlStr)); else setAlerts([]);
+          
+          if (savedTeam) {
+            setTeamMembers(JSON.parse(savedTeam));
+          } else {
+            setTeamMembers([
+              { id: 'creator-primary', name: userSession.name, role: 'Owner', email: userSession.email, isCreator: true }
+            ]);
+          }
+          setDataLoaded(true);
+        } catch (e) {
+          setInventory([]);
+          setReceipts([]);
+          setDebtors([]);
+          setAudits([]);
+          setAlerts([]);
+          setTeamMembers([
+            { id: 'creator-primary', name: userSession.name, role: 'Owner', email: userSession.email, isCreator: true }
+          ]);
+          setDataLoaded(true);
+        }
+      }
+    }
+
+    loadStoreData();
+  }, [userSession]);
+
   // Global custom confirmation modal state
   const [confirmModal, setConfirmModal] = useState<{
     isOpen: boolean;
@@ -280,7 +321,6 @@ export default function App() {
   // Ensure that whenever a page loads (activeSection or userSession transitions), it always displays from the top of the page
   useEffect(() => {
     const scrollToTop = () => {
-      // 1. Reset standard viewport scrolling
       window.scrollTo(0, 0);
       if (document.documentElement) {
         document.documentElement.scrollTop = 0;
@@ -288,41 +328,51 @@ export default function App() {
       if (document.body) {
         document.body.scrollTop = 0;
       }
-
-      // 2. Reset workspace scroll panel if rendered
       const workspacePanel = document.getElementById('workspace-main-panel');
       if (workspacePanel) {
         workspacePanel.scrollTop = 0;
       }
     };
-
-    // Perform immediately
     scrollToTop();
-
-    // Perform also on a microtask/short timeout to counter any content-dynamic sizing or dynamic layout adjustments
     const timeoutId = setTimeout(scrollToTop, 10);
     return () => clearTimeout(timeoutId);
   }, [activeSection, userSession]);
 
   useEffect(() => {
-    localStorage.setItem('eenvoq_receipts', JSON.stringify(receipts));
-  }, [receipts]);
+    if (!userSession) return;
+    const storeKeySuffix = encodeURIComponent(userSession.storeName + "_" + userSession.email);
+    localStorage.setItem(`eenvoq_sim_rec_${storeKeySuffix}`, JSON.stringify(receipts));
+  }, [receipts, userSession]);
 
   useEffect(() => {
-    localStorage.setItem('eenvoq_inventory', JSON.stringify(inventory));
-  }, [inventory]);
+    if (!userSession) return;
+    const storeKeySuffix = encodeURIComponent(userSession.storeName + "_" + userSession.email);
+    localStorage.setItem(`eenvoq_sim_inv_${storeKeySuffix}`, JSON.stringify(inventory));
+  }, [inventory, userSession]);
 
   useEffect(() => {
-    localStorage.setItem('eenvoq_debtors', JSON.stringify(debtors));
-  }, [debtors]);
+    if (!userSession) return;
+    const storeKeySuffix = encodeURIComponent(userSession.storeName + "_" + userSession.email);
+    localStorage.setItem(`eenvoq_sim_debt_${storeKeySuffix}`, JSON.stringify(debtors));
+  }, [debtors, userSession]);
 
   useEffect(() => {
-    localStorage.setItem('eenvoq_audits', JSON.stringify(audits));
-  }, [audits]);
+    if (!userSession) return;
+    const storeKeySuffix = encodeURIComponent(userSession.storeName + "_" + userSession.email);
+    localStorage.setItem(`eenvoq_sim_aud_${storeKeySuffix}`, JSON.stringify(audits));
+  }, [audits, userSession]);
 
   useEffect(() => {
-    localStorage.setItem('eenvoq_alerts', JSON.stringify(alerts));
-  }, [alerts]);
+    if (!userSession) return;
+    const storeKeySuffix = encodeURIComponent(userSession.storeName + "_" + userSession.email);
+    localStorage.setItem(`eenvoq_sim_al_${storeKeySuffix}`, JSON.stringify(alerts));
+  }, [alerts, userSession]);
+
+  useEffect(() => {
+    if (!userSession) return;
+    const storeKeySuffix = encodeURIComponent(userSession.storeName + "_" + userSession.email);
+    localStorage.setItem(`eenvoq_sim_team_${storeKeySuffix}`, JSON.stringify(teamMembers));
+  }, [teamMembers, userSession]);
 
   useEffect(() => {
     localStorage.setItem('eenvoq_chat_logs', JSON.stringify(chatLogs));
@@ -381,6 +431,7 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
   };
 
   const handleAddReceipt = (newReceipt: Receipt) => {
+    const creatorId = activeOperator ? activeOperator.id : 'creator-primary';
     const receiptWithAudit: Receipt = {
       ...newReceipt,
       createdBy: newReceipt.createdBy || (activeOperator ? {
@@ -396,6 +447,11 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
 
     setReceipts(prev => [receiptWithAudit, ...prev]);
 
+    // Live sync database
+    if (isSupabaseConfigured && userSession?.storeId) {
+      saveReceipt(userSession.storeId, receiptWithAudit, creatorId).catch(console.error);
+    }
+
     // Update inventory levels automatically based on items checked out
     if (newReceipt.items && newReceipt.items.length > 0) {
       setInventory(prevInv => {
@@ -409,6 +465,17 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
             const nextDepletionDays = invItem.velocity > 0 
               ? Math.round((nextStockLevel / invItem.velocity) * 10) / 10 
               : invItem.forecastedDepletionDays;
+
+            const updatedInv = {
+              ...invItem,
+              stockLevel: nextStockLevel,
+              forecastedDepletionDays: nextDepletionDays
+            };
+
+            // Non-blocking database update
+            if (isSupabaseConfigured && userSession?.storeId) {
+              saveInventoryItem(userSession.storeId, updatedInv).catch(console.error);
+            }
 
             // Trigger low-stock alert if level falls below safeMin
             if (nextStockLevel <= invItem.safeMin && invItem.stockLevel > invItem.safeMin) {
@@ -424,11 +491,7 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
               setAlerts(prevAlerts => [stockAlert, ...prevAlerts]);
             }
 
-            return {
-              ...invItem,
-              stockLevel: nextStockLevel,
-              forecastedDepletionDays: nextDepletionDays
-            };
+            return updatedInv;
           }
           return invItem;
         });
@@ -503,23 +566,20 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
       ...member,
       id: `member-${Date.now()}`
     };
-    setTeamMembers(prev => {
-      const next = [...prev, newMember];
-      localStorage.setItem('eenvoq_team_members', JSON.stringify(next));
-      return next;
-    });
+    setTeamMembers(prev => [...prev, newMember]);
   };
 
   const handleDeleteTeamMember = (id: string) => {
-    setTeamMembers(prev => {
-      const next = prev.filter(m => m.id !== id || m.isCreator);
-      localStorage.setItem('eenvoq_team_members', JSON.stringify(next));
-      return next;
-    });
+    setTeamMembers(prev => prev.filter(m => m.id !== id || m.isCreator));
   };
 
   const handleAddAudit = (newAudit: TruthAudit) => {
     setAudits(prev => [newAudit, ...prev]);
+
+    if (isSupabaseConfigured && userSession?.storeId) {
+      const creatorId = activeOperator ? activeOperator.id : 'creator-primary';
+      saveAudit(userSession.storeId, newAudit, creatorId).catch(console.error);
+    }
     
     if (newAudit.difference < 0) {
       const shortageAlert: Alert = {
@@ -539,11 +599,17 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
     setInventory(prev => prev.map(item => {
       if (item.id === itemId) {
         const newStock = item.stockLevel + qty;
-        return {
+        const updatedItem = {
           ...item,
           stockLevel: newStock,
           forecastedDepletionDays: Math.round((newStock / item.velocity) * 10) / 10
         };
+
+        if (isSupabaseConfigured && userSession?.storeId) {
+          saveInventoryItem(userSession.storeId, updatedItem).catch(console.error);
+        }
+
+        return updatedItem;
       }
       return item;
     }));
@@ -553,6 +619,11 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
     setDebtors(prev => prev.map(debtor => {
       if (debtor.id === debtorId) {
         const nextLock = !debtor.locked;
+        const updatedDebtor = { ...debtor, locked: nextLock };
+
+        if (isSupabaseConfigured && userSession?.storeId) {
+          saveDebtor(userSession.storeId, updatedDebtor).catch(console.error);
+        }
         
         // Add compliance lock notification feed
         const lockAlert: Alert = {
@@ -568,7 +639,7 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
         };
         setAlerts(prev => [lockAlert, ...prev]);
 
-        return { ...debtor, locked: nextLock };
+        return updatedDebtor;
       }
       return debtor;
     }));
@@ -642,7 +713,13 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
 
   const handleNavigateToAssistant = (promptText: string) => {
     setPrefilledPrompt(promptText);
-    setActiveSection('assistant');
+    setActiveSection('dashboard');
+    setTimeout(() => {
+      const element = document.getElementById('embedded-ai-assistant-container');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 100);
   };
 
   // Full-screen website landing page view
@@ -660,37 +737,41 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
     switch (activeSection) {
       case 'dashboard':
         return (
-          <Dashboard 
-            receipts={receipts}
-            inventory={inventory}
-            debtors={debtors}
-            audits={audits}
-            alerts={alerts}
-            aiInsights={aiInsights}
-            setActiveSection={setActiveSection}
-            onNavigateToAssistant={handleNavigateToAssistant}
-            onAddAudit={handleAddAudit}
-            showConfirm={showConfirm}
-            user={userSession || undefined}
-            currency={currency}
-            setCurrency={setCurrency}
-          />
-        );
-      case 'assistant':
-        return (
-          <AIAssistant 
-            chatLogs={chatLogs}
-            onSendMessage={handleSendMessage}
-            receipts={receipts}
-            inventory={inventory}
-            debtors={debtors}
-            audits={audits}
-            alerts={alerts}
-            clearChat={() => setChatLogs([])}
-            prefilledPrompt={prefilledPrompt}
-            clearPrefilledPrompt={() => setPrefilledPrompt('')}
-            currency={currency}
-          />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+            <div className="lg:col-span-2">
+              <Dashboard 
+                receipts={receipts}
+                inventory={inventory}
+                debtors={debtors}
+                audits={audits}
+                alerts={alerts}
+                aiInsights={aiInsights}
+                setActiveSection={setActiveSection}
+                onNavigateToAssistant={handleNavigateToAssistant}
+                onAddAudit={handleAddAudit}
+                showConfirm={showConfirm}
+                user={userSession || undefined}
+                currency={currency}
+                setCurrency={setCurrency}
+              />
+            </div>
+            {/* Embedded AI Assistant Column (Extreme Right downwards on desktop, and Full Mobile view on last section of home page) */}
+            <div className="lg:col-span-1 lg:sticky lg:top-4 mt-2 lg:mt-0 flex flex-col" id="embedded-ai-assistant-container">
+              <AIAssistant 
+                chatLogs={chatLogs}
+                onSendMessage={handleSendMessage}
+                receipts={receipts}
+                inventory={inventory}
+                debtors={debtors}
+                audits={audits}
+                alerts={alerts}
+                clearChat={() => setChatLogs([])}
+                prefilledPrompt={prefilledPrompt}
+                clearPrefilledPrompt={() => setPrefilledPrompt('')}
+                currency={currency}
+              />
+            </div>
+          </div>
         );
       case 'receipts':
         return (
@@ -731,7 +812,7 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
       case 'retention':
         return <CustomerRetention campaigns={retentionCampaigns} onUpdateCampaigns={setRetentionCampaigns} showConfirm={showConfirm} />;
       case 'debtor':
-        return <DebtorControl debtors={debtors} onToggleLock={handleToggleDebtorLock} showConfirm={showConfirm} currency={currency} />;
+        return <DebtorControl debtors={debtors} onToggleLock={handleToggleDebtorLock} onUpdateDebtors={setDebtors} showConfirm={showConfirm} currency={currency} />;
       case 'reports':
         return <ReportingCenter showConfirm={showConfirm} />;
       case 'notifications':
@@ -903,13 +984,19 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
 
             <button 
               type="button" 
-              onClick={() => setActiveSection('assistant')}
-              className={`flex flex-col items-center gap-1.5 bg-transparent border-0 cursor-pointer transition ${
-                activeSection === 'assistant' ? 'text-sky-500 font-semibold' : 'text-slate-400 hover:text-slate-600 font-medium'
-              }`}
+              onClick={() => {
+                setActiveSection('dashboard');
+                setTimeout(() => {
+                  const element = document.getElementById('embedded-ai-assistant-container');
+                  if (element) {
+                    element.scrollIntoView({ behavior: 'smooth' });
+                  }
+                }, 100);
+              }}
+              className="flex flex-col items-center gap-1.5 bg-transparent border-0 cursor-pointer text-slate-400 hover:text-slate-600 font-medium transition"
             >
               <Bot className="w-5 h-5 stroke-[1.5]" />
-              <span className="text-[10px] tracking-tight leading-none uppercase">Eenvoq AI</span>
+              <span className="text-[10px] tracking-tight leading-none uppercase">Analysis</span>
             </button>
 
             <button 

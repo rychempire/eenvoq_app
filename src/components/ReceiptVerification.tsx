@@ -667,7 +667,7 @@ export default function ReceiptVerification({
 
               {/* QUICK ACTIONS ROW */}
               <div className="bg-white p-5 rounded-2xl border border-[#e3e3e3] select-none" id="overview-quick-actions-box">
-                <h3 className="text-xs font-bold text-[#757575] uppercase tracking-wider mb-3 font-display">Immediate Workflows</h3>
+                <h3 className="text-xs font-normal text-black uppercase tracking-wider mb-3 font-display">Immediate Workflows</h3>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                   <button 
                     onClick={() => setActiveTab('checkout')}
@@ -707,7 +707,7 @@ export default function ReceiptVerification({
               {/* SALES TREND CHARTS REPLACEMENT */}
               <div className="bg-white p-5 rounded-2xl border border-[#e3e3e3] select-none" id="sales-metrics-trend-graph">
                 <div className="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
-                  <h3 className="text-xs font-bold text-[#757575] uppercase tracking-wider font-display">Sales Performance Index</h3>
+                  <h3 className="text-xs font-normal text-black uppercase tracking-wider font-display">Sales Performance Index</h3>
                   <div className="flex bg-neutral-100 p-0.5 rounded-full text-[11px]" id="metric-trend-switch">
                     {['revenue', 'transactions', 'profit'].map((m) => (
                       <button 
@@ -816,7 +816,7 @@ export default function ReceiptVerification({
 
               {/* BEST SELLERS AND RANKINGS SECTION (NO GRAPHICS) */}
               <div className="bg-white p-5 rounded-2xl border border-[#e3e3e3]" id="top-performers-list-panel">
-                <h3 className="text-xs font-bold text-[#757575] uppercase tracking-wider mb-4 font-display">Best-Selling Products</h3>
+                <h3 className="text-xs font-normal text-black uppercase tracking-wider mb-4 font-display">Best-Selling Products</h3>
                 <div className="space-y-4">
                   {topProducts.map((p, idx) => {
                     const topRev = topProducts[0]?.revenue || 1;
@@ -840,7 +840,7 @@ export default function ReceiptVerification({
               <div className="bg-[#fff9f6] border border-[#fbe5da] p-5 rounded-2xl" id="fraud-radar-section">
                 <div className="flex items-center gap-2 mb-3">
                   <ShieldAlert className="w-5 h-5 text-red-600" />
-                  <h3 className="text-xs font-bold text-slate-800 uppercase tracking-widest font-display">Fraud Prevention Intelligence</h3>
+                  <h3 className="text-xs font-normal text-black uppercase tracking-widest font-display">Fraud Prevention Intelligence</h3>
                 </div>
                 <p className="text-[11px] text-[#5f6368] mb-3 leading-normal">
                   Automatic monitoring systems flags unusual discounts, split deviations, or repetitive void cycles.
@@ -1000,7 +1000,7 @@ export default function ReceiptVerification({
             <div className="lg:col-span-5 bg-white p-5 rounded-2xl border border-[#e3e3e3] flex flex-col h-[650px] shadow-sm select-none" id="cart-controller">
               
               <div className="flex items-center justify-between border-b border-gray-100 pb-3 mb-3">
-                <h3 className="text-sm font-bold font-display tracking-tight text-slate-800">Review Basket Receipt</h3>
+                <h3 className="text-sm font-normal font-display tracking-tight text-black">Review Basket Receipt</h3>
                 <span className="text-[10px] font-mono text-gray-500 bg-slate-100 px-2.5 py-0.5 rounded-full font-bold">
                   {cart.length} items selected
                 </span>
@@ -1280,7 +1280,7 @@ export default function ReceiptVerification({
             <div className="lg:col-span-5 bg-white p-5 rounded-2xl border border-[#e3e3e3] flex flex-col h-[650px]" id="tx-search-index">
               
               <div className="mb-4 space-y-3.5 select-none">
-                <h3 className="text-sm font-bold font-display tracking-tight text-slate-800">Sales Register Archives</h3>
+                <h3 className="text-sm font-normal font-display tracking-tight text-black">Sales Register Archives</h3>
                 
                 <div className="relative">
                   <Search className="w-4 h-4 text-gray-400 absolute left-3 top-3" />
@@ -1515,7 +1515,7 @@ export default function ReceiptVerification({
             <div className="lg:col-span-2 bg-white p-5 rounded-2xl border border-[#e3e3e3] flex flex-col h-[650px]" id="cust-search-section">
               
               <div className="mb-4 space-y-3 select-none">
-                <h3 className="text-sm font-bold font-display tracking-tight text-slate-800 font-display">Client Relationship Register</h3>
+                <h3 className="text-sm font-normal font-display tracking-tight text-black font-display">Client Relationship Register</h3>
                 
                 <div className="relative">
                   <Search className="w-4 h-4 text-gray-400 absolute left-3 top-3" />

@@ -38,6 +38,9 @@ comment on table public.profiles is 'Team members and business operators with gr
 
 -- Link the owner_id in public.stores to public.profiles safely
 ALTER TABLE public.stores 
+    DROP CONSTRAINT IF EXISTS fk_store_owner;
+
+ALTER TABLE public.stores 
     ADD CONSTRAINT fk_store_owner FOREIGN KEY (owner_id) REFERENCES public.profiles(id) ON DELETE SET NULL;
 
 -- 3. INVENTORY & STOCKS TABLE
@@ -212,7 +215,8 @@ END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 -- Bind the trigger function to Supabase's auth.users table
-CREATE OR REPLACE TRIGGER on_auth_user_created
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+CREATE TRIGGER on_auth_user_created
     AFTER INSERT ON auth.users
     FOR EACH ROW EXECUTE FUNCTION public.handle_new_user_signup();
 
@@ -238,7 +242,8 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE TRIGGER before_audit_inserted_or_updated
+DROP TRIGGER IF EXISTS before_audit_inserted_or_updated ON public.truth_audits;
+CREATE TRIGGER before_audit_inserted_or_updated
     BEFORE INSERT OR UPDATE ON public.truth_audits
     FOR EACH ROW EXECUTE FUNCTION public.calculate_audit_leakage();
 
@@ -261,28 +266,34 @@ ALTER TABLE public.ai_chats ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.system_alerts ENABLE ROW LEVEL SECURITY;
 
 -- 1. STORES Policies
+DROP POLICY IF EXISTS "Users can view stores they belong to" ON public.stores;
 CREATE POLICY "Users can view stores they belong to"
     ON public.stores FOR SELECT
     USING (auth.uid() IN (SELECT id FROM public.profiles WHERE store_id = public.stores.id) OR owner_id = auth.uid());
 
+DROP POLICY IF EXISTS "Owners can manage stores" ON public.stores;
 CREATE POLICY "Owners can manage stores"
     ON public.stores FOR ALL
     USING (owner_id = auth.uid());
 
 -- 2. PROFILES Policies
+DROP POLICY IF EXISTS "Users can read profiles from same store" ON public.profiles;
 CREATE POLICY "Users can read profiles from same store"
     ON public.profiles FOR SELECT
     USING (store_id = (SELECT store_id FROM public.profiles WHERE id = auth.uid()) OR id = auth.uid());
 
+DROP POLICY IF EXISTS "Owners/Admins can manage team profiles" ON public.profiles;
 CREATE POLICY "Owners/Admins can manage team profiles"
     ON public.profiles FOR ALL
     USING (auth.uid() IN (SELECT id FROM public.profiles WHERE role IN ('Owner', 'Admin')));
 
 -- 3. INVENTORY Policies
+DROP POLICY IF EXISTS "Store employees can read inventory" ON public.inventory;
 CREATE POLICY "Store employees can read inventory"
     ON public.inventory FOR SELECT
     USING (store_id = (SELECT store_id FROM public.profiles WHERE id = auth.uid()));
 
+DROP POLICY IF EXISTS "Store supervisors and above can edit stock" ON public.inventory;
 CREATE POLICY "Store supervisors and above can edit stock"
     ON public.inventory FOR ALL
     USING (
@@ -291,16 +302,31 @@ CREATE POLICY "Store supervisors and above can edit stock"
     );
 
 -- 4. RECEIPTS / SALES Policies
+DROP POLICY IF EXISTS "Store employees can read/write receipts" ON public.receipts;
 CREATE POLICY "Store employees can read/write receipts"
     ON public.receipts FOR ALL
     USING (store_id = (SELECT store_id FROM public.profiles WHERE id = auth.uid()));
 
--- 5. DEBTORS Policies
+-- 5. RECEIPT ITEMS Policies
+DROP POLICY IF EXISTS "Store employees can manage receipt items" ON public.receipt_items;
+CREATE POLICY "Store employees can manage receipt items"
+    ON public.receipt_items FOR ALL
+    USING (receipt_id IN (SELECT id FROM public.receipts WHERE store_id = (SELECT store_id FROM public.profiles WHERE id = auth.uid())));
+
+-- 6. DEBTORS Policies
+DROP POLICY IF EXISTS "Store employees can manage debtors list" ON public.debtors;
 CREATE POLICY "Store employees can manage debtors list"
     ON public.debtors FOR ALL
     USING (store_id = (SELECT store_id FROM public.profiles WHERE id = auth.uid()));
 
--- 6. TRUTH AUDITS Policies
+-- 7. DEBTOR PAYMENTS Policies
+DROP POLICY IF EXISTS "Store employees can manage debtor payments" ON public.debtor_payments;
+CREATE POLICY "Store employees can manage debtor payments"
+    ON public.debtor_payments FOR ALL
+    USING (debtor_id IN (SELECT id FROM public.debtors WHERE store_id = (SELECT store_id FROM public.profiles WHERE id = auth.uid())));
+
+-- 8. TRUTH AUDITS Policies
+DROP POLICY IF EXISTS "Auditors / Owners can read/write audits" ON public.truth_audits;
 CREATE POLICY "Auditors / Owners can read/write audits"
     ON public.truth_audits FOR ALL
     USING (
@@ -308,7 +334,14 @@ CREATE POLICY "Auditors / Owners can read/write audits"
         AND auth.uid() IN (SELECT id FROM public.profiles WHERE role IN ('Owner', 'Admin', 'Manager', 'Auditor'))
     );
 
--- 7. CHATS Policies
+-- 9. CHATS Policies
+DROP POLICY IF EXISTS "Users can only see their own AI chats" ON public.ai_chats;
 CREATE POLICY "Users can only see their own AI chats"
     ON public.ai_chats FOR ALL
     USING (profile_id = auth.uid());
+
+-- 10. SYSTEM ALERTS Policies
+DROP POLICY IF EXISTS "Store employees can read/write system alerts" ON public.system_alerts;
+CREATE POLICY "Store employees can read/write system alerts"
+    ON public.system_alerts FOR ALL
+    USING (store_id = (SELECT store_id FROM public.profiles WHERE id = auth.uid()));
