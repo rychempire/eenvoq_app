@@ -68,14 +68,14 @@ export default function CustomerRetention({
           <div>
             <div className="flex items-center gap-2">
               <h2 className="text-base sm:text-lg font-bold text-white tracking-tight truncate max-w-[180px] sm:max-w-xs md:max-w-md font-sans">
-                Retention Ledger Engine
+                Retention
               </h2>
               <span className="bg-pink-950/40 text-[#db2777] text-[9px] font-bold px-2 py-0.5 rounded border border-[#db2777]/35 uppercase tracking-widest shrink-0 font-mono">
-                Retention Tracker
+                Plan
               </span>
             </div>
             <p className="text-xs text-zinc-400 font-sans mt-0.5">
-              Automated re-engagement monitors client gaps and compiles personalized recheck incentives.
+              Automated re-engagement monitors client gaps and creates personalized incentives.
             </p>
           </div>
         </div>
