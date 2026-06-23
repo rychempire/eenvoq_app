@@ -5,15 +5,27 @@ const supabaseUrl = (import.meta as any).env.VITE_SUPABASE_URL || 'https://ojpmi
 const supabaseAnonKey = (import.meta as any).env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9qcG1pc3Z2bmloem9yeXRodXZqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIwNTc2OTYsImV4cCI6MjA5NzYzMzY5Nn0.1lLMNnj_c18xN5xeo3yhMFhytdW-wkBd5aQOKV6QD4I';
 
 export const isSupabaseConfigured = 
-  !!supabaseUrl && 
-  supabaseUrl !== 'https://your-project.supabase.co' && 
-  !!supabaseAnonKey && 
-  supabaseAnonKey !== 'your-anon-key' &&
-  supabaseUrl.startsWith('https://');
+  (typeof window !== 'undefined' && localStorage.getItem('eenvoq_force_simulation_db') === 'true')
+    ? false
+    : (!!supabaseUrl && 
+       supabaseUrl !== 'https://your-project.supabase.co' && 
+       !!supabaseAnonKey && 
+       supabaseAnonKey !== 'your-anon-key' &&
+       supabaseUrl.startsWith('https://'));
 
 export const supabase = isSupabaseConfigured 
   ? createClient(supabaseUrl, supabaseAnonKey) 
   : null;
+
+export function getDbMode(): 'live' | 'offline' {
+  if (typeof window === 'undefined') return 'live';
+  return localStorage.getItem('eenvoq_force_simulation_db') === 'true' ? 'offline' : 'live';
+}
+
+export function setDbMode(mode: 'live' | 'offline') {
+  if (typeof window === 'undefined') return;
+  localStorage.setItem('eenvoq_force_simulation_db', mode === 'offline' ? 'true' : 'false');
+}
 
 /**
  * Sync operations helper suite

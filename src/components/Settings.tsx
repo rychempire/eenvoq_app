@@ -275,6 +275,42 @@ export default function Settings({ user, onUpdateUser, showConfirm, currency, on
             </div>
           </div>
 
+          {/* Database Mode Switcher */}
+          <div className="bg-white border border-[#E3E3E3] rounded-[24px] p-6 shadow-sm space-y-4 font-sans select-none">
+            <div className="flex items-center gap-2 border-b border-[#E3E3E3] pb-3">
+              <Store className="w-4.5 h-4.5 text-blue-600 stroke-[1.5]" />
+              <h4 className="font-sans font-bold text-[#1F1F1F] text-xs">Data Ledger Sync Node</h4>
+            </div>
+            
+            <p className="text-[10px] text-[#757575] leading-relaxed font-sans font-medium">
+              Toggle between Supabase Live Sync (Cloud Database connection) or localized Sandbox Engine (simulated local backup storage).
+            </p>
+
+            <div className="flex flex-col gap-2 p-3.5 bg-slate-50 border border-neutral-100 rounded-xl space-y-2">
+              <div>
+                <p className="text-xs font-bold text-slate-800">Database Connection</p>
+                <p className="text-[9px] text-[#757575] font-semibold mt-0.5 font-sans leading-relaxed">
+                  {localStorage.getItem('eenvoq_force_simulation_db') === 'true' ? "Active Ledger: Simulated Local Storage" : "Active Ledger: Live Supabase Cloud SQL Engine"}
+                </p>
+              </div>
+              <button 
+                type="button" 
+                onClick={() => {
+                  const currentMode = localStorage.getItem('eenvoq_force_simulation_db') === 'true';
+                  if (currentMode) {
+                    localStorage.removeItem('eenvoq_force_simulation_db');
+                  } else {
+                    localStorage.setItem('eenvoq_force_simulation_db', 'true');
+                  }
+                  window.location.reload();
+                }} 
+                className="w-full py-2 bg-[#1F1F1F] text-white hover:bg-black rounded-full text-[10px] tracking-wide font-semibold cursor-pointer font-sans shadow-xs transition active:scale-95 text-center block"
+              >
+                {localStorage.getItem('eenvoq_force_simulation_db') === 'true' ? "Switch to Cloud Sync" : "Switch to Local Sandbox"}
+              </button>
+            </div>
+          </div>
+
           {/* Integration triggers */}
           <div className="bg-white border border-black rounded-[24px] p-6 shadow-sm space-y-5 select-none font-sans">
             <div className="flex items-center gap-2 border-b border-[#E3E3E3] pb-3">

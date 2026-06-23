@@ -270,8 +270,15 @@ RETURNS VARCHAR AS $$
 DECLARE
     v_role VARCHAR;
 BEGIN
+    -- Prefer role from JWT metadata if available for maximum speed and safety
+    v_role := auth.jwt()->'user_metadata'->>'role';
+    IF v_role IS NOT NULL THEN
+        RETURN v_role;
+    END IF;
+    
+    -- Fallback to table lookup
     SELECT role INTO v_role FROM public.profiles WHERE id = auth.uid();
-    RETURN v_role;
+    RETURN COALESCE(v_role, 'Staff');
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
 
@@ -286,27 +293,66 @@ ALTER TABLE public.truth_audits ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.ai_chats ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.system_alerts ENABLE ROW LEVEL SECURITY;
 
+-- Explicitly grant permissions to standard Supabase roles
+GRANT ALL ON TABLE public.stores TO anon, authenticated, service_role;
+GRANT ALL ON TABLE public.profiles TO anon, authenticated, service_role;
+GRANT ALL ON TABLE public.inventory TO anon, authenticated, service_role;
+GRANT ALL ON TABLE public.receipts TO anon, authenticated, service_role;
+GRANT ALL ON TABLE public.receipt_items TO anon, authenticated, service_role;
+GRANT ALL ON TABLE public.debtors TO anon, authenticated, service_role;
+GRANT ALL ON TABLE public.debtor_payments TO anon, authenticated, service_role;
+GRANT ALL ON TABLE public.truth_audits TO anon, authenticated, service_role;
+GRANT ALL ON TABLE public.ai_chats TO anon, authenticated, service_role;
+GRANT ALL ON TABLE public.system_alerts TO anon, authenticated, service_role;
+
+GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO anon, authenticated, service_role;
+
 -- 1. STORES Policies
 DROP POLICY IF EXISTS "Users can view stores they belong to" ON public.stores;
-CREATE POLICY "Users can view stores they belong to"
-    ON public.stores FOR SELECT
-    USING (id = public.get_user_store_id() OR owner_id = auth.uid());
-
 DROP POLICY IF EXISTS "Owners can manage stores" ON public.stores;
-CREATE POLICY "Owners can manage stores"
+DROP POLICY IF EXISTS "Enable read access for all users" ON public.stores;
+DROP POLICY IF EXISTS "Enable insert access for all users" ON public.stores;
+DROP POLICY IF EXISTS "Enable update/delete access for owners" ON public.stores;
+
+CREATE POLICY "Enable read access for all users"
+    ON public.stores FOR SELECT
+    USING (true);
+
+CREATE POLICY "Enable insert access for all users"
+    ON public.stores FOR INSERT
+    WITH CHECK (true);
+
+CREATE POLICY "Enable update/delete access for owners"
     ON public.stores FOR ALL
     USING (owner_id = auth.uid());
 
 -- 2. PROFILES Policies
 DROP POLICY IF EXISTS "Users can read profiles from same store" ON public.profiles;
-CREATE POLICY "Users can read profiles from same store"
-    ON public.profiles FOR SELECT
-    USING (store_id = public.get_user_store_id() OR id = auth.uid());
-
 DROP POLICY IF EXISTS "Owners/Admins can manage team profiles" ON public.profiles;
-CREATE POLICY "Owners/Admins can manage team profiles"
+DROP POLICY IF EXISTS "Enable read access for all profiles" ON public.profiles;
+DROP POLICY IF EXISTS "Enable insert access for all profiles" ON public.profiles;
+DROP POLICY IF EXISTS "Enable update access for users to their own profile" ON public.profiles;
+DROP POLICY IF EXISTS "Enable all access for owners/admins" ON public.profiles;
+
+CREATE POLICY "Enable read access for all profiles"
+    ON public.profiles FOR SELECT
+    USING (true);
+
+CREATE POLICY "Enable insert access for all profiles"
+    ON public.profiles FOR INSERT
+    WITH CHECK (true);
+
+CREATE POLICY "Enable update access for users to their own profile"
+    ON public.profiles FOR UPDATE
+    USING (id = auth.uid())
+    WITH CHECK (id = auth.uid());
+
+CREATE POLICY "Enable all access for owners/admins"
     ON public.profiles FOR ALL
-    USING (public.get_user_role() IN ('Owner', 'Admin'));
+    USING (
+        id = auth.uid() 
+        OR COALESCE(auth.jwt()->'user_metadata'->>'role', '') IN ('Owner', 'Admin')
+    );
 
 -- 3. INVENTORY Policies
 DROP POLICY IF EXISTS "Store employees can read inventory" ON public.inventory;
