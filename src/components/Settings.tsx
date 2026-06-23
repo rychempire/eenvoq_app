@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
   ShieldCheck, Store, Key, Phone, CreditCard, Sparkles, Save,
-  ToggleLeft, ToggleRight, ArrowLeft, Clock
+  ToggleLeft, ToggleRight, ArrowLeft, Clock, Info
 } from 'lucide-react';
 import EenvoqIcon from './EenvoqIcon';
 import { UserSession } from '../types';
@@ -73,101 +73,98 @@ export default function Settings({ user, onUpdateUser, showConfirm, currency, on
   };
 
   return (
-    <div className="space-y-6 pb-24 animate-fade-in text-left font-sans select-none text-[#1F1F1F]" id="settings-preferences-view">
+    <div className="space-y-4 pb-12 animate-fade-in text-left font-sans select-none text-zinc-300 w-full" id="settings-preferences-view">
       
-      {/* HEADER SECTION WITH MESH GRADIENT */}
-      <div className="relative overflow-hidden rounded-[32px] p-1 border border-neutral-150/45 bg-white shadow-xs" id="settings-mesh-wrapper">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(14,165,233,0.14)_0%,_rgba(14,165,233,0)_75%)] pointer-events-none" />
-        
-        {/* Main Header greetings block */}
-        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between p-6 gap-4" id="settings-navbar-panel">
-          <div className="text-left">
+      {/* HEADER SECTION - SAME AS HOME DASHBOARD STYLE */}
+      <div className="bg-[#0e0e11] border border-[#27272a] rounded-lg p-4 sm:p-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow-none" id="settings-header-nav">
+        {/* Left Side: Store Identity & QuickBooks logo */}
+        <div className="flex items-center gap-3 text-left">
+          <div className="w-10 h-10 rounded bg-[#db2777] flex items-center justify-center text-white font-bold text-lg shadow-none shrink-0 select-none lowercase font-sans">
+            ev
+          </div>
+          <div>
             <div className="flex items-center gap-2">
-              <button 
-                onClick={() => window.location.hash = 'dashboard'}
-                className="p-1.5 hover:bg-neutral-100 rounded-full transition text-neutral-800 cursor-pointer flex items-center justify-center shrink-0"
-                title="Return to home dashboard"
-              >
-                <ArrowLeft className="w-5 h-5 stroke-[2.5]" />
-              </button>
-              <h1 className="text-xl sm:text-2xl font-sans font-medium text-neutral-900 tracking-tight">
-                Settings
-              </h1>
+              <h2 className="text-base sm:text-lg font-bold text-white tracking-tight truncate max-w-[180px] sm:max-w-xs md:max-w-md font-sans">
+                Company Settings Preferred Preferences
+              </h2>
+              <span className="bg-pink-950/40 text-[#db2777] text-[9px] font-bold px-2 py-0.5 rounded border border-[#db2777]/35 uppercase tracking-widest shrink-0 font-mono">
+                System Active
+              </span>
             </div>
-            <p className="text-sm font-sans font-normal text-neutral-400 mt-1.5 pl-8">
+            <p className="text-xs text-zinc-400 font-sans mt-0.5">
               Manage merchant business profiles, API setups, triggers, and monthly billing permissions.
             </p>
           </div>
+        </div>
 
-          <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap" id="settings-actions-bar">
-            <span className="text-[10px] uppercase font-bold py-2 px-4 bg-sky-50 text-sky-850 border border-sky-150/40 rounded-full flex items-center gap-1 shadow-xs font-sans">
-              System Parameters Active
-            </span>
-          </div>
+        <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap" id="settings-actions-bar">
+          <span className="text-[10px] uppercase font-bold py-1.5 px-3 bg-pink-950/40 text-[#db2777] border border-[#db2777]/35 rounded flex items-center gap-1 font-sans">
+            System Parameters Active
+          </span>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8" id="settings-splitting-grid">
         
         {/* Left Side: forms */}
-        <div className="lg:col-span-2 bg-[#FCFAF7] rounded-[24px] p-6 border border-sky-100 shadow-sm space-y-6 flex flex-col" id="settings-form-panel">
+        <div className="lg:col-span-2 bg-[#0e0e11] rounded-lg p-6 border border-[#27272a] space-y-6 flex flex-col" id="settings-form-panel">
           
-          <div className="flex items-center gap-2 border-b border-sky-100 pb-4 select-none">
-            <Store className="w-5 h-5 text-sky-600 stroke-[1.5]" />
-            <h4 className="font-sans font-bold text-sky-850 text-sm">Merchant Information</h4>
+          <div className="flex items-center gap-2 border-b border-[#27272a] pb-4 select-none">
+            <Store className="w-5 h-5 text-[#db2777] stroke-[1.5]" />
+            <h4 className="font-sans font-bold text-white text-sm">Merchant Information</h4>
           </div>
 
-          <form onSubmit={handleSaveSettingsSubmit} className="space-y-5 text-xs font-semibold text-[#1F1F1F]">
+          <form onSubmit={handleSaveSettingsSubmit} className="space-y-5 text-xs font-semibold text-zinc-200">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block mb-1.5 text-xs text-sky-850 font-sans font-bold">Administrative Owner</label>
+                <label className="block mb-1.5 text-xs text-zinc-400 font-sans font-bold">Administrative Owner</label>
                 <input
                   type="text" required value={name} onChange={e => setName(e.target.value)}
-                  className="w-full bg-white text-[#1F1F1F] border border-sky-150 rounded-full py-2.5 px-4 text-xs focus:outline-none focus:border-sky-500 font-sans font-semibold shadow-sm focus:ring-2 focus:ring-sky-100"
+                  className="w-full bg-[#18181b] text-white border border-[#27272a] rounded-lg py-2.5 px-4 text-xs focus:outline-none focus:border-[#db2777] font-sans font-semibold focus:ring-1 focus:ring-[#db2777]/40"
                 />
               </div>
 
               <div>
-                <label className="block mb-1.5 text-xs text-sky-850 font-sans font-bold">Business Email</label>
+                <label className="block mb-1.5 text-xs text-zinc-400 font-sans font-bold">Business Email</label>
                 <input
                   type="email" required value={email} onChange={e => setEmail(e.target.value)}
-                  className="w-full bg-white text-[#1F1F1F] border border-sky-150 rounded-full py-2.5 px-4 text-xs focus:outline-none focus:border-sky-500 font-sans font-semibold shadow-sm focus:ring-2 focus:ring-sky-100"
+                  className="w-full bg-[#18181b] text-white border border-[#27272a] rounded-lg py-2.5 px-4 text-xs focus:outline-none focus:border-[#db2777] font-sans font-semibold focus:ring-1 focus:ring-[#db2777]/40"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block mb-1.5 text-xs text-sky-850 font-sans font-bold">Business Store Name</label>
+                <label className="block mb-1.5 text-xs text-zinc-400 font-sans font-bold">Business Store Name</label>
                 <input
                   type="text" required value={storeName} onChange={e => setStoreName(e.target.value)}
-                  className="w-full bg-white text-[#1F1F1F] border border-sky-150 rounded-full py-2.5 px-4 text-xs focus:outline-none focus:border-sky-500 font-sans font-semibold shadow-sm focus:ring-2 focus:ring-sky-100"
+                  className="w-full bg-[#18181b] text-white border border-[#27272a] rounded-lg py-2.5 px-4 text-xs focus:outline-none focus:border-[#db2777] font-sans font-semibold focus:ring-1 focus:ring-[#db2777]/40"
                 />
               </div>
 
               <div>
-                <label className="block mb-1.5 text-xs text-sky-850 font-sans font-bold">Role Category</label>
+                <label className="block mb-1.5 text-xs text-zinc-400 font-sans font-bold">Role Category</label>
                 <input
                   type="text" disabled value={user.role}
-                  className="w-full bg-sky-50/25 text-gray-400 border border-sky-100 rounded-full py-2.5 px-4 text-xs select-none cursor-not-allowed font-sans font-bold"
+                  className="w-full bg-[#27272a]/30 text-zinc-500 border border-[#27272a] rounded-lg py-2.5 px-4 text-xs select-none cursor-not-allowed font-sans font-bold"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block mb-1.5 text-xs text-sky-850 font-sans font-bold">Physical Location Address</label>
+              <label className="block mb-1.5 text-xs text-zinc-400 font-sans font-bold">Physical Location Address</label>
               <input
                 type="text" required value={location} onChange={e => setLocation(e.target.value)}
-                className="w-full bg-white text-[#1F1F1F] border border-sky-150 rounded-full py-2.5 px-4 text-xs focus:outline-none focus:border-sky-500 font-sans font-semibold shadow-sm focus:ring-2 focus:ring-sky-100"
+                className="w-full bg-[#18181b] text-white border border-[#27272a] rounded-lg py-2.5 px-4 text-xs focus:outline-none focus:border-[#db2777] font-sans font-semibold focus:ring-1 focus:ring-[#db2777]/40"
               />
             </div>
 
             <div>
-              <label className="block mb-1.5 text-xs text-sky-850 font-sans font-bold">Business Currency Preference</label>
+              <label className="block mb-1.5 text-xs text-zinc-400 font-sans font-bold">Business Currency Preference</label>
               <select
                 value={currency}
                 onChange={e => onChangeCurrency(e.target.value)}
-                className="w-full bg-white text-[#1F1F1F] border border-sky-150 rounded-full py-2.5 px-4 text-xs focus:outline-none focus:border-sky-500 font-sans font-bold shadow-sm focus:ring-2 focus:ring-sky-100 cursor-pointer"
+                className="w-full bg-[#18181b] text-white border border-[#27272a] rounded-lg py-2.5 px-4 text-xs focus:outline-none focus:border-[#db2777] font-sans font-bold cursor-pointer"
               >
                 <option value="USD">USD ($) - Primary Default</option>
                 <option value="NGN">Naira (₦)</option>
@@ -180,7 +177,7 @@ export default function Settings({ user, onUpdateUser, showConfirm, currency, on
 
             <button
               type="submit"
-              className="bg-[#1e40af] hover:bg-[#1a368f] focus:ring-2 focus:ring-[#1e40af]/20 focus:outline-none text-white font-bold py-3.5 px-6 rounded-full transition text-xs font-sans flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+              className="bg-[#db2777] hover:bg-[#c02164] text-white font-bold py-3 px-6 rounded-lg transition text-xs font-sans flex items-center justify-center gap-2 cursor-pointer shadow-none"
             >
               <Save className="w-4 h-4 stroke-[1.5]" />
               Save Configuration
@@ -188,12 +185,12 @@ export default function Settings({ user, onUpdateUser, showConfirm, currency, on
           </form>
 
           {user.role === 'Owner' && (
-            <div className="bg-white rounded-[24px] p-6 border border-slate-150 shadow-xs space-y-4">
-              <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
-                <Clock className="w-5 h-5 text-sky-600 stroke-[1.5]" />
-                <h4 className="font-sans font-normal text-black text-sm">Store Opening & Closing Hours</h4>
+            <div className="bg-[#18181b] rounded-lg p-6 border border-[#27272a] space-y-4">
+              <div className="flex items-center gap-2 border-b border-[#27272a] pb-3">
+                <Clock className="w-5 h-5 text-[#db2777] stroke-[1.5]" />
+                <h4 className="font-sans font-normal text-white text-sm">Store Opening & Closing Hours</h4>
               </div>
-              <p className="text-[11px] text-[#757575] font-sans font-semibold leading-relaxed">
+              <p className="text-[11px] text-zinc-400 font-sans font-semibold leading-relaxed">
                 Set weekly operational schedule to control active sales rundown alerts and day-end performance calculations.
               </p>
               
@@ -201,7 +198,7 @@ export default function Settings({ user, onUpdateUser, showConfirm, currency, on
                 {Object.keys(weeklyHours).map((day) => {
                   const d = day as keyof typeof weeklyHours;
                   return (
-                    <div key={day} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-3 bg-slate-50/50 hover:bg-slate-50 border border-slate-100 rounded-xl transition">
+                    <div key={day} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-3 bg-[#0e0e11] hover:bg-zinc-900 border border-[#27272a] rounded-xl transition">
                       <div className="flex items-center gap-3">
                         <input
                           type="checkbox"
@@ -210,15 +207,15 @@ export default function Settings({ user, onUpdateUser, showConfirm, currency, on
                             ...weeklyHours,
                             [d]: { ...weeklyHours[d], open: e.target.checked }
                           })}
-                          className="w-4 h-4 text-sky-600 border-gray-300 rounded focus:ring-sky-500 cursor-pointer"
+                          className="w-4 h-4 text-[#db2777] border-zinc-700 bg-zinc-800 rounded focus:ring-[#db2777] cursor-pointer"
                         />
-                        <span className="text-xs font-bold text-slate-800 w-24">{day}</span>
+                        <span className="text-xs font-bold text-white w-24">{day}</span>
                       </div>
                       
                       {weeklyHours[d].open ? (
                         <div className="flex items-center gap-2">
                           <div className="flex items-center gap-1">
-                            <span className="text-[10px] text-slate-400 font-bold font-mono">OPEN:</span>
+                            <span className="text-[10px] text-zinc-500 font-bold font-mono">OPEN:</span>
                             <input
                               type="time"
                               value={weeklyHours[d].openTime}
@@ -226,12 +223,12 @@ export default function Settings({ user, onUpdateUser, showConfirm, currency, on
                                 ...weeklyHours,
                                 [d]: { ...weeklyHours[d], openTime: e.target.value }
                               })}
-                              className="bg-white border border-slate-200 px-2 py-1 rounded-lg text-xs font-bold text-slate-700 focus:outline-none focus:ring-1 focus:ring-sky-500 cursor-pointer"
+                              className="bg-[#18181b] border border-[#27272a] text-zinc-300 px-2 py-1 rounded text-xs font-bold focus:outline-none focus:ring-1 focus:ring-[#db2777] cursor-pointer"
                             />
                           </div>
-                          <span className="text-slate-300 text-xs">-</span>
+                          <span className="text-zinc-600 text-xs">-</span>
                           <div className="flex items-center gap-1">
-                            <span className="text-[10px] text-slate-400 font-bold font-mono">CLOSE:</span>
+                            <span className="text-[10px] text-zinc-500 font-bold font-mono">CLOSE:</span>
                             <input
                               type="time"
                               value={weeklyHours[d].closeTime}
@@ -239,12 +236,12 @@ export default function Settings({ user, onUpdateUser, showConfirm, currency, on
                                 ...weeklyHours,
                                 [d]: { ...weeklyHours[d], closeTime: e.target.value }
                               })}
-                              className="bg-white border border-slate-200 px-2 py-1 rounded-lg text-xs font-bold text-slate-700 focus:outline-none focus:ring-1 focus:ring-sky-500 cursor-pointer"
+                              className="bg-[#18181b] border border-[#27272a] text-zinc-300 px-2 py-1 rounded text-xs font-bold focus:outline-none focus:ring-1 focus:ring-[#db2777] cursor-pointer"
                             />
                           </div>
                         </div>
                       ) : (
-                        <span className="text-xs text-rose-500 font-bold uppercase tracking-wider font-mono">Closed &bull; Day Off</span>
+                        <span className="text-xs text-rose-400 font-bold uppercase tracking-wider font-mono">Closed &bull; Day Off</span>
                       )}
                     </div>
                   );
@@ -259,37 +256,37 @@ export default function Settings({ user, onUpdateUser, showConfirm, currency, on
         <div className="space-y-6 flex flex-col justify-start" id="settings-secondary-panel">
           
           {/* Secrets and credentials locked report */}
-          <div className="bg-[#f0f9ff] border border-[#bae6fd] rounded-[24px] p-6 shadow-sm space-y-4 text-[#0284c7]">
-            <div className="flex items-center gap-2 border-b border-[#bae6fd] pb-3 select-none">
-              <Key className="w-4.5 h-4.5 text-[#0284c7] stroke-[1.5]" />
-              <h4 className="font-sans font-bold text-[#0284c7] text-xs">Credentials Node</h4>
+          <div className="bg-pink-950/20 border border-pink-900/30 rounded-lg p-6 shadow-none space-y-4 text-pink-400">
+            <div className="flex items-center gap-2 border-b border-pink-900/20 pb-3 select-none">
+              <Key className="w-4.5 h-4.5 text-[#db2777] stroke-[1.5]" />
+              <h4 className="font-sans font-bold text-[#db2777] text-xs">Credentials Node</h4>
             </div>
 
-            <p className="text-xs text-[#0284c7] leading-relaxed font-sans font-semibold">
+            <p className="text-xs text-zinc-300 leading-relaxed font-sans font-medium">
               Environment keys are encapsulated inside cloud container instances to prevent browser-side leakage events.
             </p>
 
-            <div className="p-3 bg-white rounded-xl border border-[#bae6fd] flex gap-2 items-center text-[10.5px] text-[#0284c7] font-sans font-bold">
-              <ShieldCheck className="w-4 h-4 text-[#0284c7] stroke-[1.5] shrink-0" />
-              <span className="font-mono">GEMINI_API_KEY: Configured Server-Side</span>
+            <div className="p-3 bg-zinc-950/50 rounded-xl border border-pink-900/20 flex gap-2 items-center text-[10.5px] text-[#db2777] font-sans font-bold">
+              <ShieldCheck className="w-4 h-4 text-[#db2777] stroke-[1.5] shrink-0" />
+              <span className="font-mono">GEMINI_API_KEY: Active Server-Side</span>
             </div>
           </div>
 
           {/* Database Mode Switcher */}
-          <div className="bg-white border border-[#E3E3E3] rounded-[24px] p-6 shadow-sm space-y-4 font-sans select-none">
-            <div className="flex items-center gap-2 border-b border-[#E3E3E3] pb-3">
-              <Store className="w-4.5 h-4.5 text-blue-600 stroke-[1.5]" />
-              <h4 className="font-sans font-bold text-[#1F1F1F] text-xs">Data Ledger Sync Node</h4>
+          <div className="bg-[#0e0e11] border border-[#27272a] rounded-lg p-6 shadow-none space-y-4 font-sans select-none">
+            <div className="flex items-center gap-2 border-b border-[#27272a] pb-3">
+              <Store className="w-4.5 h-4.5 text-[#db2777] stroke-[1.5]" />
+              <h4 className="font-sans font-bold text-white text-xs">Data Ledger Sync Node</h4>
             </div>
             
-            <p className="text-[10px] text-[#757575] leading-relaxed font-sans font-medium">
+            <p className="text-[10px] text-zinc-400 leading-relaxed font-sans font-medium">
               Toggle between Supabase Live Sync (Cloud Database connection) or localized Sandbox Engine (simulated local backup storage).
             </p>
 
-            <div className="flex flex-col gap-2 p-3.5 bg-slate-50 border border-neutral-100 rounded-xl space-y-2">
+            <div className="flex flex-col gap-2 p-3.5 bg-[#18181b] border border-[#27272a] rounded-xl space-y-2">
               <div>
-                <p className="text-xs font-bold text-slate-800">Database Connection</p>
-                <p className="text-[9px] text-[#757575] font-semibold mt-0.5 font-sans leading-relaxed">
+                <p className="text-xs font-bold text-white">Database Connection</p>
+                <p className="text-[9px] text-[#db2777] font-semibold mt-0.5 font-sans leading-relaxed">
                   {localStorage.getItem('eenvoq_force_simulation_db') === 'true' ? "Active Ledger: Simulated Local Storage" : "Active Ledger: Live Supabase Cloud SQL Engine"}
                 </p>
               </div>
@@ -304,7 +301,7 @@ export default function Settings({ user, onUpdateUser, showConfirm, currency, on
                   }
                   window.location.reload();
                 }} 
-                className="w-full py-2 bg-[#1F1F1F] text-white hover:bg-black rounded-full text-[10px] tracking-wide font-semibold cursor-pointer font-sans shadow-xs transition active:scale-95 text-center block"
+                className="w-full py-2 bg-[#db2777] text-white hover:bg-[#c02164] rounded-lg text-[10px] tracking-wide font-semibold cursor-pointer font-sans shadow-none transition active:scale-95 text-center block"
               >
                 {localStorage.getItem('eenvoq_force_simulation_db') === 'true' ? "Switch to Cloud Sync" : "Switch to Local Sandbox"}
               </button>
@@ -312,98 +309,98 @@ export default function Settings({ user, onUpdateUser, showConfirm, currency, on
           </div>
 
           {/* Integration triggers */}
-          <div className="bg-white border border-black rounded-[24px] p-6 shadow-sm space-y-5 select-none font-sans">
-            <div className="flex items-center gap-2 border-b border-[#E3E3E3] pb-3">
-              <Phone className="w-4.5 h-4.5 text-[#1F1F1F] stroke-[1.5]" />
-              <h4 className="font-sans font-bold text-[#1F1F1F] text-xs">Simulations & Triggers</h4>
+          <div className="bg-[#0e0e11] border border-[#27272a] rounded-lg p-6 shadow-none space-y-5 select-none font-sans text-zinc-300">
+            <div className="flex items-center gap-2 border-b border-[#27272a] pb-3">
+              <Phone className="w-4.5 h-4.5 text-[#db2777] stroke-[1.5]" />
+              <h4 className="font-sans font-bold text-white text-xs">Simulations & Triggers</h4>
             </div>
 
             {/* WhatsApp Integration Toggle */}
             <div className="flex items-center justify-between text-xs font-sans">
               <div>
-                <p className="font-bold text-[#1F1F1F]">WhatsApp Messages</p>
-                <p className="text-[10px] text-[#757575] mt-1 font-semibold leading-normal">Route verified receipts on checkout</p>
+                <p className="font-bold text-white">WhatsApp Messages</p>
+                <p className="text-[10px] text-zinc-400 mt-1 font-semibold leading-normal">Route verified receipts on checkout</p>
               </div>
               <button type="button" onClick={() => setWaIntegration(!waIntegration)} className="cursor-pointer">
-                {waIntegration ? <ToggleRight className="w-8 h-8 text-[#1F1F1F]" /> : <ToggleLeft className="w-8 h-8 text-gray-300" />}
+                {waIntegration ? <ToggleRight className="w-8 h-8 text-[#db2777]" /> : <ToggleLeft className="w-8 h-8 text-zinc-600" />}
               </button>
             </div>
 
             {/* Debtor Auto locker trigger */}
             <div className="flex items-center justify-between text-xs font-sans">
               <div>
-                <p className="font-bold text-[#1F1F1F]">Auto Credit Lockouts</p>
-                <p className="text-[10px] text-[#757575] mt-1 font-semibold leading-normal">Restrict sales on credit for unpaid customers</p>
+                <p className="font-bold text-white">Auto Credit Lockouts</p>
+                <p className="text-[10px] text-zinc-400 mt-1 font-semibold leading-normal">Restrict sales on credit for unpaid customers</p>
               </div>
               <button type="button" onClick={() => setAutoBillingLock(!autoBillingLock)} className="cursor-pointer">
-                {autoBillingLock ? <ToggleRight className="w-8 h-8 text-[#1F1F1F]" /> : <ToggleLeft className="w-8 h-8 text-gray-300" />}
+                {autoBillingLock ? <ToggleRight className="w-8 h-8 text-[#db2777]" /> : <ToggleLeft className="w-8 h-8 text-zinc-600" />}
               </button>
             </div>
 
             {/* Realtime variance indicator alert */}
             <div className="flex items-center justify-between text-xs font-sans">
               <div>
-                <p className="font-bold text-[#1F1F1F]">Push Notifications</p>
-                <p className="text-[10px] text-[#757575] mt-1 font-semibold leading-normal">Send cash register alert messages to your phone</p>
+                <p className="font-bold text-white">Push Notifications</p>
+                <p className="text-[10px] text-zinc-400 mt-1 font-semibold leading-normal">Send cash register alert messages to your phone</p>
               </div>
               <button type="button" onClick={() => setRealtimeNotify(!realtimeNotify)} className="cursor-pointer">
-                {realtimeNotify ? <ToggleRight className="w-8 h-8 text-[#1F1F1F]" /> : <ToggleLeft className="w-8 h-8 text-gray-300" />}
+                {realtimeNotify ? <ToggleRight className="w-8 h-8 text-[#db2777]" /> : <ToggleLeft className="w-8 h-8 text-zinc-600" />}
               </button>
             </div>
           </div>
 
           {/* Legal & Policies compliance card */}
-          <div className="bg-white border border-[#E3E3E3] rounded-[24px] p-6 shadow-sm space-y-4 font-sans select-none">
-            <div className="flex items-center gap-2 border-b border-[#E3E3E3] pb-3">
-              <ShieldCheck className="w-4.5 h-4.5 text-emerald-600 stroke-[1.5]" />
-              <h4 className="font-sans font-bold text-[#1F1F1F] text-xs">Compliance and Legal</h4>
+          <div className="bg-[#0e0e11] border border-[#27272a] rounded-lg p-6 shadow-none space-y-4 font-sans select-none">
+            <div className="flex items-center gap-2 border-b border-[#27272a] pb-3">
+              <ShieldCheck className="w-4.5 h-4.5 text-pink-500 stroke-[1.5]" />
+              <h4 className="font-sans font-bold text-white text-xs">Compliance and Legal</h4>
             </div>
             
-            <p className="text-[10px] text-[#757575] leading-relaxed font-sans font-medium">
+            <p className="text-[10px] text-zinc-400 leading-relaxed font-sans font-medium">
               Review our officially active compliance schedules, privacy guidelines, and user terms of service.
             </p>
 
-            <div className="flex flex-col gap-2 font-bold text-[#1F1F1F]">
+            <div className="flex flex-col gap-2 font-bold text-white">
               <button 
                 type="button" 
                 onClick={() => setActiveLegalTab('terms')}
-                className="w-full text-left p-3 bg-[#FCFAF7] border border-[#E3E3E3] hover:border-[#1F1F1F] rounded-xl transition text-[11px] font-sans flex items-center justify-between cursor-pointer"
+                className="w-full text-left p-3 bg-[#18181b] border border-[#27272a] hover:border-[#db2777] rounded-xl transition text-[11px] font-sans flex items-center justify-between cursor-pointer"
               >
                 <span>Terms and Conditions</span>
-                <span className="text-[10px] text-gray-400 font-mono">View &rarr;</span>
+                <span className="text-[10px] text-[#db2777] font-mono">View &rarr;</span>
               </button>
               <button 
                 type="button" 
                 onClick={() => setActiveLegalTab('privacy')}
-                className="w-full text-left p-3 bg-[#FCFAF7] border border-[#E3E3E3] hover:border-[#1F1F1F] rounded-xl transition text-[11px] font-sans flex items-center justify-between cursor-pointer"
+                className="w-full text-left p-3 bg-[#18181b] border border-[#27272a] hover:border-[#db2777] rounded-xl transition text-[11px] font-sans flex items-center justify-between cursor-pointer"
               >
                 <span>Privacy Policy</span>
-                <span className="text-[10px] text-gray-400 font-mono">View &rarr;</span>
+                <span className="text-[10px] text-[#db2777] font-mono">View &rarr;</span>
               </button>
               <button 
                 type="button" 
                 onClick={() => setActiveLegalTab('cookie')}
-                className="w-full text-left p-3 bg-[#FCFAF7] border border-[#E3E3E3] hover:border-[#1F1F1F] rounded-xl transition text-[11px] font-sans flex items-center justify-between cursor-pointer"
+                className="w-full text-left p-3 bg-[#18181b] border border-[#27272a] hover:border-[#db2777] rounded-xl transition text-[11px] font-sans flex items-center justify-between cursor-pointer"
               >
                 <span>Cookie Policy</span>
-                <span className="text-[10px] text-gray-400 font-mono">View &rarr;</span>
+                <span className="text-[10px] text-[#db2777] font-mono">View &rarr;</span>
               </button>
             </div>
           </div>
 
           {/* Billing subscription card */}
-          <div className="bg-[#f0f9ff] border border-[#bae6fd] rounded-[24px] p-6 shadow-sm flex flex-col justify-between font-sans relative overflow-hidden text-[#0284c7]">
+          <div className="bg-[#db2777]/10 border border-[#db2777]/30 rounded-lg p-6 shadow-none flex flex-col justify-between font-sans relative overflow-hidden text-[#db2777]">
             
             <div className="space-y-5">
-              <div className="flex justify-between items-center pb-3 border-b border-[#bae6fd] select-none">
-                <span className="text-[9px] font-bold uppercase tracking-wider bg-white border border-[#bae6fd] text-[#0284c7] px-2.5 py-0.5 rounded-full">Pro Tier</span>
-                <EenvoqIcon className="w-4 h-4 text-[#0284c7] stroke-[1.5] animate-pulse" />
+              <div className="flex justify-between items-center pb-3 border-b border-[#db2777]/20 select-none">
+                <span className="text-[9px] font-bold uppercase tracking-wider bg-[#18181b] border border-[#db2777]/35 text-[#db2777] px-2.5 py-0.5 rounded-full">Pro Tier</span>
+                <EenvoqIcon className="w-4 h-4 text-[#db2777] stroke-[1.5] animate-pulse" />
               </div>
 
               <div>
-                <h4 className="font-bold text-[#0284c7] text-[11px] uppercase">Service Tier Status</h4>
-                <p className="text-xl font-bold font-mono mt-1 text-[#0284c7]">{formatCurrency(45000, currency)} <span className="text-xs font-sans font-semibold text-[#0284c7]">/ mo</span></p>
-                <p className="text-[10px] text-[#0284c7] mt-1 font-semibold font-sans">Next automatic bill run: July 1st, 2026</p>
+                <h4 className="font-bold text-[#db2777] text-[11px] uppercase">Service Tier Status</h4>
+                <p className="text-xl font-bold font-mono mt-1 text-white">{formatCurrency(45000, currency)} <span className="text-xs font-sans font-semibold text-zinc-400">/ mo</span></p>
+                <p className="text-[10px] text-zinc-400 mt-1 font-semibold font-sans">Next automatic bill run: July 1st, 2026</p>
               </div>
             </div>
 
@@ -418,7 +415,7 @@ export default function Settings({ user, onUpdateUser, showConfirm, currency, on
                   alert(msg);
                 }
               }}
-              className="mt-5 w-full bg-[#1F1F1F] hover:bg-black text-white font-semibold py-3 rounded-full text-xs font-sans flex items-center justify-center gap-2 transition cursor-pointer"
+              className="mt-5 w-full bg-[#db2777] hover:bg-[#c02164] text-white font-semibold py-3 rounded-lg text-xs font-sans flex items-center justify-center gap-2 transition cursor-pointer"
             >
               <CreditCard className="w-4 h-4 stroke-[1.5]" />
               Manage Billing Card

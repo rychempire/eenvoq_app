@@ -580,126 +580,126 @@ export default function InventoryIntelligence({
   };
 
   return (
-    <div className="space-y-6 pb-20 animate-fade-in text-left font-sans select-none text-neutral-900" id="eenvoq-inventory-intelligence-page">
+    <div className="space-y-4 pb-12 animate-fade-in text-left font-sans select-none text-zinc-300 w-full" id="eenvoq-inventory-intelligence-page">
       
-      {/* HEADER CONTROLS WITH MESH GRADIENT */}
-      <div className="relative overflow-hidden rounded-[32px] p-1 border border-neutral-150/45 bg-white shadow-xs" id="inventory-mesh-wrapper">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(14,165,233,0.14)_0%,_rgba(14,165,233,0)_75%)] pointer-events-none" />
-        
-        {/* Main Header greetings block */}
-        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between p-6 gap-4" id="inventory-navbar-panel">
-          <div className="text-left">
+      {/* HEADER SECTION - SAME AS HOME DASHBOARD STYLE */}
+      <div className="bg-[#0e0e11] border border-[#27272a] rounded-lg p-4 sm:p-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow-none" id="inventory-header-nav">
+        {/* Left Side: Store Identity & QuickBooks logo */}
+        <div className="flex items-center gap-3 text-left">
+          <div className="w-10 h-10 rounded bg-[#db2777] flex items-center justify-center text-white font-bold text-lg shadow-none shrink-0 select-none lowercase font-sans">
+            ev
+          </div>
+          <div>
             <div className="flex items-center gap-2">
-              <button 
-                onClick={() => window.location.hash = 'dashboard'}
-                className="p-1.5 hover:bg-neutral-100 rounded-full transition text-neutral-800 cursor-pointer flex items-center justify-center shrink-0"
-                title="Return to home dashboard"
-              >
-                <ArrowLeft className="w-5 h-5 stroke-[2.5]" />
-              </button>
-              <h1 className="text-xl sm:text-2xl font-sans font-medium text-neutral-900 tracking-tight">
+              <h2 className="text-base sm:text-lg font-bold text-white tracking-tight truncate max-w-[180px] sm:max-w-xs md:max-w-md font-sans">
                 Eenvoq Inventory Control
-              </h1>
+              </h2>
+              <span className="bg-pink-950/40 text-[#db2777] text-[9px] font-bold px-2 py-0.5 rounded border border-[#db2777]/35 uppercase tracking-widest shrink-0 font-mono">
+                Asset Sentry
+              </span>
             </div>
-            <p className="text-sm font-sans font-normal text-neutral-400 mt-1.5 pl-8">
-              Evaluate stock levels, trace history updates, and auto-dispatch supplier procurement.
+            <p className="text-xs text-zinc-400 font-sans mt-0.5">
+              Evaluate real-time stock levels, trace history updates, and auto-dispatch supplier procurement.
             </p>
           </div>
+        </div>
 
-          <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap">
-            {isStockCounting ? (
-              <button
-                type="button"
-                onClick={handleSubmitStockCount}
-                className="bg-emerald-600 hover:bg-emerald-700 text-white transition-all duration-200 px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-95 cursor-pointer flex items-center gap-1.5"
-              >
-                <FileCheck className="w-3.5 h-3.5" />
-                <span>Complete Physical Count</span>
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={handleStartStockCount}
-                className="bg-neutral-900 hover:bg-black text-white transition-all duration-200 px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-95 cursor-pointer flex items-center gap-1.5"
-              >
-                <ClipboardList className="w-3.5 h-3.5" />
-                <span>Start Physical Count</span>
-              </button>
-            )}
-
+        <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap">
+          {isStockCounting ? (
             <button
-              type="button"
-              onClick={() => setShowAddModal(true)}
-              className="bg-[#1e40af] hover:bg-blue-800 text-white transition-all duration-200 px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-95 cursor-pointer flex items-center gap-1.5"
+               type="button"
+               onClick={handleSubmitStockCount}
+               className="bg-[#db2777] hover:bg-[#c02164] text-white transition-all duration-150 px-3 py-1.5 rounded text-xs font-bold uppercase tracking-wider cursor-pointer flex items-center gap-1.5"
             >
-              <Plus className="w-3.5 h-3.5" />
-              <span>Add Product</span>
+              <FileCheck className="w-3.5 h-3.5" />
+              <span>Complete Physical Count</span>
             </button>
-          </div>
+          ) : (
+            <button
+               type="button"
+               onClick={handleStartStockCount}
+               className="bg-[#18181b] hover:bg-zinc-855 border border-[#27272a] text-zinc-300 transition-all duration-150 px-3 py-1.5 rounded text-xs font-bold uppercase tracking-wider cursor-pointer flex items-center gap-1.5"
+            >
+              <ClipboardList className="w-3.5 h-3.5" />
+              <span>Start Physical Count</span>
+            </button>
+          )}
+
+          <button
+            type="button"
+            onClick={() => setShowAddModal(true)}
+            className="bg-[#db2777] hover:bg-[#c02164] text-white transition-all duration-150 px-3 py-1.5 rounded text-xs font-bold uppercase tracking-wider cursor-pointer flex items-center gap-1.5"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            <span>Add Product</span>
+          </button>
         </div>
       </div>
 
       {/* METRIC SUMMARY TAB */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4" id="inventory-snapshot-grid">
-        <div className="bg-white border border-neutral-150 rounded-[22px] p-5">
-          <span className="text-[9px] uppercase font-black text-neutral-400 tracking-wider">Total Products</span>
-          <p className="text-2xl font-black text-neutral-950 leading-none mt-1 font-mono">{totalProductsCount}</p>
-          <span className="text-[10px] text-neutral-400 mt-1 block font-sans font-semibold">Active SKUs cataloged</span>
+        <div className="bg-[#0e0e11] border border-[#27272a] rounded-lg p-4 text-left shadow-none">
+          <span className="text-[9px] uppercase font-bold text-zinc-400 tracking-wider">Total Products</span>
+          <p className="text-xl font-bold text-white leading-none mt-1 font-mono">{totalProductsCount}</p>
+          <span className="text-[10px] text-zinc-500 mt-1 block font-sans">Active SKUs cataloged</span>
         </div>
 
-        <div className="bg-white border border-neutral-150 rounded-[22px] p-5">
-          <span className="text-[9px] uppercase font-black text-neutral-400 tracking-wider">Units in stock</span>
-          <p className="text-2xl font-black text-neutral-950 leading-none mt-1 font-mono">{totalUnitsInStock}</p>
-          <span className="text-[10px] text-emerald-700 font-bold mt-1 block font-sans">Across {categoriesList.length} categories</span>
+        <div className="bg-[#0e0e11] border border-[#27272a] rounded-lg p-4 text-left shadow-none">
+          <span className="text-[9px] uppercase font-bold text-zinc-400 tracking-wider">Units in stock</span>
+          <p className="text-xl font-bold text-white leading-none mt-1 font-mono">{totalUnitsInStock}</p>
+          <span className="text-[10px] text-pink-400 font-semibold mt-1 block font-sans">Across {categoriesList.length} categories</span>
         </div>
 
-        <div className="bg-white border border-neutral-150 rounded-[22px] p-5 relative overflow-hidden">
-          <span className="text-[9px] uppercase font-black text-neutral-400 tracking-wider block">Stock Valuation</span>
-          <p className="text-xl font-black text-neutral-950 mt-1 font-mono leading-none">{formatCurrency(totalRetailValue, currency)}</p>
-          <div className="flex gap-2 text-[8px] text-neutral-450 font-sans mt-2">
+        <div className="bg-[#0e0e11] border border-[#27272a] rounded-lg p-4 text-left relative overflow-hidden shadow-none">
+          <span className="text-[9px] uppercase font-bold text-zinc-400 tracking-wider block">Stock Valuation</span>
+          <p className="text-lg font-bold text-white mt-1 font-mono leading-none">{formatCurrency(totalRetailValue, currency)}</p>
+          <div className="flex gap-2 text-[8px] text-zinc-500 font-sans mt-2">
             <span>Cost: {formatCurrency(totalCostValue, currency)}</span>
             <span>Profit: {formatCurrency(potentialProfit, currency)}</span>
           </div>
         </div>
 
-        <div className="bg-white border border-neutral-150 rounded-[22px] p-5">
-          <span className="text-[9px] uppercase font-black text-neutral-400 tracking-wider">Low Stock Items</span>
-          <p className={`text-2xl font-black leading-none mt-1 font-mono ${lowStockProducts.length > 0 ? 'text-red-650' : 'text-neutral-950'}`}>
+        <div className="bg-[#0e0e11] border border-[#27272a] rounded-lg p-4 text-left shadow-none">
+          <span className="text-[9px] uppercase font-bold text-zinc-400 tracking-wider">Low Stock Items</span>
+          <p className={`text-xl font-bold leading-none mt-1 font-mono ${lowStockProducts.length > 0 ? 'text-rose-550' : 'text-white'}`}>
             {lowStockProducts.length}
           </p>
-          <span className={`text-[10px] font-bold mt-1 block ${lowStockProducts.length > 0 ? 'text-red-500' : 'text-neutral-450'}`}>
+          <span className={`text-[10px] font-semibold mt-1 block ${lowStockProducts.length > 0 ? 'text-rose-455' : 'text-zinc-500'}`}>
             {lowStockProducts.length > 0 ? 'Attention Needed urgently' : 'Optimal safe range'}
           </span>
         </div>
       </div>
 
-      {/* THREE-NAV SECTORS */}
-      <div className="flex border-b border-neutral-200" id="inventory-tab-pills-bar">
+      {/* TABS SELECTOR - RECTANGULAR STANDARD STYLE */}
+      <div className="flex border-b border-[#27272a] pb-1 text-zinc-300 font-sans select-none overflow-x-auto scrollbar-none items-center gap-1.5 animate-fade-in" id="inventory-tab-pills-bar">
         {[
           { key: 'overview', title: 'Overview' },
           { key: 'products', title: 'Products' },
           { key: 'activity', title: 'Activity' },
           { key: 'alerts', title: 'Alerts' }
-        ].map((tab) => (
-          <button
-            key={tab.key}
-            type="button"
-            onClick={() => {
-              setActiveTab(tab.key as any);
-              setSelectedItem(null);
-            }}
-            className={`flex-1 text-center py-3.5 text-xs font-black uppercase tracking-wider relative transition-all border-b-2 cursor-pointer ${
-              activeTab === tab.key 
-                ? 'border-[#1e40af] text-[#1e40af]' 
-                : 'border-transparent text-neutral-400 hover:text-neutral-700'
-            }`}
-          >
-            {tab.title}
-            {tab.key === 'alerts' && lowStockProducts.length > 0 && (
-              <span className="absolute top-2.5 right-4 w-2 h-2 rounded-full bg-red-650" />
-            )}
-          </button>
-        ))}
+        ].map((tab) => {
+          const isActive = activeTab === tab.key;
+          return (
+            <button
+              key={tab.key}
+              type="button"
+              onClick={() => {
+                setActiveTab(tab.key as any);
+                setSelectedItem(null);
+              }}
+              className={`flex items-center gap-1.5 py-1.5 px-3 rounded text-xs font-bold transition-all duration-150 whitespace-nowrap cursor-pointer border ${
+                isActive 
+                  ? 'bg-pink-950/40 text-[#db2777] border-[#db2777]/35' 
+                  : 'bg-[#18181b] text-zinc-400 border-[#27272a] hover:bg-zinc-800/40'
+              }`}
+            >
+              <span>{tab.title}</span>
+              {tab.key === 'alerts' && lowStockProducts.length > 0 && (
+                <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" />
+              )}
+            </button>
+          );
+        })}
       </div>
 
       {/* ACTIVE TAB ELEMENT RENDERS */}

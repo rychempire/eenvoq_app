@@ -473,56 +473,53 @@ export default function DebtorControl({
   };
 
   return (
-    <div className="space-y-6 pb-24 animate-fade-in text-left font-sans select-none text-[#1F1F1F]" id="debtors-advanced-dashboard">
+    <div className="space-y-4 pb-12 animate-fade-in text-left font-sans select-none text-zinc-300 w-full" id="debtors-advanced-dashboard">
       
-      {/* HEADER SECTION WITH MESH GRADIENT */}
-      <div className="relative overflow-hidden rounded-[32px] p-1 border border-neutral-150/45 bg-white shadow-xs" id="debtors-mesh-wrapper">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(14,165,233,0.14)_0%,_rgba(14,165,233,0)_75%)] pointer-events-none" />
-        
-        {/* Main Header greetings block */}
-        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between p-6 gap-4" id="debtors-navbar-panel">
-          <div className="text-left">
+      {/* HEADER SECTION - SAME AS HOME DASHBOARD STYLE */}
+      <div className="bg-[#0e0e11] border border-[#27272a] rounded-lg p-4 sm:p-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow-none" id="debtors-header-nav">
+        {/* Left Side: Store Identity & QuickBooks logo */}
+        <div className="flex items-center gap-3 text-left">
+          <div className="w-10 h-10 rounded bg-[#db2777] flex items-center justify-center text-white font-bold text-lg shadow-none shrink-0 select-none lowercase">
+            ev
+          </div>
+          <div>
             <div className="flex items-center gap-2">
-              <button 
-                onClick={() => window.location.hash = 'dashboard'}
-                className="p-1.5 hover:bg-neutral-100 rounded-full transition text-neutral-800 cursor-pointer flex items-center justify-center shrink-0"
-                title="Return to home dashboard"
-              >
-                <ArrowLeft className="w-5 h-5 stroke-[2.5]" />
-              </button>
-              <h1 className="text-xl sm:text-2xl font-sans font-medium text-neutral-900 tracking-tight">
-                Debtor Control Board
-              </h1>
+              <h2 className="text-base sm:text-lg font-bold text-white tracking-tight truncate max-w-[180px] sm:max-w-xs md:max-w-md font-sans">
+                Debtor Registers Control
+              </h2>
+              <span className="bg-pink-950/40 text-[#db2777] text-[9px] font-bold px-2 py-0.5 rounded border border-[#db2777]/35 uppercase tracking-widest shrink-0 font-mono">
+                Asset Sentry
+              </span>
             </div>
-            <p className="text-sm font-sans font-normal text-neutral-400 mt-1.5 pl-8">
-              Analyze customer credit liabilities, enforce overdue restrictions, schedule custom payment plans, and dispatch targeted notifications.
+            <p className="text-xs text-zinc-400 font-sans mt-0.5">
+              Analyze credit liabilities, enforce overdue restrictions, schedule custom payment plans, and dispatch targeted notifications.
             </p>
           </div>
+        </div>
 
-          <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap" id="debtors-actions-bar">
-            <span className="text-[9px] uppercase font-bold py-1.5 px-3 bg-[#fde8e8] text-[#9b1c1c] border border-red-200 rounded flex items-center gap-1">
-              <AlertCircle className="w-3.5 h-3.5 text-red-650 shrink-0" />
-              <span>Overdue Priority Check Active</span>
-            </span>
-          </div>
+        <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap" id="debtors-actions-bar">
+          <span className="text-[9px] uppercase font-bold py-1.5 px-3 bg-red-950/40 text-rose-400 border border-red-900/40 rounded flex items-center gap-1 font-sans">
+            <AlertCircle className="w-3.5 h-3.5 text-rose-400 shrink-0" />
+            <span>Overdue Priority Check Active</span>
+          </span>
         </div>
       </div>
 
       {/* 2. LIVE SUCCESS NOTIFICATION FEED TOAST */}
       {statusNotification && (
-        <div className="fixed bottom-6 right-6 z-50 p-4 rounded border border-[#2ca01c]/30 bg-[#e9f5e6] text-slate-800 font-sans shadow-md flex items-center gap-3 max-w-sm animate-bounce" id="local-debtor-toast">
-          <div className="p-1.5 bg-[#2ca01c] rounded text-white">
+        <div className="fixed bottom-6 right-6 z-50 p-4 rounded border border-[#db2777]/30 bg-[#0e0e11] text-zinc-200 font-sans shadow-xl flex items-center gap-3 max-w-sm animate-bounce" id="local-debtor-toast">
+          <div className="p-1.5 bg-[#db2777] rounded text-white">
             <Check className="w-4 h-4" />
           </div>
           <div>
-            <strong className="text-xs font-bold block text-[#2ca01c]">Transaction Logged Successfully</strong>
-            <p className="text-[10px] text-slate-600 font-medium">{statusNotification}</p>
+            <strong className="text-xs font-bold block text-[#db2777]">Transaction Logged Successfully</strong>
+            <p className="text-[10px] text-zinc-400 font-medium">{statusNotification}</p>
           </div>
         </div>
       )}
 
       {/* 3. FOUR TABS CONTROL STRIP */}
-      <div className="flex border-b border-[#d4d7dc] pb-1 text-[#393a3d] font-sans select-none overflow-x-auto scrollbar-none items-center gap-1.5" id="debtors-hub-tabs">
+      <div className="flex border-b border-[#27272a] pb-1 text-zinc-300 font-sans select-none overflow-x-auto scrollbar-none items-center gap-1.5" id="debtors-hub-tabs">
         {[
           { tab: 'overview', label: 'Overview Hub', icon: <Activity className="w-3.5 h-3.5" /> },
           { tab: 'debtors', label: 'Debtors Ledger', icon: <User className="w-3.5 h-3.5" /> },
@@ -541,11 +538,11 @@ export default function DebtorControl({
               }}
               className={`flex items-center gap-1.5 py-1.5 px-3 rounded text-xs font-bold transition-all duration-150 whitespace-nowrap cursor-pointer border ${
                 isActive 
-                  ? 'bg-[#e9f5e6] text-[#2ca01c] border-[#2ca01c]/30' 
-                  : 'bg-white text-slate-600 border-[#d4d7dc] hover:bg-[#f4f5f8]'
+                  ? 'bg-pink-950/40 text-[#db2777] border-[#db2777]/35' 
+                  : 'bg-[#18181b] text-zinc-400 border-[#27272a] hover:bg-zinc-800/40'
               }`}
             >
-              <span className={isActive ? 'text-[#2ca01c]' : 'text-neutral-400'}>{t.icon}</span>
+              <span className={isActive ? 'text-[#db2777]' : 'text-zinc-500'}>{t.icon}</span>
               <span>{t.label}</span>
             </button>
           );
@@ -562,46 +559,46 @@ export default function DebtorControl({
             {/* LARGE METRICS BAR */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 select-none">
               
-              <div className="bg-white border border-neutral-200 p-5 rounded-2xl shadow-2xs">
-                <span className="text-[10px] font-black uppercase text-gray-500 font-mono block">Total Outstanding Debt</span>
-                <p className="text-xl md:text-2xl font-bold font-sans text-gray-900 mt-2">
+              <div className="bg-[#0e0e11] border border-[#27272a] p-5 rounded-lg shadow-none">
+                <span className="text-[10px] font-black uppercase text-zinc-400 font-mono block">Total Outstanding Debt</span>
+                <p className="text-xl md:text-2xl font-bold font-sans text-white mt-2">
                   {formatCurrency(debtMetrics.totalOutstanding, currency)}
                 </p>
-                <div className="flex items-center gap-1.5 mt-2.5 text-[10px] text-red-700 font-bold bg-red-50/50 px-2 py-1 rounded-md w-fit">
-                  <AlertCircle className="w-3 h-3 text-red-600 shrink-0" />
+                <div className="flex items-center gap-1.5 mt-2.5 text-[10px] text-rose-400 font-bold bg-rose-950/40 px-2 py-1 rounded w-fit">
+                  <AlertCircle className="w-3 h-3 text-rose-400 shrink-0" />
                   <span>Uncollected retail assets</span>
                 </div>
               </div>
 
-              <div className="bg-white border border-neutral-200 p-5 rounded-2xl shadow-2xs">
-                <span className="text-[10px] font-black uppercase text-gray-500 font-mono block">Active Customer Tabs</span>
-                <p className="text-xl md:text-2xl font-bold font-sans text-gray-900 mt-2">
+              <div className="bg-[#0e0e11] border border-[#27272a] p-5 rounded-lg shadow-none">
+                <span className="text-[10px] font-black uppercase text-zinc-400 font-mono block">Active Customer Tabs</span>
+                <p className="text-xl md:text-2xl font-bold font-sans text-white mt-2">
                   {debtMetrics.activeDebtorsCount} Active
                 </p>
-                <div className="flex items-center gap-1.5 mt-2.5 text-[10px] text-gray-600 font-bold bg-neutral-50 px-2 py-1 rounded-md w-fit">
-                  <User className="w-3 h-3 text-gray-500" />
+                <div className="flex items-center gap-1.5 mt-2.5 text-[10px] text-zinc-300 font-bold bg-zinc-800 px-2 py-1 rounded w-fit">
+                  <User className="w-3 h-3 text-zinc-400" />
                   <span>Authorized users profiles</span>
                 </div>
               </div>
 
-              <div className="bg-white border border-neutral-200 p-5 rounded-2xl shadow-2xs">
-                <span className="text-[10px] font-black uppercase text-gray-500 font-mono block">Overdue Collections</span>
-                <p className="text-xl md:text-2xl font-bold font-sans text-red-700 mt-2">
+              <div className="bg-[#0e0e11] border border-[#27272a] p-5 rounded-lg shadow-none">
+                <span className="text-[10px] font-black uppercase text-zinc-300 font-mono block">Overdue Collections</span>
+                <p className="text-xl md:text-2xl font-bold font-sans text-rose-500 mt-2">
                   {debtMetrics.overdueDebtorsCount} Accounts
                 </p>
-                <div className="flex items-center gap-1.5 mt-2.5 text-[10px] text-red-800 font-bold bg-red-50 px-2 py-1 rounded-md w-fit">
-                  <AlertTriangle className="w-3 h-3 text-red-600 shrink-0" />
+                <div className="flex items-center gap-1.5 mt-2.5 text-[10px] text-rose-400 font-bold bg-rose-950/40 px-2 py-1 rounded w-fit">
+                  <AlertTriangle className="w-3 h-3 text-rose-400 shrink-0" />
                   <span>Immediate alerts required</span>
                 </div>
               </div>
 
-              <div className="bg-white border border-neutral-200 p-5 rounded-2xl shadow-2xs">
-                <span className="text-[10px] font-black uppercase text-gray-500 font-mono block">Scheduled for this Week</span>
-                <p className="text-xl md:text-2xl font-bold font-sans text-[#0284c7] mt-2">
+              <div className="bg-[#0e0e11] border border-[#27272a] p-5 rounded-lg shadow-none">
+                <span className="text-[10px] font-black uppercase text-zinc-400 font-mono block">Scheduled for this Week</span>
+                <p className="text-xl md:text-2xl font-bold font-sans text-[#db2777] mt-2">
                   {formatCurrency(debtMetrics.amountDueThisWeekCount, currency)}
                 </p>
-                <div className="flex items-center gap-1.5 mt-2.5 text-[10px] text-blue-800 font-bold bg-blue-50 px-2 py-1 rounded-md w-fit">
-                  <Calendar className="w-3 h-3 text-blue-600" />
+                <div className="flex items-center gap-1.5 mt-2.5 text-[10px] text-pink-300 font-bold bg-pink-950/40 px-2 py-1 rounded w-fit">
+                  <Calendar className="w-3 h-3 text-[#db2777]" />
                   <span>Cycle projection estimate</span>
                 </div>
               </div>
@@ -609,12 +606,12 @@ export default function DebtorControl({
             </div>
 
             {/* AI DEBTOR ASSISTANT CONSOLE */}
-            <div className="bg-indigo-50/50 border border-indigo-250 p-6 rounded-[24px]" id="ai-debtor-assistant">
-              <div className="flex items-center gap-2 text-indigo-950 select-none">
-                <Sparkles className="w-5 h-5 text-indigo-700 fill-indigo-150" />
+            <div className="bg-[#0e0e11] border border-[#27272a] p-6 rounded-lg" id="ai-debtor-assistant">
+              <div className="flex items-center gap-2 text-white select-none">
+                <Sparkles className="w-5 h-5 text-[#db2777]" />
                 <h3 className="text-sm font-bold font-display">Debtor Forensic AI Consultant</h3>
               </div>
-              <p className="text-[11px] text-indigo-900 mt-0.5 select-none">Instantly audit liabilities. Select prompts below or describe criteria to investigate outstanding profiles.</p>
+              <p className="text-[11px] text-zinc-400 mt-0.5 select-none">Instantly audit liabilities. Select prompts below or describe criteria to investigate outstanding profiles.</p>
 
               <div className="grid grid-cols-1 md:grid-cols-4 gap-2 mt-4 select-none">
                 {[

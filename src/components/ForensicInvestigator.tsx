@@ -59,37 +59,34 @@ export default function ForensicInvestigator({ currency }: ForensicInvestigatorP
   const activeAnomalyData = anomaliesList.find(a => a.id === selectedAnomaly) || anomaliesList[0];
 
   return (
-    <div className="space-y-6 pb-24 animate-fade-in text-left font-sans select-none text-[#1F1F1F]" id="forensic-investigation-workspace">
+    <div className="space-y-4 pb-12 animate-fade-in text-left font-sans select-none text-zinc-300 w-full" id="forensic-investigation-workspace">
       
-      {/* HEADER SECTION WITH MESH GRADIENT */}
-      <div className="relative overflow-hidden rounded-[32px] p-1 border border-neutral-150/45 bg-white shadow-xs" id="forensic-mesh-wrapper">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(14,165,233,0.14)_0%,_rgba(14,165,233,0)_75%)] pointer-events-none" />
-        
-        {/* Main Header greetings block */}
-        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between p-6 gap-4" id="forensic-navbar-panel">
-          <div className="text-left">
+      {/* HEADER SECTION - SAME AS HOME DASHBOARD STYLE */}
+      <div className="bg-[#0e0e11] border border-[#27272a] rounded-lg p-4 sm:p-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow-none" id="forensic-header-nav">
+        {/* Left Side: Store Identity & QuickBooks logo */}
+        <div className="flex items-center gap-3 text-left">
+          <div className="w-10 h-10 rounded bg-[#db2777] flex items-center justify-center text-white font-bold text-lg shadow-none shrink-0 select-none lowercase font-sans">
+            ev
+          </div>
+          <div>
             <div className="flex items-center gap-2">
-              <button 
-                onClick={() => window.location.hash = 'dashboard'}
-                className="p-1.5 hover:bg-neutral-100 rounded-full transition text-neutral-800 cursor-pointer flex items-center justify-center shrink-0"
-                title="Return to home dashboard"
-              >
-                <ArrowLeft className="w-5 h-5 stroke-[2.5]" />
-              </button>
-              <h1 className="text-xl sm:text-2xl font-sans font-medium text-neutral-900 tracking-tight">
-                Forensic Investigator
-              </h1>
+              <h2 className="text-base sm:text-lg font-bold text-white tracking-tight truncate max-w-[180px] sm:max-w-xs md:max-w-md font-sans">
+                Forensic Audit Desk
+              </h2>
+              <span className="bg-pink-950/40 text-[#db2777] text-[9px] font-bold px-2 py-0.5 rounded border border-[#db2777]/35 uppercase tracking-widest shrink-0 font-mono">
+                Audit Sentry
+              </span>
             </div>
-            <p className="text-sm font-sans font-normal text-neutral-400 mt-1.5 pl-8">
+            <p className="text-xs text-zinc-400 font-sans mt-0.5">
               Automatically tracks register voids, unlogged deletions, and suspicious transactions in real time.
             </p>
           </div>
+        </div>
 
-          <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap" id="forensic-actions-bar">
-            <span className="text-[10px] uppercase font-bold py-2 px-4 bg-purple-50 text-purple-750 border border-purple-200/50 rounded-full flex items-center gap-1 shadow-xs font-sans">
-              Real-time Scan Active
-            </span>
-          </div>
+        <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap" id="forensic-actions-bar">
+          <span className="text-[10px] uppercase font-bold py-1.5 px-3 bg-pink-950/45 text-[#db2777] border border-[#db2777]/30 rounded flex items-center gap-1 font-sans">
+            Real-time Scan Active
+          </span>
         </div>
       </div>
 
@@ -99,31 +96,31 @@ export default function ForensicInvestigator({ currency }: ForensicInvestigatorP
         <div className="lg:col-span-2 space-y-8" id="forensic-history-panel">
           
           {/* Shift Telemetry Hourly block */}
-          <div className="bg-white rounded-[24px] border border-[#E3E3E3] p-6 shadow-sm space-y-5" id="hourly-shift-telemetry">
+          <div className="bg-[#0e0e11] rounded-lg border border-[#27272a] p-6 shadow-none space-y-5" id="hourly-shift-telemetry">
             <div className="flex items-center gap-2 select-none">
-              <Thermometer className="w-4.5 h-4.5 text-[#5F6368]" />
-              <h3 className="font-sans font-semibold text-[#1F1F1F] text-xs">Shift Heatmap (June 13th Activity)</h3>
+              <Thermometer className="w-4.5 h-4.5 text-zinc-400" />
+              <h3 className="font-sans font-semibold text-white text-xs">Shift Heatmap (June 13th Activity)</h3>
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-4 select-none">
               {shiftHours.map((sh, idx) => (
                 <div 
                   key={idx}
-                  className={`p-3.5 rounded-2xl border text-center transition-all ${
-                    sh.risk === 'critical' ? 'bg-red-50 border-red-200 text-red-700' :
-                    sh.risk === 'medium' ? 'bg-amber-50/50 border-amber-200/50 text-amber-700' :
-                    'bg-[#f0f9ff] border-[#bae6fd] text-[#0284c7]'
+                  className={`p-3.5 rounded-lg border text-center transition-all ${
+                    sh.risk === 'critical' ? 'bg-red-950/30 border-red-900/40 text-rose-300' :
+                    sh.risk === 'medium' ? 'bg-amber-950/20 border-amber-900/30 text-amber-300' :
+                    'bg-[#18181b] border-[#27272a] text-zinc-300'
                   }`}
                 >
                   <p className="text-[9px] font-mono font-semibold opacity-70 flex items-center justify-center gap-1">
-                    <Clock className="w-3 h-3 text-[#5F6368] stroke-[1.5]" />
+                    <Clock className="w-3 h-3 text-zinc-500 stroke-[1.5]" />
                     {sh.hour.split(' ')[0]}
                   </p>
                   <p className="text-xs font-semibold font-mono my-2">{formatCurrency(sh.salesAmount, currency)}</p>
-                  <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded-full ${
-                    sh.risk === 'critical' ? 'bg-red-200 text-red-800' :
-                    sh.risk === 'medium' ? 'bg-amber-100 text-amber-800' :
-                    'bg-white text-[#0284c7]'
+                  <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded-sm ${
+                    sh.risk === 'critical' ? 'bg-red-900/55 text-red-200' :
+                    sh.risk === 'medium' ? 'bg-amber-900/55 text-amber-200' :
+                    'bg-zinc-800 text-zinc-300'
                   } uppercase font-sans`}>
                     {sh.status.split(' ')[0]}
                   </span>
@@ -134,45 +131,45 @@ export default function ForensicInvestigator({ currency }: ForensicInvestigatorP
           </div>
 
           {/* Anomalies Chronicles */}
-          <div className="bg-white/70 backdrop-blur rounded-[24px] border border-[#E3E3E3] shadow-sm overflow-hidden" id="forensic-logs-panel">
-            <div className="p-5 border-b border-[#E3E3E3] bg-transparent select-none">
-              <h3 className="font-sans font-semibold text-[#1F1F1F] text-sm flex items-center gap-2">
-                <ShieldAlert className="w-5 h-5 text-[#5F6368] stroke-[1.5]" />
+          <div className="bg-[#0e0e11] rounded-lg border border-[#27272a] shadow-none overflow-hidden" id="forensic-logs-panel">
+            <div className="p-5 border-b border-[#27272a] bg-transparent select-none">
+              <h3 className="font-sans font-semibold text-white text-sm flex items-center gap-2">
+                <ShieldAlert className="w-5 h-5 text-[#db2777] stroke-[1.5]" />
                 Recent Flagged Sales Issues
               </h3>
             </div>
 
-            <div className="divide-y divide-[#E3E3E3]" id="anomalies-scrolling-items">
+            <div className="divide-y divide-[#27272a]" id="anomalies-scrolling-items">
               {anomaliesList.map((anomaly) => (
                 <div
                   key={anomaly.id}
                   onClick={() => setSelectedAnomaly(anomaly.id)}
-                  className={`p-5 flex items-center justify-between hover:bg-[#FCFAF7]/70 transition border-l-4 cursor-pointer ${
+                  className={`p-5 flex items-center justify-between hover:bg-zinc-800/40 transition border-l-4 cursor-pointer ${
                     selectedAnomaly === anomaly.id 
-                      ? 'bg-[#f0f9ff]/70 border-[#0284c7]' 
+                      ? 'bg-pink-950/20 border-[#db2777]' 
                       : 'border-transparent'
                   }`}
                 >
                   <div className="min-w-0 pr-4">
                     <div className="flex items-center gap-2 mb-1.5">
-                      <span className="font-mono text-xs font-semibold text-[#1F1F1F]">{anomaly.id}</span>
-                      <span className={`text-[9px] font-semibold px-2 py-0.5 rounded-full border uppercase ${
-                        anomaly.riskLevel === 'Critical' ? 'bg-red-50 text-red-700 border-red-200' :
-                        anomaly.riskLevel === 'High' ? 'bg-amber-50 text-amber-700 border-amber-200' :
-                        'bg-gray-100 text-[#1F1F1F] border-[#E3E3E3]'
+                      <span className="font-mono text-xs font-semibold text-white">{anomaly.id}</span>
+                      <span className={`text-[9px] font-semibold px-2 py-0.5 rounded-sm border uppercase ${
+                        anomaly.riskLevel === 'Critical' ? 'bg-red-950/50 text-rose-300 border-red-900/40' :
+                        anomaly.riskLevel === 'High' ? 'bg-amber-950/50 text-amber-300 border-amber-900/30' :
+                        'bg-zinc-800 text-zinc-300 border-[#27272a]'
                       }`}>
                         {anomaly.riskLevel}
                       </span>
                     </div>
-                    <p className="font-semibold text-[#1F1F1F] text-xs mb-1 font-sans">{anomaly.title}</p>
-                    <p className="text-[10px] text-[#757575] font-mono">Logged: {anomaly.time}</p>
+                    <p className="font-semibold text-white text-xs mb-1 font-sans">{anomaly.title}</p>
+                    <p className="text-[10px] text-zinc-500 font-mono">Logged: {anomaly.time}</p>
                   </div>
 
                   <div className="text-right shrink-0">
-                    <span className="text-xs font-mono font-semibold text-red-600 bg-red-50 border border-red-100 px-2 shadow-none py-0.5 rounded-full block">
+                    <span className="text-xs font-mono font-semibold text-rose-400 bg-rose-950/40 border border-[#db2777]/30 px-2 shadow-none py-0.5 rounded-full block">
                       {formatCurrency(anomaly.impactAmount, currency)}
                     </span>
-                    <span className="text-[10px] text-[#757575] font-mono mt-1.5 block">Confidence: {anomaly.score}%</span>
+                    <span className="text-[10px] text-zinc-500 font-mono mt-1.5 block">Confidence: {anomaly.score}%</span>
                   </div>
                 </div>
               ))}
@@ -182,55 +179,55 @@ export default function ForensicInvestigator({ currency }: ForensicInvestigatorP
         </div>
 
         {/* Right Column: AI Explanations & Deep Diagnostics */}
-        <div className="bg-white border border-black rounded-[24px] p-6 self-start space-y-6 flex flex-col pt-6 shadow-sm" id="forensic-deep-diagnose">
+        <div className="bg-[#0e0e11] border border-[#27272a] rounded-lg p-6 self-start space-y-6 flex flex-col pt-6 shadow-none" id="forensic-deep-diagnose">
           
-          <div className="border-b border-[#E3E3E3] pb-4 select-none">
-            <span className="text-[10px] text-[#757575] font-mono block uppercase">What Happened Here?</span>
-            <h3 className="font-sans font-semibold text-[#1F1F1F] text-sm mt-1">{activeAnomalyData.title}</h3>
+          <div className="border-b border-[#27272a] pb-4 select-none">
+            <span className="text-[10px] text-zinc-500 font-mono block uppercase">What Happened Here?</span>
+            <h3 className="font-sans font-semibold text-white text-sm mt-1">{activeAnomalyData.title}</h3>
           </div>
 
           <div className="space-y-5" id="case-study-details-content">
             <div className="grid grid-cols-2 gap-4 font-sans select-none" id="case-study-metric-pair">
-              <div className="bg-[#FCFAF7] border border-[#E3E3E3] p-4 rounded-xl">
-                <span className="text-[10px] font-semibold text-[#5F6368] uppercase font-sans">Confidence Level</span>
-                <p className="text-base font-mono font-bold text-[#1F1F1F] mt-1">{activeAnomalyData.score}%</p>
+              <div className="bg-[#18181b] border border-[#27272a] p-4 rounded-lg">
+                <span className="text-[10px] font-semibold text-zinc-400 uppercase font-sans">Confidence Level</span>
+                <p className="text-base font-mono font-bold text-white mt-1">{activeAnomalyData.score}%</p>
               </div>
-              <div className="bg-[#FCFAF7] border border-[#E3E3E3] p-4 rounded-xl">
-                <span className="text-[10px] font-semibold text-[#5F6368] uppercase font-sans">Money Lost</span>
-                <p className="text-base font-mono font-bold text-red-600 mt-1">{formatCurrency(activeAnomalyData.impactAmount, currency)}</p>
+              <div className="bg-[#18181b] border border-[#27272a] p-4 rounded-lg">
+                <span className="text-[10px] font-semibold text-zinc-400 uppercase font-sans">Money Lost</span>
+                <p className="text-base font-mono font-bold text-rose-500 mt-1">{formatCurrency(activeAnomalyData.impactAmount, currency)}</p>
               </div>
             </div>
 
             {/* Diagnostic Narrative Description */}
             <div className="space-y-1.5 font-sans">
-              <span className="text-[9px] font-semibold text-[#757575] uppercase tracking-wider block">Security Flag details:</span>
-              <p className="text-xs text-[#1F1F1F] leading-relaxed bg-[#FCFAF7] border border-[#E3E3E3] p-4 rounded-xl font-semibold">
+              <span className="text-[9px] font-semibold text-zinc-500 uppercase tracking-wider block">Security Flag details:</span>
+              <p className="text-xs text-zinc-300 leading-relaxed bg-[#18181b] border border-[#27272a] p-4 rounded-lg font-semibold">
                 {activeAnomalyData.description}
               </p>
             </div>
 
             {/* AI Automated Forensic Explanation */}
-            <div className="bg-[#f0f9ff] border border-[#bae6fd] p-5 rounded-[24px] space-y-3">
+            <div className="bg-pink-950/20 border border-[#db2777]/30 p-5 rounded-lg space-y-3">
               <div className="flex items-center gap-2">
-                <div className="w-6 h-6 rounded-full bg-[#0284c7] flex items-center justify-center shrink-0">
-                  <EenvoqIcon className="w-3.5 h-3.5 text-white stroke-[1.5]" />
+                <div className="w-6 h-6 rounded bg-[#db2777] flex items-center justify-center shrink-0">
+                  <span className="text-xs font-bold text-white">AI</span>
                 </div>
-                <span className="text-xs font-bold text-[#0284c7] font-sans">AI Summary</span>
+                <span className="text-xs font-bold text-pink-400 font-sans">AI Summary</span>
               </div>
-              <p className="text-[11.5px] text-[#0284c7] leading-relaxed font-sans font-semibold">
+              <p className="text-[11.5px] text-zinc-300 leading-relaxed font-sans font-semibold">
                 {activeAnomalyData.explanation}
               </p>
             </div>
 
             {/* Teller Performance Scorecard */}
             <div className="space-y-2.5 font-sans" id="teller-performance-flag">
-              <span className="text-[9px] font-semibold text-[#757575] uppercase tracking-wider block">Assigned Staff</span>
-              <div className="flex items-center justify-between p-3 bg-white border border-[#E3E3E3] rounded-full text-xs">
+              <span className="text-[9px] font-semibold text-zinc-500 uppercase tracking-wider block">Assigned Staff</span>
+              <div className="flex items-center justify-between p-3 bg-[#18181b] border border-[#27272a] rounded-lg text-xs">
                 <div className="flex items-center gap-2 pl-1">
-                  <UserCheck className="w-4 h-4 text-[#5F6368] stroke-[1.5]" />
-                  <span className="font-semibold text-[#1F1F1F]">Okafor, T-1</span>
+                  <UserCheck className="w-4 h-4 text-zinc-400 stroke-[1.5]" />
+                  <span className="font-semibold text-white">Okafor, T-1</span>
                 </div>
-                <span className="bg-red-50 text-red-700 font-semibold px-3 py-1 rounded-full text-[10px] font-mono border border-red-100 uppercase">
+                <span className="bg-pink-950/40 text-[#db2777] font-semibold px-3 py-1 rounded border border-[#db2777]/30 text-[10px] font-mono uppercase">
                   Flagged Shift
                 </span>
               </div>

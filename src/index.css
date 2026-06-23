@@ -67,13 +67,13 @@
 
 /* CSS transition resets for modern pages */
 html, body {
-  background-color: #FCFAF7;
-  color: #1F1F1F;
+  background-color: #000000;
+  color: #f4f4f5;
   font-family: var(--font-sans);
   overflow-x: hidden;
 }
 
 /* Ambient glow accent behind the central workspace with very light undertones */
 .gemini-ambient-gradient {
-  background: radial-gradient(circle at 50% -20%, rgba(240, 244, 249, 0.45) 0%, rgba(255, 255, 255, 0) 70%);
+  background: radial-gradient(circle at 50% -20%, rgba(219, 39, 119, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
 }

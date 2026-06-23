@@ -817,7 +817,7 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
   };
 
   return (
-    <div className="flex h-screen bg-[#f4f5f8]" id="application-container-root animate-fade-in">
+    <div className="flex h-screen bg-black text-zinc-100 font-sans" id="application-container-root animate-fade-in">
       
       {/* Sidebar for Desktop */}
       <div className="hidden md:flex shrink-0">
@@ -831,27 +831,27 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
       </div>
 
       {/* Main body canvas */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden bg-black">
         
         {/* Desktop Header for QuickBooks Aesthetic */}
-        <header className="hidden md:flex h-12 items-center justify-between px-6 bg-[#ffffff] border-b border-[#d4d7dc] select-none shrink-0" id="desktop-navigation-header">
-          <h1 className="text-xs font-bold text-gray-900 font-sans flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-[#2ca01c] animate-pulse" />
+        <header className="hidden md:flex h-12 items-center justify-between px-4 bg-[#0a0a0c] border-b border-[#27272a] select-none shrink-0" id="desktop-navigation-header">
+          <h1 className="text-xs font-bold text-zinc-200 font-sans flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-[#db2777] animate-pulse" />
             {userSession.storeName}
-            <span className="text-[10px] bg-[#e9f5e6] text-[#2ca01c] border border-[#2ca01c]/20 px-1.5 py-0.2 rounded uppercase font-bold tracking-wider scale-95 font-sans">
+            <span className="text-[10px] bg-pink-950/40 text-[#db2777] border border-[#db2777]/20 px-1.5 py-0.2 rounded uppercase font-bold tracking-wider scale-95 font-sans">
               Live Register
             </span>
           </h1>
           <div className="flex items-center gap-4">
-            <span className="text-[9px] text-[#2ca01c] font-bold tracking-wider font-sans">SENTRY ALARMS ACTIVE</span>
-            <div className="w-7 h-7 rounded bg-[#1e2a38] text-white flex items-center justify-center text-[10px] font-bold">
+            <span className="text-[9px] text-[#db2777] font-bold tracking-wider font-sans">SENTRY ALARMS ACTIVE</span>
+            <div className="w-7 h-7 rounded bg-zinc-800 text-white flex items-center justify-center text-[10px] font-bold">
               {userSession.name.split(' ').map((n: string) => n[0]).join('')}
             </div>
           </div>
         </header>
 
          {/* Mobile Header Bar */}
-        <header className="h-16 bg-[#ffffff] border-b border-[#d4d7dc] px-4 flex items-center justify-between md:hidden select-none shrink-0" id="mobile-navigation-header">
+        <header className="h-16 bg-[#0a0a0c] border-b border-[#27272a] px-4 flex items-center justify-between md:hidden select-none shrink-0" id="mobile-navigation-header">
 <div className="flex items-center gap-1 cursor-pointer" onClick={() => {
   setActiveSection('dashboard');
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -860,18 +860,16 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
     panel.scrollTo({ top: 0, behavior: 'smooth' });
   }
 }}>
-  {/* Logo Image */}
-  <img 
-    src="https://res.cloudinary.com/dee01jm0p/image/upload/e_bgremoval/f_auto,q_auto/1001135527_ij6c4q" 
-    alt="Eenvoq logo" 
-    className="h-7 w-auto object-contain select-none translate-y-0.5 [filter:drop-shadow(1px_0_0_#000)_drop-shadow(-1px_0_0_#000)_drop-shadow(0_1px_0_0_#000)_drop-shadow(0_-1px_0_0_#000)]" 
-  />
+  {/* Logo Image swapped for ev css logo */}
+  <div className="w-8 h-8 rounded bg-[#db2777] flex items-center justify-center font-bold text-white text-sm lowercase select-none">
+    ev
+  </div>
 </div>
 
           <div className="flex items-center gap-2">
             <button 
               onClick={() => setActiveSection('notifications')}
-              className="p-1.5 hover:bg-gray-50 text-gray-500 rounded-lg relative cursor-pointer"
+              className="p-1.5 hover:bg-zinc-800 text-zinc-400 rounded-lg relative cursor-pointer"
             >
               <BellRing className="w-4.5 h-4.5 stroke-[1.5]" />
               {alerts.filter(a => !a.read).length > 0 && (
@@ -880,7 +878,7 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
             </button>
             <button 
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-1.5 hover:bg-gray-50 text-gray-500 rounded-lg cursor-pointer"
+              className="p-1.5 hover:bg-zinc-800 text-zinc-400 rounded-lg cursor-pointer"
             >
               {mobileMenuOpen ? <X className="w-5 h-5 stroke-[1.5]" /> : <Menu className="w-5 h-5 stroke-[1.5]" />}
             </button>
@@ -891,10 +889,10 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
         {mobileMenuOpen && createPortal(
           <div className="fixed inset-0 z-[9999]" id="mobile-sidebar-backdrop">
             <div 
-              className="fixed inset-0 bg-gray-950/40 backdrop-blur-xs transition-opacity" 
+              className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity" 
               onClick={() => setMobileMenuOpen(false)}
             />
-            <div className="fixed top-0 bottom-0 left-0 bg-white w-72 border-r border-gray-100 flex flex-col shadow-2xl">
+            <div className="fixed top-0 bottom-0 left-0 bg-[#0a0a0c] w-72 border-r border-[#27272a] flex flex-col shadow-2xl">
               <Sidebar 
                 activeSection={activeSection} 
                 setActiveSection={(sec) => {
@@ -914,14 +912,14 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
         )}
 
         {/* Dynamic Workspace Container scrolling segment */}
-        <main className="flex-1 overflow-y-auto p-4 md:p-8 relative pb-28 md:pb-8" id="workspace-main-panel">
+        <main className="flex-1 overflow-y-auto p-3 md:p-4 relative pb-24 md:pb-4" id="workspace-main-panel">
           <div className="max-w-7xl mx-auto" id="centralized-viewport-width-bounds">
             {renderWorkspaceMainBody()}
           </div>
         </main>
 
-        {/* Global Mobile Bottom Navigation Bar: Screen-wide, Flush base, QuickBooks green active styling */}
-        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-[#d4d7dc] pb-5 pt-3 select-none md:hidden z-45" id="global-mobile-bottom-nav">
+        {/* Global Mobile Bottom Navigation Bar: Screen-wide, Flush base, QuickBooks pink active styling */}
+        <div className="fixed bottom-0 left-0 right-0 bg-[#0a0a0c] border-t border-[#27272a] pb-5 pt-3 select-none md:hidden z-45" id="global-mobile-bottom-nav">
           <div className="max-w-7xl mx-auto px-4 flex items-center justify-around">
             
             <button 
@@ -931,7 +929,7 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
               className={`flex flex-col items-center gap-1 bg-transparent border-0 cursor-pointer transition ${
-                activeSection === 'dashboard' ? 'text-[#2ca01c] font-semibold' : 'text-slate-500 hover:text-slate-800 font-medium'
+                activeSection === 'dashboard' ? 'text-[#db2777] font-semibold' : 'text-zinc-500 hover:text-zinc-300 font-medium'
               }`}
             >
               <Activity className="w-5 h-5 stroke-[2]" />
@@ -941,8 +939,8 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
             <button 
               type="button" 
               onClick={() => setActiveSection('receipts')}
-              className={`flex flex-col items-center gap-1 bg-transparent border-0 cursor-pointer transition ${
-                activeSection === 'receipts' ? 'text-[#2ca01c] font-semibold' : 'text-slate-500 hover:text-slate-800 font-medium'
+              className={`flex flex-col items-center gap-1 bg-[#0a0a0c] border-0 cursor-pointer transition ${
+                activeSection === 'receipts' ? 'text-[#db2777] font-semibold' : 'text-zinc-500 hover:text-zinc-300 font-medium'
               }`}
             >
               <CircleDollarSign className="w-5 h-5 stroke-[2]" />
@@ -952,8 +950,8 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
             <button 
               type="button" 
               onClick={() => setActiveSection('inventory')}
-              className={`flex flex-col items-center gap-1 bg-transparent border-0 cursor-pointer transition ${
-                activeSection === 'inventory' ? 'text-[#2ca01c] font-semibold' : 'text-slate-500 hover:text-slate-800 font-medium'
+              className={`flex flex-col items-center gap-1 bg-[#0a0a0c] border-0 cursor-pointer transition ${
+                activeSection === 'inventory' ? 'text-[#db2777] font-semibold' : 'text-zinc-500 hover:text-zinc-300 font-medium'
               }`}
             >
               <ShoppingCart className="w-5 h-5 stroke-[2]" />
@@ -965,7 +963,7 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
               onClick={() => {
                 setIsChatOpen(true);
               }}
-              className="flex flex-col items-center gap-1 bg-transparent border-0 cursor-pointer text-slate-500 hover:text-slate-800 font-medium transition"
+              className="flex flex-col items-center gap-1 bg-[#0a0a0c] border-0 cursor-pointer text-zinc-500 hover:text-zinc-300 font-medium transition"
             >
               <Bot className="w-5 h-5 stroke-[2]" />
               <span className="text-[9px] tracking-tight leading-none uppercase font-sans">Analysis</span>
@@ -974,7 +972,7 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
             <button 
               type="button" 
               onClick={() => setMobileMenuOpen(true)}
-              className="flex flex-col items-center gap-1.5 bg-transparent border-0 cursor-pointer text-slate-400 hover:text-slate-600 font-medium transition"
+              className="flex flex-col items-center gap-1.5 bg-[#0a0a0c] border-0 cursor-pointer text-zinc-500 hover:text-zinc-300 font-medium transition"
             >
               <Menu className="w-5 h-5 stroke-[1.5]" />
               <span className="text-[10px] tracking-tight leading-none uppercase">More</span>
@@ -989,12 +987,12 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
         <button
           type="button"
           onClick={() => setIsChatOpen(!isChatOpen)}
-          className="fixed right-4 bottom-20 md:bottom-6 z-40 bg-[#2ca01c] hover:bg-[#207a14] text-white p-3.5 rounded-full shadow-lg flex items-center justify-center cursor-pointer transition-transform duration-150 active:scale-95 group"
+          className="fixed right-4 bottom-20 md:bottom-6 z-40 bg-[#db2777] hover:bg-[#be185d] text-white p-3.5 rounded-full shadow-lg flex items-center justify-center cursor-pointer transition-transform duration-150 active:scale-95 group"
           title="Ollama AI Sentry Advisor"
           id="floating-sentry-chat-trigger"
         >
           <Bot className="w-5 h-5 animate-pulse-once group-hover:scale-110 transition-transform" />
-          <span className="absolute right-14 bg-[#1e2a38] text-white text-[10px] py-1 px-2.5 rounded font-bold uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-all duration-150 shadow-md whitespace-nowrap pointer-events-none">
+          <span className="absolute right-14 bg-zinc-900 text-white text-[10px] py-1 px-2.5 rounded border border-[#27272a] font-bold uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-all duration-150 shadow-md whitespace-nowrap pointer-events-none">
             AI Assistant
           </span>
         </button>
@@ -1003,7 +1001,7 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
       {/* Floating AI Assistant Popup Dialog */}
       {userSession && isChatOpen && (
         <div 
-          className="fixed inset-0 sm:inset-auto sm:right-4 sm:bottom-20 md:bottom-22 w-full h-full sm:w-[420px] sm:h-[600px] bg-white sm:rounded-lg border border-[#d4d7dc] shadow-2xl z-50 flex flex-col overflow-hidden animate-fade-in animate-slide-up"
+          className="fixed inset-0 sm:inset-auto sm:right-4 sm:bottom-20 md:bottom-22 w-full h-full sm:w-[420px] sm:h-[600px] bg-[#0e0e11] sm:rounded-lg border border-[#27272a] shadow-2xl z-50 flex flex-col overflow-hidden animate-fade-in animate-slide-up"
           id="floating-ai-assistant-popup"
         >
           <AIAssistant 

@@ -801,15 +801,15 @@ Hello! I am your sales and stock advisor. I am online and ready to help you anal
   }, [historySearch, historyFilter]);
 
   return (
-    <div className="flex flex-col h-full w-full bg-[#FCFAF7] rounded border border-[#d4d7dc] shadow-none overflow-hidden" id="ai-intelligence-canvas">
+    <div className="flex flex-col h-full w-full bg-[#0e0e11] rounded-lg border border-[#27272a] shadow-none overflow-hidden" id="ai-intelligence-canvas">
       
       {/* OPERATIONS HEADER WITH MESH GRADIENT */}
-      <div className="relative overflow-hidden border-b border-[#d4d7dc] bg-[#f4f5f8] select-none shrink-0" id="ai-top-navigation">
+      <div className="relative overflow-hidden border-b border-[#27272a] bg-[#18181b] select-none shrink-0" id="ai-top-navigation">
         <div className="relative z-10 h-12 px-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <button 
               onClick={onClose || (() => window.location.hash = 'dashboard')}
-              className="p-1 hover:bg-[#d4d7dc] rounded transition text-[#2c3e50] cursor-pointer flex items-center justify-center shrink-0"
+              className="p-1 hover:bg-zinc-800 rounded transition text-zinc-400 hover:text-white cursor-pointer flex items-center justify-center shrink-0"
               title={onClose ? "Close AI Assistant" : "Return to home dashboard"}
             >
               {onClose ? (
@@ -819,10 +819,10 @@ Hello! I am your sales and stock advisor. I am online and ready to help you anal
               )}
             </button>
             <div className="flex items-center gap-2">
-              <div className="w-5 h-5 rounded-sm bg-[#2ca01c] flex items-center justify-center font-bold text-white text-[10px]">
+              <div className="w-5 h-5 rounded bg-[#db2777] flex items-center justify-center font-bold text-white text-[10px]">
                 AI
               </div>
-              <h2 className="text-[13px] font-bold font-sans text-neutral-900 tracking-tight">
+              <h2 className="text-[13px] font-bold font-sans text-white tracking-tight">
                 QuickBooks Advisor Sentry
               </h2>
             </div>
@@ -830,8 +830,8 @@ Hello! I am your sales and stock advisor. I am online and ready to help you anal
 
           {/* Clear buttons / Status flags */}
           <div className="flex items-center gap-1.5">
-            <span className="hidden sm:inline-flex items-center gap-1 bg-[#e9f5e6] text-[#2ca01c] text-[9px] uppercase font-bold tracking-wider px-2 py-1 rounded border border-[#2ca01c]/20">
-              <span className="w-1.5 h-1.5 bg-[#2ca01c] rounded-full animate-ping" />
+            <span className="hidden sm:inline-flex items-center gap-1 bg-pink-955/35 text-[#db2777] text-[9px] uppercase font-bold tracking-wider px-2 py-1 rounded border border-[#db2777]/35">
+              <span className="w-1.5 h-1.5 bg-[#db2777] rounded-full animate-ping" />
               Live Sentry Active
             </span>
             <button 
@@ -839,9 +839,9 @@ Hello! I am your sales and stock advisor. I am online and ready to help you anal
                 clearChat();
                 setMessages([messages[0]]);
               }}
-              className="text-[11px] text-[#2c3e50] hover:text-black hover:bg-white border border-[#d4d7dc] h-7 rounded px-2.5 flex items-center gap-1 cursor-pointer transition font-bold"
+              className="text-[11px] text-zinc-300 hover:text-white hover:bg-zinc-800 border border-[#27272a] h-7 rounded px-2.5 flex items-center gap-1 cursor-pointer transition font-bold"
             >
-              <RefreshCcw className="w-3 h-3 text-[#2ca01c]" />
+              <RefreshCcw className="w-3 h-3 text-[#db2777]" />
               Reset
             </button>
           </div>
@@ -853,10 +853,10 @@ Hello! I am your sales and stock advisor. I am online and ready to help you anal
 
         {/* Tab A: CONVERSATIONAL AGENT */}
         {activeTab === 'chat' && (
-          <div className="flex flex-col h-full bg-[#fdfcfb]">
+          <div className="flex flex-col h-full bg-[#0e0e11]">
             
             {showModelConfig && (
-              <div className="bg-slate-50/90 border-b border-slate-200/70 p-4 animate-fade-in shrink-0 shadow-2xs select-none" id="ollama-settings-drawer">
+              <div className="bg-[#18181b]/95 border-b border-[#27272a] p-4 animate-fade-in shrink-0 shadow-none select-none" id="ollama-settings-drawer">
                 <div className="max-w-2xl mx-auto space-y-3">
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                     <h3 className="text-xs font-bold uppercase text-slate-500 tracking-wider flex items-center gap-1.5">
@@ -904,15 +904,15 @@ Hello! I am your sales and stock advisor. I am online and ready to help you anal
                     <div key={msg.id || i} className={`flex gap-3.5 ${isAI ? 'justify-start' : 'justify-end'} animate-fade-in`}>
                       
                       {isAI && (
-                        <div className="w-8 h-8 rounded-sm border border-[#2ca01c]/30 bg-[#e9f5e6] flex items-center justify-center shrink-0 shadow-xs">
-                          <EenvoqIcon className="w-4 h-4 text-[#2ca01c]" />
+                        <div className="w-8 h-8 rounded bg-pink-950/20 border border-[#db2777]/35 flex items-center justify-center shrink-0 shadow-none">
+                          <EenvoqIcon className="w-4 h-4 text-[#db2777]" />
                         </div>
                       )}
 
-                      <div className={`w-full max-w-[94%] sm:max-w-[88%] md:max-w-[85%] lg:max-w-[82%] rounded px-4 py-3 text-xs md:text-sm ${
+                      <div className={`w-full max-w-[94%] sm:max-w-[88%] md:max-w-[85%] lg:max-w-[82%] rounded-lg px-4 py-3 text-xs md:text-sm ${
                         isAI 
-                          ? 'bg-[#e9f5e6] border border-[#2ca01c]/15 text-neutral-800 shadow-none' 
-                          : 'bg-[#1e2a38] text-white border border-[#1a2531] shadow-none'
+                          ? 'bg-[#18181b] border border-[#27272a] text-zinc-100 shadow-none' 
+                          : 'bg-zinc-900 text-zinc-100 border border-zinc-800 shadow-none'
                       }`}>
                         
                         {/* Attachments if rendered */}
@@ -932,19 +932,19 @@ Hello! I am your sales and stock advisor. I am online and ready to help you anal
                             
                             {/* Section 1: Answer block */}
                             <div>
-                              <strong className="text-[10px] uppercase font-mono tracking-widest text-[#2ca01c] block mb-1 font-bold">Answer Summary</strong>
-                              <div className="text-slate-900 leading-relaxed font-sans mt-0.5">
+                              <strong className="text-[10px] uppercase font-mono tracking-widest text-[#db2777] block mb-1 font-bold">Answer Summary</strong>
+                              <div className="text-zinc-200 leading-relaxed font-sans mt-0.5">
                                 {renderFormattedText(msg.structured.answer)}
                               </div>
                             </div>
 
                             {/* Section 2: Evidence checklist */}
-                            <div className="bg-white border border-[#d4d7dc] p-3 rounded">
-                              <strong className="text-[10px] uppercase font-mono tracking-widest text-slate-500 block mb-1.5 font-bold">Evidence Data Logged</strong>
-                              <ul className="space-y-1 font-mono text-[10px] text-slate-700 leading-relaxed">
+                            <div className="bg-[#18181b] border border-[#27272a] p-3 rounded-lg">
+                              <strong className="text-[10px] uppercase font-mono tracking-widest text-zinc-500 block mb-1.5 font-bold">Evidence Data Logged</strong>
+                              <ul className="space-y-1 font-mono text-[10px] text-zinc-400 leading-relaxed">
                                 {msg.structured.evidence.map((ev: string, evIdx: number) => (
                                   <li key={evIdx} className="flex items-start gap-1">
-                                    <span className="shrink-0 text-[#2ca01c] font-bold">&#8250;</span>
+                                    <span className="shrink-0 text-[#db2777] font-bold">&#8250;</span>
                                     <span>{ev}</span>
                                   </li>
                                 ))}
@@ -953,14 +953,14 @@ Hello! I am your sales and stock advisor. I am online and ready to help you anal
 
                             {/* Section 3: Recommended action trigger buttons */}
                             {msg.structured.actions && msg.structured.actions.length > 0 && (
-                              <div className="pt-2 select-none border-t border-[#d4d7dc]">
-                                <strong className="text-[10px] uppercase font-mono tracking-widest text-neutral-600 block mb-1.5 font-bold">Approved Actions</strong>
+                              <div className="pt-2 select-none border-t border-[#27272a]">
+                                <strong className="text-[10px] uppercase font-mono tracking-widest text-zinc-400 block mb-1.5 font-bold">Approved Actions</strong>
                                 <div className="flex flex-col sm:flex-row flex-wrap gap-1.5">
                                   {msg.structured.actions.map((act: any, actIdx: number) => (
                                     <button
                                       key={actIdx}
                                       onClick={() => handleExecuteAIAction(act.type, act.label, act.value)}
-                                      className="text-[10px] font-bold px-3 py-1.5 bg-[#2ca01c] hover:bg-[#207a14] text-white rounded transition cursor-pointer flex items-center gap-1 group shadow-none"
+                                      className="text-[10px] font-bold px-3 py-1.5 bg-[#db2777] hover:bg-[#c02164] text-white rounded transition cursor-pointer flex items-center gap-1 group shadow-none"
                                     >
                                       <Play className="w-2 h-2 fill-white" />
                                       {act.label}
@@ -973,28 +973,28 @@ Hello! I am your sales and stock advisor. I am online and ready to help you anal
                           </div>
                         ) : (
                           // Fallback or normal flat plaintext message
-                          <div className="space-y-1.5 select-text leading-relaxed font-sans whitespace-pre-wrap text-slate-900 text-xs sm:text-sm font-normal">
+                          <div className="space-y-1.5 select-text leading-relaxed font-sans whitespace-pre-wrap text-zinc-200 text-xs sm:text-sm font-normal">
                             {renderFormattedText(msg.text)}
                           </div>
                         )}
 
                         {/* Speech read-out voice assistance button */}
-                        <div className="flex items-center justify-between text-[10px] mt-3 pt-2 border-t border-[#d4d7dc] text-slate-500">
+                        <div className="flex items-center justify-between text-[10px] mt-3 pt-2 border-t border-[#27272a] text-zinc-500">
                           <span className="font-sans font-medium">{new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                           
                           <button 
                             onClick={() => handleTogglePlayback(msg.id, msg.structured ? msg.structured.answer : msg.text)}
-                            className="flex items-center gap-1 px-2.5 py-0.5 border border-[#d4d7dc] hover:border-neutral-400 text-[10px] font-bold rounded bg-white hover:bg-neutral-50 transition cursor-pointer text-[#2c3e50] shadow-none"
+                            className="flex items-center gap-1 px-2.5 py-0.5 border border-[#27272a] hover:border-zinc-700 text-[10px] font-bold rounded bg-[#18181b] hover:bg-zinc-800 transition cursor-pointer text-zinc-300 shadow-none"
                           >
                             {activePlaybackId === msg.id ? (
                               <>
-                                <Pause className="w-2 h-2 text-red-600 fill-red-600" />
-                                <span className="animate-pulse text-red-650">Stop</span>
+                                <Pause className="w-2 h-2 text-rose-500 fill-rose-500" />
+                                <span className="animate-pulse text-rose-500">Stop</span>
                               </>
                             ) : (
                               <>
-                                <Mic className="w-2.5 h-2.5 text-[#2ca01c]" />
-                                <span className="text-[#2c3e50] font-sans">Speak</span>
+                                <Mic className="w-2.5 h-2.5 text-[#db2777]" />
+                                <span className="text-zinc-300 font-sans">Speak</span>
                               </>
                             )}
                           </button>
@@ -1003,7 +1003,7 @@ Hello! I am your sales and stock advisor. I am online and ready to help you anal
                       </div>
 
                       {!isAI && (
-                        <div className="w-8 h-8 rounded-sm bg-[#1e2a38] text-white flex items-center justify-center shrink-0 border border-[#1a2531] text-xs font-bold font-mono">
+                        <div className="w-8 h-8 rounded bg-zinc-800 text-white flex items-center justify-center shrink-0 border border-zinc-700 text-xs font-bold font-mono">
                           OP
                         </div>
                       )}
@@ -1014,14 +1014,14 @@ Hello! I am your sales and stock advisor. I am online and ready to help you anal
 
                 {sending && (
                   <div className="flex gap-2.5 justify-start animate-fade-in">
-                    <div className="w-8 h-8 rounded-sm border border-[#2ca01c]/30 bg-[#e9f5e6] flex items-center justify-center shrink-0">
-                      <EenvoqIcon className="w-4 h-4 text-[#2ca01c] animate-bounce" />
+                    <div className="w-8 h-8 rounded border border-[#db2777]/35 bg-pink-950/20 flex items-center justify-center shrink-0">
+                      <EenvoqIcon className="w-4 h-4 text-[#db2777] animate-bounce" />
                     </div>
-                    <div className="bg-[#e9f5e6]/40 border border-[#2ca01c]/10 rounded px-4 py-2.5 flex items-center gap-1.5">
-                      <div className="h-1 w-1 bg-[#2ca01c] rounded-full animate-bounce [animation-delay:-0.3s]" />
-                      <div className="h-1 w-1 bg-[#2ca01c] rounded-full animate-bounce [animation-delay:-0.15s]" />
-                      <div className="h-1 w-1 bg-[#2ca01c] rounded-full animate-bounce" />
-                      <span className="text-[10px] text-neutral-700 font-sans pl-1 font-medium">Scanning systems database registers...</span>
+                    <div className="bg-pink-950/15 border border-[#db2777]/15 rounded-lg px-4 py-2.5 flex items-center gap-1.5">
+                      <div className="h-1 w-1 bg-[#db2777] rounded-full animate-bounce [animation-delay:-0.3s]" />
+                      <div className="h-1 w-1 bg-[#db2777] rounded-full animate-bounce [animation-delay:-0.15s]" />
+                      <div className="h-1 w-1 bg-[#db2777] rounded-full animate-bounce" />
+                      <span className="text-[10px] text-zinc-400 font-sans pl-1 font-medium font-sans">Scanning systems database registers...</span>
                     </div>
                   </div>
                 )}
@@ -1033,7 +1033,7 @@ Hello! I am your sales and stock advisor. I am online and ready to help you anal
             {/* Suggested cards at the bottom */}
             {messages.length <= 1 && (
               <div className="max-w-2xl mx-auto w-full px-6 py-2.5 select-none" id="starting-prompts-cardboard">
-                <p className="text-[10px] font-bold uppercase text-slate-500 tracking-wider mb-2 text-center sm:text-left">Suggestions</p>
+                <p className="text-[10px] font-bold uppercase text-zinc-500 tracking-wider mb-2 text-center sm:text-left">Suggestions</p>
                 <div className="flex flex-col sm:flex-row sm:flex-wrap gap-x-5 gap-y-1.5 justify-center sm:justify-start" id="suggestions-scroller">
                   {[
                     { q: "Check Low Stock", d: "Detect stock levels running dry & restock instantly" },
@@ -1045,11 +1045,11 @@ Hello! I am your sales and stock advisor. I am online and ready to help you anal
                       key={idx}
                       type="button"
                       onClick={() => setInputText(sg.q)}
-                      className="inline-flex items-center gap-1 text-slate-700 hover:text-sky-600 text-xs font-medium font-sans transition cursor-pointer hover:underline bg-transparent border-0 p-0 text-left group"
+                      className="inline-flex items-center gap-1 text-zinc-400 hover:text-[#db2777] text-xs font-medium font-sans transition cursor-pointer hover:underline bg-transparent border-0 p-0 text-left group"
                       title={sg.d}
                     >
                       <span>{sg.q}</span>
-                      <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-sky-600 group-hover:translate-x-0.5 transition-all" />
+                      <ArrowRight className="w-3.5 h-3.5 text-zinc-650 group-hover:text-[#db2777] group-hover:translate-x-0.5 transition-all" />
                     </button>
                   ))}
                 </div>
@@ -1057,9 +1057,9 @@ Hello! I am your sales and stock advisor. I am online and ready to help you anal
             )}
 
             {/* Input Composer Console */}
-            <div className="p-3 bg-[#f4f5f8] border-t border-[#d4d7dc] select-none shrink-0" id="chat-control-console">
+            <div className="p-3 bg-[#18181b] border-t border-[#27272a] select-none shrink-0" id="chat-control-console">
               <div className="max-w-2xl mx-auto">
-                <form onSubmit={handleVoiceOrTextSend} className="relative flex items-center bg-white border border-[#d4d7dc] rounded p-1 focus-within:border-[#2ca01c] focus-within:ring-1 focus-within:ring-[#e9f5e6] transition-all gap-0.5 shadow-none">
+                <form onSubmit={handleVoiceOrTextSend} className="relative flex items-center bg-[#0e0e11] border border-[#27272a] rounded-lg p-1 focus-within:border-[#db2777] focus-within:ring-1 focus-within:ring-[#db2777]/20 transition-all gap-0.5 shadow-none">
                   
                   {/* Left side actions group: Mic, Paperclip, Image */}
                   <div className="flex items-center shrink-0">
@@ -1067,8 +1067,8 @@ Hello! I am your sales and stock advisor. I am online and ready to help you anal
                     <button
                       type="button"
                       onClick={toggleVoiceRecording}
-                      className={`p-2 rounded transition cursor-pointer ${
-                        isRecording ? 'bg-red-600 text-white animate-pulse' : 'hover:bg-[#f4f5f8] text-slate-500 hover:text-[#2ca01c]'
+                      className={`p-2 rounded-lg transition cursor-pointer ${
+                        isRecording ? 'bg-red-650 text-white animate-pulse' : 'hover:bg-zinc-800 text-zinc-400 hover:text-[#db2777]'
                       }`}
                       title={isRecording ? "Stop voice recording" : "Speak to Eenvoq naturally..."}
                     >
@@ -1078,7 +1078,7 @@ Hello! I am your sales and stock advisor. I am online and ready to help you anal
                     <button
                       type="button"
                       onClick={() => simulateAttachmentUpload('invoice')}
-                      className="p-2 text-slate-500 hover:text-[#2ca01c] hover:bg-[#f4f5f8] transition rounded cursor-pointer"
+                      className="p-2 text-zinc-400 hover:text-[#db2777] hover:bg-zinc-800 transition rounded-lg cursor-pointer"
                       title="Upload Supplier Invoice"
                     >
                       <Paperclip className="w-4 h-4" />
@@ -1087,7 +1087,7 @@ Hello! I am your sales and stock advisor. I am online and ready to help you anal
                     <button
                       type="button"
                       onClick={() => simulateAttachmentUpload('receipt')}
-                      className="p-2 text-slate-500 hover:text-[#2ca01c] hover:bg-[#f4f5f8] transition rounded cursor-pointer"
+                      className="p-2 text-zinc-400 hover:text-[#db2777] hover:bg-zinc-800 transition rounded-lg cursor-pointer"
                       title="Upload Customer Receipt"
                     >
                       <Image className="w-4 h-4" />
@@ -1100,7 +1100,7 @@ Hello! I am your sales and stock advisor. I am online and ready to help you anal
                     value={inputText}
                     onChange={(e) => setInputText(e.target.value)}
                     placeholder={isRecording ? `Recording simulated voice input... [${voiceSeconds}s]` : "Ask Eenvoq QuickBooks Advisor..."}
-                    className="flex-1 min-w-0 bg-transparent px-2 py-2 text-xs text-neutral-955 focus:outline-none placeholder-slate-400 font-medium"
+                    className="flex-1 min-w-0 bg-transparent px-2 py-2 text-xs text-white focus:outline-none placeholder-zinc-500 font-medium"
                     disabled={isRecording}
                   />
 
@@ -1108,7 +1108,7 @@ Hello! I am your sales and stock advisor. I am online and ready to help you anal
                   <button
                     type="submit"
                     disabled={!inputText.trim()}
-                    className="p-2 bg-[#2ca01c] hover:bg-[#207a14] disabled:opacity-30 disabled:bg-slate-200 text-white rounded transition cursor-pointer shrink-0 flex items-center justify-center shadow-none"
+                    className="p-2 bg-[#db2777] hover:bg-[#c02164] disabled:opacity-30 disabled:bg-zinc-800 text-white rounded-lg transition cursor-pointer shrink-0 flex items-center justify-center shadow-none"
                   >
                     <Send className="w-3.5 h-3.5" />
                   </button>

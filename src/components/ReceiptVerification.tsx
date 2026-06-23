@@ -491,63 +491,66 @@ export default function ReceiptVerification({
   };
 
   return (
-    <div className="space-y-6 pb-24 animate-fade-in font-sans text-[#1F1F1F] select-none" id="eenvoq-sales-panel-wrapper">
+    <div className="space-y-4 pb-12 animate-fade-in font-sans text-zinc-300 select-none w-full" id="eenvoq-sales-panel-wrapper">
       
-      {/* HEADER SECTION WITH MESH GRADIENT */}
-      <div className="relative overflow-hidden rounded-[32px] p-1 border border-neutral-150/45 bg-white shadow-xs" id="sales-mesh-wrapper">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(14,165,233,0.14)_0%,_rgba(14,165,233,0)_75%)] pointer-events-none" />
-        
-        {/* Main Header greetings block */}
-        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between p-6 gap-4" id="sales-navbar-panel">
-          <div className="text-left">
+      {/* HEADER SECTION - SAME AS HOME DASHBOARD STYLE */}
+      <div className="bg-[#0e0e11] border border-[#27272a] rounded-lg p-4 sm:p-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow-none" id="sales-header-nav">
+        {/* Left Side: Store Identity & QuickBooks logo */}
+        <div className="flex items-center gap-3 text-left">
+          <div className="w-10 h-10 rounded bg-[#db2777] flex items-center justify-center text-white font-bold text-lg shadow-none shrink-0 select-none lowercase font-sans">
+            ev
+          </div>
+          <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-xl sm:text-2xl font-sans font-medium text-neutral-900 tracking-tight">
+              <h2 className="text-base sm:text-lg font-bold text-white tracking-tight truncate max-w-[180px] sm:max-w-xs md:max-w-md font-sans">
                 Sales Operating System
-              </h1>
-              <span className="bg-sky-50 text-sky-850 text-[9px] font-medium px-2 py-0.5 rounded-full border border-sky-200/40 uppercase tracking-wider font-mono">
+              </h2>
+              <span className="bg-pink-950/40 text-[#db2777] text-[9px] font-bold px-2 py-0.5 rounded border border-[#db2777]/35 uppercase tracking-widest shrink-0 font-mono">
                 Terminal Live
               </span>
             </div>
-            <p className="text-sm font-sans font-normal text-neutral-400 mt-1.5">
-              Active Cashier: <strong className="text-neutral-900">{currentCashier.name}</strong> ({currentCashier.role}) &bull; Register Central Depot
+            <p className="text-xs text-zinc-400 font-sans mt-0.5">
+              Active Cashier: <span className="text-[#db2777] font-bold">{currentCashier.name}</span> ({currentCashier.role}) &bull; Central Depot
             </p>
           </div>
+        </div>
           
-          {/* Action controls */}
-          <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap" id="sales-reconciliation-actions-bar">
-            <button 
-              onClick={() => {
-                if (isOnline) {
-                  setIsOnline(false);
-                } else {
-                  handleApplyOfflineSync();
-                }
-              }}
-              className={`flex items-center gap-2 text-xs font-semibold px-4 py-2.5 rounded-full border transition duration-150 cursor-pointer ${
-                isOnline 
-                  ? 'bg-emerald-50 text-emerald-800 border-emerald-200 hover:bg-emerald-100' 
-                  : 'bg-amber-50 text-amber-800 border-amber-200 hover:bg-amber-100'
-              }`}
-              id="network-simulator-toggle"
-            >
-              {isOnline ? <Wifi className="w-3.5 h-3.5 text-emerald-600" /> : <WifiOff className="w-3.5 h-3.5 text-amber-600" />}
-              {isOnline ? "Online Ready" : `Offline Mode (${offlineQueue.length} Queued)`}
-            </button>
+        {/* Action controls */}
+        <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap" id="sales-reconciliation-actions-bar">
+          <button 
+            type="button"
+            onClick={() => {
+              if (isOnline) {
+                setIsOnline(false);
+              } else {
+                handleApplyOfflineSync();
+              }
+            }}
+            className={`flex items-center gap-2 text-xs font-bold px-3 py-1.5 rounded border transition duration-150 cursor-pointer ${
+              isOnline 
+                ? 'bg-pink-950/40 text-[#db2777] border-[#db2777]/30 hover:bg-pink-900/50' 
+                : 'bg-amber-950/40 text-amber-500 border border-amber-900/30 hover:bg-amber-900/40'
+            }`}
+            id="network-simulator-toggle"
+          >
+            {isOnline ? <Wifi className="w-3.5 h-3.5 text-[#db2777]" /> : <WifiOff className="w-3.5 h-3.5 text-amber-500" />}
+            {isOnline ? "Online Ready" : `Offline Mode (${offlineQueue.length} Queued)`}
+          </button>
 
-            <button 
-              onClick={() => setShowReconciliationModal(true)}
-              className="flex items-center gap-1.5 text-xs font-semibold px-4 py-2.5 bg-neutral-900 text-white hover:bg-black rounded-full transition duration-150 cursor-pointer shadow-xs border border-transparent"
-              id="recon-trigger-btn"
-            >
-              <RefreshCw className="w-3.5 h-3.5" />
-              <span>End of Day Drawer</span>
-            </button>
-          </div>
+          <button 
+            type="button"
+            onClick={() => setShowReconciliationModal(true)}
+            className="flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 bg-[#db2777] hover:bg-[#c02164] border border-[#db2777]/20 text-white rounded transition duration-150 cursor-pointer"
+            id="recon-trigger-btn"
+          >
+            <RefreshCw className="w-3.5 h-3.5 animate-spin-slow" />
+            <span>End of Day Drawer</span>
+          </button>
         </div>
       </div>
 
-      {/* TABS SELECTOR */}
-      <div className="flex border-b border-neutral-150/60 pb-1 text-neutral-600 font-sans select-none overflow-x-auto scrollbar-none items-center gap-2" id="sales-page-tabs-bar">
+      {/* TABS SELECTOR - RECTANGULAR STANDARD STYLE */}
+      <div className="flex border-b border-[#27272a] pb-1 text-zinc-300 font-sans select-none overflow-x-auto scrollbar-none items-center gap-1.5" id="sales-page-tabs-bar">
         {[
           { id: 'overview', label: 'Overview', icon: TrendingUp },
           { id: 'checkout', label: 'New Sale', icon: ShoppingCart },
@@ -563,13 +566,13 @@ export default function ReceiptVerification({
                 setActiveTab(tab.id as any);
                 if (tab.id === 'overview') setAiAnswer(null);
               }}
-              className={`flex items-center gap-1.5 py-2.5 px-4 text-xs font-semibold rounded-full transition-all duration-200 whitespace-nowrap cursor-pointer border ${
+              className={`flex items-center gap-1.5 py-1.5 px-3 rounded text-xs font-bold transition-all duration-150 whitespace-nowrap cursor-pointer border ${
                 isActive 
-                  ? 'bg-sky-50 text-sky-850 border-sky-200/60 shadow-xs font-bold' 
-                  : 'bg-white text-neutral-600 border-neutral-150/45 hover:bg-neutral-50 hover:text-neutral-900'
+                  ? 'bg-pink-950/40 text-[#db2777] border-[#db2777]/35' 
+                  : 'bg-[#18181b] text-zinc-400 border-[#27272a] hover:bg-zinc-800/40'
               }`}
             >
-              <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-sky-700' : 'text-neutral-400'}`} />
+              <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-[#db2777]' : 'text-zinc-500'}`} />
               <span>{tab.label}</span>
             </button>
           );
