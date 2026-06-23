@@ -23,19 +23,19 @@ export default function Sidebar({ activeSection, setActiveSection, user, alerts,
   const unreadAlertsCount = alerts.filter(a => !a.read).length;
 
   const mainNavItems: { id: string; label: string; icon: any; highlight?: boolean }[] = [
-    { id: 'dashboard', label: 'Home Dashboard', icon: LayoutDashboard },
+    { id: 'dashboard', label: 'Home', icon: LayoutDashboard },
     { id: 'receipts', label: 'Sales & Receipts', icon: FileCheck },
-    { id: 'inventory', label: 'Inventory Assets', icon: ShoppingCart },
-    { id: 'retention', label: 'Customers Ledger', icon: Users },
-    { id: 'debtor', label: 'Debtor Registers', icon: BookOpen },
-    { id: 'truthcheck', label: 'Cash Registry Match', icon: Activity },
-    { id: 'forensic', label: 'Forensic Audit', icon: FileSearch },
-    { id: 'reports', label: 'Accounting Reports', icon: TrendingUp },
+    { id: 'inventory', label: 'Inventory', icon: ShoppingCart },
+    { id: 'retention', label: 'Customers', icon: Users },
+    { id: 'debtor', label: 'Debtors', icon: BookOpen },
+    { id: 'truthcheck', label: 'Cash Records', icon: Activity },
+    { id: 'forensic', label: 'Audit', icon: FileSearch },
+    { id: 'reports', label: 'Accounting', icon: TrendingUp },
   ];
 
   const bottomNavItems = [
     { id: 'landing', label: 'Visit Website', icon: Sparkles },
-    { id: 'notifications', label: 'Sentry Alerts', icon: BellRing, badge: unreadAlertsCount },
+    { id: 'notifications', label: 'Alerts', icon: BellRing, badge: unreadAlertsCount },
     { id: 'settings', label: 'Company Settings', icon: Settings2 },
   ];
 
@@ -62,8 +62,8 @@ export default function Sidebar({ activeSection, setActiveSection, user, alerts,
                 ev
               </div>
               <div className="flex flex-col text-left">
-                <span className="font-sans font-extrabold text-white text-xs leading-none uppercase tracking-wider">Eenvoq Ledger</span>
-                <span className="font-sans text-[8px] text-[#db2777] font-bold uppercase tracking-wider mt-0.5">QuickBooks Mode</span>
+                <span className="font-sans font-extrabold text-white text-xs leading-none uppercase tracking-wider">Eenvoq</span>
+                <span className="font-sans text-[8px] text-[#db2777] font-bold uppercase tracking-wider mt-0.5">You're Live</span>
               </div>
             </div>
           ) : (
@@ -136,7 +136,7 @@ export default function Sidebar({ activeSection, setActiveSection, user, alerts,
         <div className="h-px bg-zinc-850 my-3 mx-4" />
 
         {!collapsed && (
-          <p className="px-5 text-[9px] font-bold text-zinc-400 uppercase tracking-wider mb-2 font-display">System Tools</p>
+          <p className="px-5 text-[9px] font-bold text-zinc-400 uppercase tracking-wider mb-2 font-display">Tools</p>
         )}
         {bottomNavItems.map((item) => {
           const Icon = item.icon;
@@ -229,7 +229,7 @@ export default function Sidebar({ activeSection, setActiveSection, user, alerts,
             <div className="flex items-center justify-center gap-2">
               <button
                 onClick={() => setShowLogoutConfirm(false)}
-                className="px-4 py-2 rounded border border-[#27272a] bg-transparent text-xs font-bold text-zinc-300 hover:bg-zinc-800 active:scale-95 transition cursor-pointer"
+                className="px-4 py-2 rounded border border-[#27272a] bg-black text-xs font-bold text-zinc-300 hover:bg-zinc-800 active:scale-95 transition cursor-pointer"
               >
                 Cancel
               </button>

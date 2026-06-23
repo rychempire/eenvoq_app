@@ -275,11 +275,11 @@ export default function Dashboard({
                 {businessName}
               </h2>
               <span className="bg-pink-950/40 text-[#db2777] text-[9px] font-bold px-2 py-0.5 rounded border border-[#db2777]/30 uppercase tracking-widest shrink-0 font-mono">
-                Live &bull; Matched
+                Live &bull;
               </span>
             </div>
             <p className="text-xs text-zinc-450 font-sans">
-              Welcome back, <span className="text-[#db2777] font-bold">{userName}</span> &bull; Real-time Cash and Ledger
+              Welcome back, <span className="text-[#db2777] font-bold">{userName}</span> &bull;
             </p>
           </div>
         </div>
@@ -305,7 +305,7 @@ export default function Dashboard({
             type="button"
             onClick={handleCurrencyToggle}
             className="text-[10px] sm:text-xs font-bold text-zinc-300 hover:text-[#db2777] border border-[#27272a] bg-[#18181b] rounded px-3 py-2 flex items-center gap-1.5 transition active:scale-95 cursor-pointer font-sans"
-            title="Switch Core Currency"
+            title="Switch Currency"
           >
             <Coins className="w-3.5 h-3.5 text-[#db2777]" />
             <span>Currency: <span className="text-white font-bold">{currency}</span></span>
@@ -482,8 +482,8 @@ export default function Dashboard({
           {/* QuickBooks Signature Accounts Receivable Ribbon (Overdue, Open, Paid status tracker) */}
           <div className="bg-[#0e0e11] border border-[#27272a] rounded p-5 text-left shadow-none space-y-4">
             <div>
-              <span className="text-[10px] font-bold uppercase tracking-widest text-[#5f6368] block">Accounts Receivable</span>
-              <h3 className="text-base font-bold text-white mt-0.5 font-sans">Invoices &amp; Credit Ledger</h3>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-[#5f6368] block">Accounts</span>
+              <h3 className="text-base font-bold text-white mt-0.5 font-sans">Invoices &amp; Credit</h3>
             </div>
 
             {/* Color multi-segmented progress bar */}
@@ -492,7 +492,7 @@ export default function Dashboard({
                 <div 
                   className="bg-orange-500 transition-all duration-500" 
                   style={{ width: debtors.length > 0 ? '45%' : '0%' }} 
-                  title="Overdue Accounts"
+                  title="Overdue"
                 />
                 <div 
                   className="bg-zinc-700 transition-all duration-500" 
@@ -545,7 +545,7 @@ export default function Dashboard({
 
             {/* Quick click checklist action */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 bg-[#18181b] p-3 rounded border border-[#27272a] text-xs">
-              <span className="text-zinc-200">Maintain customer debtor ledgers, add invoices, or clear dues:</span>
+              <span className="text-zinc-200">Manage customer debts, add invoices, or clear dues:</span>
               <button
                 type="button"
                 onClick={() => setActiveSection('debtor')}
@@ -562,7 +562,7 @@ export default function Dashboard({
             <div className="flex justify-between items-center">
               <div>
                 <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 block">Recent Sales History</span>
-                <h3 className="text-base font-bold text-white mt-0.5 font-sans">Registered Invoices &amp; Receipts</h3>
+                <h3 className="text-base font-bold text-white mt-0.5 font-sans">Recorded Invoices &amp; Receipts</h3>
               </div>
               <button 
                 onClick={() => { window.location.hash = 'receipts'; setActiveSection('receipts'); }}
@@ -576,7 +576,7 @@ export default function Dashboard({
               <div className="text-center py-8 text-zinc-500 font-sans">
                 <CheckCircle2 className="w-7 h-7 text-zinc-500/35 mx-auto mb-2" />
                 <p className="text-xs font-bold text-white">No receipts generated today</p>
-                <p className="text-[10px] text-zinc-400 mt-1">Click "+ New" to add a sales receipt.</p>
+                <p className="text-[10px] text-zinc-400 mt-1">Click "New" to add a sales receipt.</p>
               </div>
             ) : (
               <div className="overflow-x-auto min-w-full font-sans">
@@ -722,7 +722,7 @@ export default function Dashboard({
                           ? 'text-[#db2777] bg-pink-950/40 border-[#db2777]/30' 
                           : 'text-rose-400 bg-rose-950/40 border-rose-900/40'
                       }`}>
-                        {truthCheckResult.riskLevel === 'low' ? '🔒 MATCHED ✔' : '⚠️ UNMATCHED VARIANCE'}
+                        {truthCheckResult.riskLevel === 'low' ? 'MATCHED ✔' : 'UNMATCHED'}
                       </span>
                     </div>
                     <p className="text-zinc-300 leading-snug font-medium italic text-[10.5px]">
@@ -810,18 +810,18 @@ export default function Dashboard({
                   </div>
                   <div>
                     <span className="text-[8px] font-bold uppercase tracking-widest text-[#db2777] block">Operating Schedule</span>
-                    <h2 className="text-xs font-bold text-white tracking-wide mt-0.5 font-sans">EOD Auditing Console</h2>
+                    <h2 className="text-xs font-bold text-white tracking-wide mt-0.5 font-sans">EOD Auditing</h2>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-1.5 self-start sm:self-center">
                   {isEndOfDay ? (
                     <span className="text-[8px] bg-rose-500/25 text-rose-350 font-bold px-2 py-0.5 rounded border border-rose-500/30 uppercase tracking-widest font-mono">
-                      Closed Summary
+                      Closed
                     </span>
                   ) : (
                     <span className="text-[8px] bg-[#db2777]/25 text-pink-300 font-bold px-2 py-0.5 rounded border border-[#db2777]/30 uppercase tracking-widest font-mono">
-                      Running Feed
+                      Ongoing
                     </span>
                   )}
                 </div>
@@ -886,8 +886,8 @@ export default function Dashboard({
               >
                 <ShieldAlert className="w-5 h-5 text-purple-600" />
                 <div>
-                  <h4 className="text-xs font-bold text-[#111111] leading-tight font-sans">Forensic Audit Check</h4>
-                  <p className="text-[10px] text-[#5f6368] mt-0.5 font-normal font-sans">Trace missing register cash</p>
+                  <h4 className="text-xs font-bold text-[#111111] leading-tight font-sans">Audit</h4>
+                  <p className="text-[10px] text-[#5f6368] mt-0.5 font-normal font-sans">Trace missing cash</p>
                 </div>
               </button>
 
@@ -902,8 +902,8 @@ export default function Dashboard({
               >
                 <Plus className="w-5 h-5 text-[#db2777]" />
                 <div>
-                  <h4 className="text-xs font-bold text-white leading-tight font-sans">Add Sales Receipt</h4>
-                  <p className="text-[10px] text-zinc-400 mt-0.5 font-normal font-sans">Generate brand new receipt</p>
+                  <h4 className="text-xs font-bold text-white leading-tight font-sans">Add Sale</h4>
+                  <p className="text-[10px] text-zinc-400 mt-0.5 font-normal font-sans">Generate a new receipt</p>
                 </div>
               </button>
 
@@ -959,13 +959,13 @@ export default function Dashboard({
               <div className="flex items-center gap-2.5">
                 <Clock className="w-5 h-5 text-[#db2777] stroke-[1.5]" />
                 <div>
-                  <h3 className="font-sans font-bold text-white text-xs uppercase tracking-wide">Shift Audits Overview</h3>
+                  <h3 className="font-sans font-bold text-white text-xs uppercase tracking-wide">Shifts</h3>
                   <p className="text-[10px] text-zinc-455 font-sans mt-0.5">
                     Operating Schedule: {openTimeStr} - {closeTimeStr}
                   </p>
                 </div>
               </div>
-              <button 
+              <button
                 onClick={() => setShowRundownModal(false)}
                 className="p-1.5 rounded hover:bg-zinc-800 text-zinc-400 hover:text-white transition cursor-pointer"
               >
@@ -979,7 +979,7 @@ export default function Dashboard({
               <div className="flex items-center justify-between p-3 rounded bg-[#18181b] border border-[#27272a]">
                 <div className="flex items-center gap-2 text-xs font-bold text-zinc-350">
                   <Activity className="w-4 h-4 text-[#db2777]" />
-                  <span>Interactive Real-Time Auditing Desk</span>
+                  <span>Interactive Auditing</span>
                 </div>
                 {isEndOfDay ? (
                   <span className="text-[9px] bg-rose-950/30 text-rose-400 font-bold px-2 py-0.5 rounded border border-rose-900/35 uppercase tracking-wider font-mono">
@@ -1000,7 +1000,7 @@ export default function Dashboard({
                   <span className="text-[9px] text-zinc-555 block mt-0.5 font-sans">Through {totalTransactions} sales receipts</span>
                 </div>
                 <div className="bg-[#18181b] p-4 border border-[#27272a] rounded-lg">
-                  <span className="text-[9px] text-zinc-400 font-bold uppercase tracking-wider block font-sans">Marginal Net Income</span>
+                  <span className="text-[9px] text-zinc-400 font-bold uppercase tracking-wider block font-sans">Net Income</span>
                   <span className="text-base sm:text-lg font-bold text-[#db2777] mt-1 block font-mono">{formatCurrency(todayProfit, currency)}</span>
                   <span className="text-[9px] text-zinc-555 block mt-0.5 font-sans">Assuming core 15% retail margin</span>
                 </div>
@@ -1033,7 +1033,7 @@ export default function Dashboard({
                   <ShieldAlert className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
                   <div>
                     <span className="font-bold block">Closing Audits Recommended</span>
-                    Validate shift drawers in QuickBooks Feed Matcher or trigger cash truth check parameters before closing files.
+                    Validate shift drawers in Eenvoe Feed Matcher or trigger cash truth check parameters before closing files.
                   </div>
                 </div>
               ) : (
