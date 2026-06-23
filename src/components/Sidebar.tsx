@@ -23,34 +23,34 @@ export default function Sidebar({ activeSection, setActiveSection, user, alerts,
   const unreadAlertsCount = alerts.filter(a => !a.read).length;
 
   const mainNavItems: { id: string; label: string; icon: any; highlight?: boolean }[] = [
-    { id: 'dashboard', label: 'Home', icon: LayoutDashboard },
+    { id: 'dashboard', label: 'Home Dashboard', icon: LayoutDashboard },
     { id: 'receipts', label: 'Sales & Receipts', icon: FileCheck },
-    { id: 'inventory', label: 'Inventory', icon: ShoppingCart },
-    { id: 'retention', label: 'Customers', icon: Users },
-    { id: 'debtor', label: 'Debtors', icon: BookOpen },
-    { id: 'truthcheck', label: 'Truth Check', icon: Activity },
-    { id: 'forensic', label: 'Analysis', icon: FileSearch },
-    { id: 'reports', label: 'Full Report', icon: TrendingUp },
+    { id: 'inventory', label: 'Inventory Assets', icon: ShoppingCart },
+    { id: 'retention', label: 'Customers Ledger', icon: Users },
+    { id: 'debtor', label: 'Debtor Registers', icon: BookOpen },
+    { id: 'truthcheck', label: 'Cash Registry Match', icon: Activity },
+    { id: 'forensic', label: 'Forensic Audit', icon: FileSearch },
+    { id: 'reports', label: 'Accounting Reports', icon: TrendingUp },
   ];
 
   const bottomNavItems = [
     { id: 'landing', label: 'Visit Website', icon: Sparkles },
-    { id: 'notifications', label: 'Alerts', icon: BellRing, badge: unreadAlertsCount },
-    { id: 'settings', label: 'Settings', icon: Settings2 },
+    { id: 'notifications', label: 'Sentry Alerts', icon: BellRing, badge: unreadAlertsCount },
+    { id: 'settings', label: 'Company Settings', icon: Settings2 },
   ];
 
   return (
     <aside 
-      className={`bg-white border-r border-[#E3E3E3] flex flex-col justify-between transition-none relative z-30 h-full ${
-        collapsed ? 'w-24' : 'w-72'
+      className={`bg-[#1e2a38] border-r border-[#1a2531] flex flex-col justify-between transition-none relative z-30 h-full ${
+        collapsed ? 'w-20' : 'w-64'
       }`}
       id="application-sidebar-root"
     >
       {/* Brand logo bar */}
-      <div className="h-16 flex items-center px-5 border-b border-[#E3E3E3] justify-between select-none shrink-0">
+      <div className="h-14 flex items-center px-4 border-b border-[#2d3a4b] justify-between select-none shrink-0 bg-[#141d27]">
         <div className="flex items-center overflow-hidden w-full">
           {!collapsed ? (
-            <div className="flex items-center gap-1 cursor-pointer" onClick={() => {
+            <div className="flex items-center gap-2 cursor-pointer" onClick={() => {
               setActiveSection('dashboard');
               window.scrollTo({ top: 0, behavior: 'smooth' });
               const panel = document.getElementById('workspace-main-panel');
@@ -58,7 +58,13 @@ export default function Sidebar({ activeSection, setActiveSection, user, alerts,
                 panel.scrollTo({ top: 0, behavior: 'smooth' });
               }
             }}>
-              <span className="font-sans font-extrabold text-neutral-900 uppercase tracking-widest text-sm">Eenvoq Menu</span>
+              <div className="w-6 h-6 rounded-sm bg-[#2ca01c] flex items-center justify-center font-bold text-white text-xs shadow-sm">
+                E
+              </div>
+              <div className="flex flex-col text-left">
+                <span className="font-sans font-extrabold text-white text-xs leading-none uppercase tracking-wider">Eenvoq Ledger</span>
+                <span className="font-sans text-[8px] text-[#2ca01c] font-bold uppercase tracking-wider mt-0.5">QuickBooks Mode</span>
+              </div>
             </div>
           ) : (
             <div className="flex items-center justify-center w-full cursor-pointer" onClick={() => {
@@ -69,7 +75,9 @@ export default function Sidebar({ activeSection, setActiveSection, user, alerts,
                 panel.scrollTo({ top: 0, behavior: 'smooth' });
               }
             }}>
-              <span className="font-sans font-extrabold text-neutral-900 uppercase tracking-widest text-xs">EM</span>
+              <div className="w-7 h-7 rounded-sm bg-[#2ca01c] flex items-center justify-center font-bold text-white text-sm shadow-sm">
+                EQ
+              </div>
             </div>
           )}
         </div>
@@ -77,17 +85,17 @@ export default function Sidebar({ activeSection, setActiveSection, user, alerts,
         {/* Leverage standard desktop hide/collapse state trigger */}
         <button 
           onClick={() => setCollapsed(!collapsed)}
-          className="p-1.5 rounded-full hover:bg-gray-100 text-[#5F6368] hover:text-gray-950 hidden md:flex items-center justify-center transition cursor-pointer"
+          className="p-1 rounded hover:bg-[#2d3a4b] text-[#8e9cae] hover:text-white hidden md:flex items-center justify-center transition cursor-pointer"
           title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
         >
-          {collapsed ? <ChevronRight className="w-5 h-5 stroke-[1.5]" /> : <ChevronLeft className="w-5 h-5 stroke-[1.5]" />}
+          {collapsed ? <ChevronRight className="w-4 h-4 stroke-[2]" /> : <ChevronLeft className="w-4 h-4 stroke-[2]" />}
         </button>
       </div>
 
       {/* Main navigation menu streams - scrollable */}
-      <nav className="flex-1 overflow-y-auto py-6 px-3 space-y-1.5 select-none font-sans">
+      <nav className="flex-1 overflow-y-auto py-4 px-0 space-y-0.5 select-none font-sans">
         {!collapsed && (
-          <p className="px-3 text-[10px] font-medium text-[#757575] uppercase tracking-wider mb-2 font-display">Tools</p>
+          <p className="px-5 text-[9px] font-bold text-[#8e9cae] uppercase tracking-wider mb-2 font-display">Store Ledger</p>
         )}
         {mainNavItems.map((item) => {
           const Icon = item.icon;
@@ -96,28 +104,28 @@ export default function Sidebar({ activeSection, setActiveSection, user, alerts,
             <button
               key={item.id}
               onClick={() => setActiveSection(item.id)}
-              className={`w-full flex items-center h-12 rounded-full px-4 text-xs font-semibold transition-all group relative cursor-pointer ${
+              className={`w-full flex items-center h-10 px-4 text-xs font-medium transition-all group relative cursor-pointer border-l-4 ${
                 isActive 
-                  ? 'bg-sky-50 border border-sky-100 text-sky-950 font-bold' 
-                  : 'text-[#444746] bg-transparent hover:bg-gray-100 hover:text-black'
+                  ? 'bg-[#2d3d4e] border-[#2ca01c] text-[#ffffff] font-semibold' 
+                  : 'border-transparent text-[#adb9c7] hover:bg-[#243343] hover:text-[#ffffff]'
               }`}
               title={collapsed ? item.label : undefined}
             >
-              <Icon className={`w-6 h-6 shrink-0 stroke-[1.5] ${collapsed ? 'mx-auto' : 'mr-3'} ${isActive ? 'text-sky-600 stroke-[2]' : 'text-[#5F6368] group-hover:text-black'}`} />
+              <Icon className={`w-5 h-5 shrink-0 stroke-[2] ${collapsed ? 'mx-auto' : 'mr-3'} ${isActive ? 'text-[#2ca01c]' : 'text-[#8e9cae] group-hover:text-white'}`} />
               {!collapsed && (
-                <span className="truncate flex-1 text-left font-display text-[13px] leading-none">
+                <span className="truncate flex-1 text-left font-display text-[12.5px] leading-tight">
                   {item.label}
                 </span>
               )}
               
               {/* Intelligent highlight flare resembling workspace nodes */}
               {item.highlight && !collapsed && !isActive && (
-                <span className="w-1.5 h-1.5 rounded-full bg-[#1F1F1F] absolute right-4" />
+                <span className="w-1.5 h-1.5 rounded-full bg-[#2ca01c] absolute right-4" />
               )}
               
               {/* Collapsed label hover tooltips */}
               {collapsed && (
-                <div className="absolute left-24 bg-gray-950 text-white text-xs py-1 px-2.5 rounded-md opacity-0 pointer-events-none group-hover:opacity-100 transition whitespace-nowrap shadow-md z-40">
+                <div className="absolute left-20 bg-gray-950 text-white text-[10px] py-1 px-2 rounded opacity-0 pointer-events-none group-hover:opacity-100 transition whitespace-nowrap shadow-md z-40">
                   {item.label}
                 </div>
               )}
@@ -125,10 +133,10 @@ export default function Sidebar({ activeSection, setActiveSection, user, alerts,
           );
         })}
 
-        <div className="h-px bg-[#E3E3E3] my-4 mx-2" />
+        <div className="h-px bg-[#2d3a4b] my-3 mx-4" />
 
         {!collapsed && (
-          <p className="px-3 text-[10px] font-medium text-[#757575] uppercase tracking-wider mb-2 font-display">System</p>
+          <p className="px-5 text-[9px] font-bold text-[#8e9cae] uppercase tracking-wider mb-2 font-display">System Tools</p>
         )}
         {bottomNavItems.map((item) => {
           const Icon = item.icon;
@@ -137,35 +145,35 @@ export default function Sidebar({ activeSection, setActiveSection, user, alerts,
             <button
               key={item.id}
               onClick={() => setActiveSection(item.id)}
-              className={`w-full flex items-center h-12 rounded-full px-4 text-xs font-semibold transition-all group relative cursor-pointer ${
+              className={`w-full flex items-center h-10 px-4 text-xs font-medium transition-all group relative cursor-pointer border-l-4 ${
                 isActive 
-                  ? 'bg-sky-50 border border-sky-100 text-sky-950 font-bold' 
-                  : 'text-[#444746] bg-transparent hover:bg-gray-100 hover:text-black'
+                  ? 'bg-[#2d3d4e] border-[#2ca01c] text-white font-semibold' 
+                  : 'border-transparent text-[#adb9c7] hover:bg-[#243343] hover:text-[#ffffff]'
               }`}
               title={collapsed ? item.label : undefined}
             >
-              <Icon className={`w-6 h-6 shrink-0 stroke-[1.5] ${collapsed ? 'mx-auto' : 'mr-3'} ${isActive ? 'text-sky-600 stroke-[2]' : 'text-[#5F6368] group-hover:text-[#1F1F1F]'}`} />
+              <Icon className={`w-5 h-5 shrink-0 stroke-[2] ${collapsed ? 'mx-auto' : 'mr-3'} ${isActive ? 'text-[#2ca01c]' : 'text-[#8e9cae] group-hover:text-[#ffffff]'}`} />
               {!collapsed && (
-                <span className="truncate flex-1 text-left font-display text-[13px] leading-none">
+                <span className="truncate flex-1 text-left font-display text-[12.5px] leading-tight">
                   {item.label}
                 </span>
               )}
 
               {/* Badges */}
               {item.badge !== undefined && item.badge > 0 && (
-                <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full leading-none border shrink-0 ${
+                <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded leading-none shrink-0 ${
                   collapsed 
-                    ? 'absolute top-1.5 right-1.5 bg-red-600 text-white border-white scale-75'
+                    ? 'absolute top-1 right-1 bg-red-600 text-white border-white scale-75'
                     : isActive 
-                      ? 'bg-white text-[#1F1F1F] border-[#E3E3E3]' 
-                      : 'bg-[#5F6368] text-white border-transparent'
+                      ? 'bg-[#2ca01c] text-white' 
+                      : 'bg-red-600 text-white'
                 }`}>
                   {item.badge}
                 </span>
               )}
 
               {collapsed && (
-                <div className="absolute left-24 bg-gray-950 text-white text-xs py-1 px-2.5 rounded-md opacity-0 pointer-events-none group-hover:opacity-100 transition whitespace-nowrap shadow-md z-40">
+                <div className="absolute left-20 bg-gray-950 text-white text-[10px] py-1 px-2 rounded opacity-0 pointer-events-none group-hover:opacity-100 transition whitespace-nowrap shadow-md z-40">
                   {item.label}
                 </div>
               )}
@@ -174,23 +182,21 @@ export default function Sidebar({ activeSection, setActiveSection, user, alerts,
         })}
       </nav>
 
-      {/* Status widget removed */}
-
       {/* Authenticated user segment block / permanent bottom logout panel */}
-      <div className="p-4 border-t border-[#E3E3E3] bg-white select-none shrink-0" id="sidebar-bottom-panel">
-        <div className={`flex flex-col gap-3 ${collapsed ? 'items-center' : ''}`}>
+      <div className="p-3 border-t border-[#2d3a4b] bg-[#141d27] select-none shrink-0" id="sidebar-bottom-panel">
+        <div className={`flex flex-col gap-2 ${collapsed ? 'items-center' : ''}`}>
           {!collapsed && (
-            <div className="flex items-center gap-3 p-2 bg-[#F9FAFB] rounded-[24px] border border-[#E3E3E3]">
+            <div className="flex items-center gap-2.5 p-2 bg-[#1e2a38] rounded border border-[#2d3a4b]">
               {/* Circular user branding */}
-              <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shrink-0 border border-[#E3E3E3]">
-                <span className="font-display font-medium text-[#1F1F1F] text-sm">
+              <div className="w-8 h-8 rounded-sm bg-[#2ca01c] flex items-center justify-center shrink-0">
+                <span className="font-display font-bold text-white text-xs">
                   {user.name.split(' ').map(n => n[0]).join('')}
                 </span>
               </div>
               <div className="flex-1 min-w-0" id="user-profile-meta-sidebar">
-                <h4 className="text-xs font-semibold text-[#1F1F1F] truncate leading-tight">{user.name}</h4>
-                <p className="text-[10px] text-[#757575] truncate mt-0.5" title={user.storeName}>{user.storeName}</p>
-                <span className="inline-block px-1.5 py-0.5 mt-1 text-[8px] font-semibold text-[#1F1F1F] bg-white border border-[#E3E3E3] rounded-full uppercase leading-none">
+                <h4 className="text-[11px] font-bold text-white truncate leading-none">{user.name}</h4>
+                <p className="text-[9px] text-[#8e9cae] truncate mt-1 leading-none" title={user.storeName}>{user.storeName}</p>
+                <span className="inline-block px-1 py-0.2 mt-1 text-[8px] font-bold text-[#2ca01c] bg-[#e9f5e6] rounded uppercase leading-none">
                   {user.role}
                 </span>
               </div>
@@ -199,31 +205,31 @@ export default function Sidebar({ activeSection, setActiveSection, user, alerts,
           
           <button
             onClick={() => setShowLogoutConfirm(true)}
-            className={`w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-full text-xs font-semibold transition-all cursor-pointer ${
+            className={`w-full flex items-center justify-center gap-1.5 py-2 px-3 rounded text-[11px] font-semibold transition-all cursor-pointer ${
               collapsed 
-                ? 'bg-transparent text-red-600 hover:bg-red-50 p-2.5' 
-                : 'bg-red-50 hover:bg-red-100 text-red-700 border border-transparent'
+                ? 'bg-transparent text-red-500 hover:bg-neutral-800 p-2' 
+                : 'bg-transparent hover:bg-red-950/20 text-red-400 border border-transparent hover:border-red-900/30'
             }`}
             title="Sign Out"
           >
-            <LogOut className="w-4 h-4 stroke-[1.5]" />
-            {!collapsed && <span>Logout</span>}
+            <LogOut className="w-3.5 h-3.5 stroke-[2]" />
+            {!collapsed && <span>Sign Out</span>}
           </button>
         </div>
       </div>
 
       {/* Center-aligned Logout Confirmation Modal with serene premium tokens */}
       {showLogoutConfirm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-950/40 backdrop-blur-xs">
-          <div className="w-full max-w-sm bg-white rounded-[28px] border border-[#E3E3E3] p-6 text-center shadow-lg animate-fade-in">
-            <h3 className="text-lg font-semibold font-display text-[#1F1F1F] mb-2">Confirm Logout</h3>
-            <p className="text-xs text-[#757575] font-sans leading-relaxed mb-6">
-              Are you sure you want to log out of eenvoq? Your current session memory context will be compiled and completed.
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-950/60 backdrop-blur-xs">
+          <div className="w-full max-w-sm bg-white rounded border border-[#d4d7dc] p-5 text-center shadow-lg animate-fade-in">
+            <h3 className="text-base font-bold font-display text-neutral-900 mb-1">Confirm Logout</h3>
+            <p className="text-xs text-[#5f6368] font-sans leading-relaxed mb-5">
+              Are you sure you want to log out of Eenvoq? Your current session bookkeeping details will be securely saved.
             </p>
-            <div className="flex items-center justify-center gap-3">
+            <div className="flex items-center justify-center gap-2">
               <button
                 onClick={() => setShowLogoutConfirm(false)}
-                className="px-6 py-2.5 rounded-full border border-[#E3E3E3] bg-white text-xs font-semibold text-[#757575] hover:bg-gray-50 active:scale-95 transition-all cursor-pointer"
+                className="px-4 py-2 rounded border border-[#d4d7dc] bg-white text-xs font-bold text-[#5f6368] hover:bg-neutral-50 active:scale-95 transition cursor-pointer"
               >
                 Cancel
               </button>
@@ -232,9 +238,9 @@ export default function Sidebar({ activeSection, setActiveSection, user, alerts,
                   setShowLogoutConfirm(false);
                   onLogout();
                 }}
-                className="px-6 py-2.5 rounded-full bg-red-650 hover:bg-red-700 text-white text-xs font-semibold active:scale-95 transition-all cursor-pointer animate-pulse-once"
+                className="px-4 py-2 rounded bg-red-600 hover:bg-red-700 text-white text-xs font-bold active:scale-95 transition cursor-pointer"
               >
-                Confirm
+                Confirm Logout
               </button>
             </div>
           </div>

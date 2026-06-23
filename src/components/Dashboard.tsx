@@ -258,7 +258,7 @@ export default function Dashboard({
   ];
 
   return (
-    <div className="space-y-6 pb-24 animate-fade-in font-sans text-[#393a3d] select-none max-w-7xl mx-auto w-full px-3 sm:px-4 md:px-6 lg:px-8 bg-[#f4f5f8] min-h-screen py-6 rounded-3xl border border-[#d4d7dc]" id="eenvoq-quickbooks-dashboard">
+    <div className="space-y-4 pb-12 animate-fade-in font-sans text-[#393a3d] select-none w-full" id="eenvoq-quickbooks-dashboard">
       
       {/* ===============================================
           1. QUICKBOOKS PREMIUM TOP NAVIGATION BAR
@@ -495,7 +495,7 @@ export default function Dashboard({
                   title="Overdue Accounts"
                 />
                 <div 
-                  className="bg-sky-500 transition-all duration-500" 
+                  className="bg-[#1e2a38] transition-all duration-500" 
                   style={{ width: debtors.length > 0 ? '35%' : '0%' }}
                   title="Open Invoices"
                 />
@@ -521,7 +521,7 @@ export default function Dashboard({
 
                 <div className="text-left border-l border-[#eaebeb] pl-3">
                   <div className="flex items-center gap-1.5">
-                    <span className="w-2.5 h-2.5 rounded bg-sky-500 inline-block shrink-0" />
+                    <span className="w-2.5 h-2.5 rounded bg-[#1e2a38] inline-block shrink-0" />
                     <span className="text-[10px] text-[#5f6368] uppercase font-bold tracking-wider">Open Invoices</span>
                   </div>
                   <span className="text-sm font-bold text-[#111111] block font-mono mt-0.5">
@@ -913,9 +913,9 @@ export default function Dashboard({
                   setShowMoreMenu(false);
                   setActiveSection('debtor');
                 }}
-                className="p-4 bg-sky-50/10 hover:bg-sky-50/45 border border-sky-100 hover:border-sky-300 rounded text-left flex flex-col gap-2 transition cursor-pointer"
+                className="p-4 bg-[#e9f5e6]/20 hover:bg-[#e9f5e6]/50 border border-[#2ca01c]/15 hover:border-[#2ca01c] rounded text-left flex flex-col gap-2 transition cursor-pointer"
               >
-                <Users className="w-5 h-5 text-sky-600" />
+                <Users className="w-5 h-5 text-[#2ca01c]" />
                 <div>
                   <h4 className="text-xs font-bold text-[#111111] leading-tight font-sans">Add Client Debts</h4>
                   <p className="text-[10px] text-[#5f6368] mt-0.5 font-normal font-sans">Log custom debtor totals</p>
@@ -1037,10 +1037,10 @@ export default function Dashboard({
                   </div>
                 </div>
               ) : (
-                <div className="p-3.5 bg-sky-50 border border-sky-100 rounded flex gap-2.5 text-xs text-sky-900 leading-relaxed font-sans">
+                <div className="p-3.5 bg-[#e9f5e6] border border-[#2ca01c]/25 rounded flex gap-2.5 text-xs text-neutral-800 leading-relaxed font-sans">
                   <CheckCircle2 className="w-5 h-5 text-[#2ca01c] shrink-0 mt-0.5" />
                   <div>
-                    <span className="font-bold block">Protection Services Online</span>
+                    <span className="font-bold text-[#2ca01c] block">Protection Services Online</span>
                     Audits logging enabled. Deletions or receipt modifications are saved directly to the permanent audit trail.
                   </div>
                 </div>

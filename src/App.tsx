@@ -842,7 +842,7 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
   };
 
   return (
-    <div className="flex h-screen bg-[#FCFAF7]" id="application-container-root animate-fade-in">
+    <div className="flex h-screen bg-[#f4f5f8]" id="application-container-root animate-fade-in">
       
       {/* Sidebar for Desktop */}
       <div className="hidden md:flex shrink-0">
@@ -858,22 +858,25 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
       {/* Main body canvas */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         
-        {/* Desktop Header for Minimalist Aesthetic */}
-        <header className="hidden md:flex h-16 items-center justify-between px-8 bg-[#FCFAF7]/90 backdrop-blur-md border-b border-[#E3E3E3] select-none shrink-0" id="desktop-navigation-header">
-          <h1 className="text-sm font-semibold text-[#1F1F1F] font-display flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-[#1F1F1F]" />
+        {/* Desktop Header for QuickBooks Aesthetic */}
+        <header className="hidden md:flex h-12 items-center justify-between px-6 bg-[#ffffff] border-b border-[#d4d7dc] select-none shrink-0" id="desktop-navigation-header">
+          <h1 className="text-xs font-bold text-gray-900 font-sans flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-[#2ca01c] animate-pulse" />
             {userSession.storeName}
+            <span className="text-[10px] bg-[#e9f5e6] text-[#2ca01c] border border-[#2ca01c]/20 px-1.5 py-0.2 rounded uppercase font-bold tracking-wider scale-95 font-sans">
+              Live Register
+            </span>
           </h1>
           <div className="flex items-center gap-4">
-            <span className="text-[10px] text-[#757575] font-mono tracking-wider font-semibold">AUDIT ACTIVE</span>
-            <div className="w-8 h-8 rounded-full bg-white border border-[#E3E3E3] flex items-center justify-center text-xs font-semibold text-[#1F1F1F]">
+            <span className="text-[9px] text-[#2ca01c] font-bold tracking-wider font-sans">SENTRY ALARMS ACTIVE</span>
+            <div className="w-7 h-7 rounded bg-[#1e2a38] text-white flex items-center justify-center text-[10px] font-bold">
               {userSession.name.split(' ').map((n: string) => n[0]).join('')}
             </div>
           </div>
         </header>
 
          {/* Mobile Header Bar */}
-        <header className="h-16 bg-[#FCFAF7]/90 backdrop-blur-md border-b border-[#E3E3E3] px-4 flex items-center justify-between md:hidden select-none shrink-0" id="mobile-navigation-header">
+        <header className="h-16 bg-[#ffffff] border-b border-[#d4d7dc] px-4 flex items-center justify-between md:hidden select-none shrink-0" id="mobile-navigation-header">
 <div className="flex items-center gap-1 cursor-pointer" onClick={() => {
   setActiveSection('dashboard');
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -942,8 +945,8 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
           </div>
         </main>
 
-        {/* Global Mobile Bottom Navigation Bar: Screen-wide, Flush base, Premium Sky Blue active styling */}
-        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 pb-5 pt-3.5 shadow-md z-45 md:hidden select-none" id="global-mobile-bottom-nav">
+        {/* Global Mobile Bottom Navigation Bar: Screen-wide, Flush base, QuickBooks green active styling */}
+        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-[#d4d7dc] pb-5 pt-3 select-none md:hidden z-45" id="global-mobile-bottom-nav">
           <div className="max-w-7xl mx-auto px-4 flex items-center justify-around">
             
             <button 
@@ -952,34 +955,34 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
                 setActiveSection('dashboard');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
-              className={`flex flex-col items-center gap-1.5 bg-transparent border-0 cursor-pointer transition ${
-                activeSection === 'dashboard' ? 'text-sky-500 font-semibold' : 'text-slate-400 hover:text-slate-600 font-medium'
+              className={`flex flex-col items-center gap-1 bg-transparent border-0 cursor-pointer transition ${
+                activeSection === 'dashboard' ? 'text-[#2ca01c] font-semibold' : 'text-slate-500 hover:text-slate-800 font-medium'
               }`}
             >
-              <Activity className="w-5 h-5 stroke-[1.5]" />
-              <span className="text-[10px] tracking-tight leading-none uppercase">Home</span>
+              <Activity className="w-5 h-5 stroke-[2]" />
+              <span className="text-[9px] tracking-tight leading-none uppercase font-sans">Home</span>
             </button>
 
             <button 
               type="button" 
               onClick={() => setActiveSection('receipts')}
-              className={`flex flex-col items-center gap-1.5 bg-transparent border-0 cursor-pointer transition ${
-                activeSection === 'receipts' ? 'text-sky-500 font-semibold' : 'text-slate-400 hover:text-slate-600 font-medium'
+              className={`flex flex-col items-center gap-1 bg-transparent border-0 cursor-pointer transition ${
+                activeSection === 'receipts' ? 'text-[#2ca01c] font-semibold' : 'text-slate-500 hover:text-slate-800 font-medium'
               }`}
             >
-              <CircleDollarSign className="w-5 h-5 stroke-[1.5]" />
-              <span className="text-[10px] tracking-tight leading-none uppercase">Sales</span>
+              <CircleDollarSign className="w-5 h-5 stroke-[2]" />
+              <span className="text-[9px] tracking-tight leading-none uppercase font-sans">Sales</span>
             </button>
 
             <button 
               type="button" 
               onClick={() => setActiveSection('inventory')}
-              className={`flex flex-col items-center gap-1.5 bg-transparent border-0 cursor-pointer transition ${
-                activeSection === 'inventory' ? 'text-sky-500 font-semibold' : 'text-slate-400 hover:text-slate-600 font-medium'
+              className={`flex flex-col items-center gap-1 bg-transparent border-0 cursor-pointer transition ${
+                activeSection === 'inventory' ? 'text-[#2ca01c] font-semibold' : 'text-slate-500 hover:text-slate-800 font-medium'
               }`}
             >
-              <ShoppingCart className="w-5 h-5 stroke-[1.5]" />
-              <span className="text-[10px] tracking-tight leading-none uppercase">Inventory</span>
+              <ShoppingCart className="w-5 h-5 stroke-[2]" />
+              <span className="text-[9px] tracking-tight leading-none uppercase font-sans">Inventory</span>
             </button>
 
             <button 
@@ -993,10 +996,10 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
                   }
                 }, 100);
               }}
-              className="flex flex-col items-center gap-1.5 bg-transparent border-0 cursor-pointer text-slate-400 hover:text-slate-600 font-medium transition"
+              className="flex flex-col items-center gap-1 bg-transparent border-0 cursor-pointer text-slate-500 hover:text-slate-800 font-medium transition"
             >
-              <Bot className="w-5 h-5 stroke-[1.5]" />
-              <span className="text-[10px] tracking-tight leading-none uppercase">Analysis</span>
+              <Bot className="w-5 h-5 stroke-[2]" />
+              <span className="text-[9px] tracking-tight leading-none uppercase font-sans">Analysis</span>
             </button>
 
             <button 

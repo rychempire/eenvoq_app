@@ -500,8 +500,8 @@ export default function DebtorControl({
           </div>
 
           <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap" id="debtors-actions-bar">
-            <span className="text-[10px] uppercase font-bold py-2 px-4 bg-red-50 text-red-700 border border-red-150/40 rounded-full flex items-center gap-1 shadow-xs">
-              <AlertCircle className="w-3.5 h-3.5 text-red-600 shrink-0" />
+            <span className="text-[9px] uppercase font-bold py-1.5 px-3 bg-[#fde8e8] text-[#9b1c1c] border border-red-200 rounded flex items-center gap-1">
+              <AlertCircle className="w-3.5 h-3.5 text-red-650 shrink-0" />
               <span>Overdue Priority Check Active</span>
             </span>
           </div>
@@ -510,19 +510,19 @@ export default function DebtorControl({
 
       {/* 2. LIVE SUCCESS NOTIFICATION FEED TOAST */}
       {statusNotification && (
-        <div className="fixed bottom-6 right-6 z-50 p-4 rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-950 font-sans shadow-lg flex items-center gap-3.5 max-w-sm animate-bounce" id="local-debtor-toast">
-          <div className="p-1.5 bg-emerald-600 rounded-lg text-white">
-            <Check className="w-5 h-5" />
+        <div className="fixed bottom-6 right-6 z-50 p-4 rounded border border-[#2ca01c]/30 bg-[#e9f5e6] text-slate-800 font-sans shadow-md flex items-center gap-3 max-w-sm animate-bounce" id="local-debtor-toast">
+          <div className="p-1.5 bg-[#2ca01c] rounded text-white">
+            <Check className="w-4 h-4" />
           </div>
           <div>
-            <strong className="text-xs font-bold block">Transaction Logged successfully</strong>
-            <p className="text-[10px] text-emerald-800 font-semibold">{statusNotification}</p>
+            <strong className="text-xs font-bold block text-[#2ca01c]">Transaction Logged Successfully</strong>
+            <p className="text-[10px] text-slate-600 font-medium">{statusNotification}</p>
           </div>
         </div>
       )}
 
       {/* 3. FOUR TABS CONTROL STRIP */}
-      <div className="flex border-b border-neutral-150/60 pb-1 text-neutral-600 font-sans select-none overflow-x-auto scrollbar-none items-center gap-2" id="debtors-hub-tabs">
+      <div className="flex border-b border-[#d4d7dc] pb-1 text-[#393a3d] font-sans select-none overflow-x-auto scrollbar-none items-center gap-1.5" id="debtors-hub-tabs">
         {[
           { tab: 'overview', label: 'Overview Hub', icon: <Activity className="w-3.5 h-3.5" /> },
           { tab: 'debtors', label: 'Debtors Ledger', icon: <User className="w-3.5 h-3.5" /> },
@@ -539,13 +539,13 @@ export default function DebtorControl({
                   setSelectedDebtor(initialDebtors[0]);
                 }
               }}
-              className={`flex items-center gap-1.5 py-2.5 px-4 text-xs font-semibold rounded-full transition-all duration-200 whitespace-nowrap cursor-pointer border ${
+              className={`flex items-center gap-1.5 py-1.5 px-3 rounded text-xs font-bold transition-all duration-150 whitespace-nowrap cursor-pointer border ${
                 isActive 
-                  ? 'bg-sky-50 text-sky-850 border-sky-200/60 shadow-xs font-bold' 
-                  : 'bg-white text-neutral-600 border-neutral-150/45 hover:bg-neutral-50 hover:text-neutral-900'
+                  ? 'bg-[#e9f5e6] text-[#2ca01c] border-[#2ca01c]/30' 
+                  : 'bg-white text-slate-600 border-[#d4d7dc] hover:bg-[#f4f5f8]'
               }`}
             >
-              <span className={isActive ? 'text-sky-700' : 'text-neutral-400'}>{t.icon}</span>
+              <span className={isActive ? 'text-[#2ca01c]' : 'text-neutral-400'}>{t.icon}</span>
               <span>{t.label}</span>
             </button>
           );
