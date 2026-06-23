@@ -257,13 +257,23 @@ CREATE TRIGGER before_audit_inserted_or_updated
 -- Helper functions designed to bypass RLS recursion on the profiles table
 CREATE OR REPLACE FUNCTION public.get_user_store_id()
 RETURNS UUID AS $$
-    SELECT store_id FROM public.profiles WHERE id = auth.uid();
-$$ LANGUAGE sql SECURITY DEFINER;
+DECLARE
+    v_store_id UUID;
+BEGIN
+    SELECT store_id INTO v_store_id FROM public.profiles WHERE id = auth.uid();
+    RETURN v_store_id;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
 
 CREATE OR REPLACE FUNCTION public.get_user_role()
 RETURNS VARCHAR AS $$
-    SELECT role FROM public.profiles WHERE id = auth.uid();
-$$ LANGUAGE sql SECURITY DEFINER;
+DECLARE
+    v_role VARCHAR;
+BEGIN
+    SELECT role INTO v_role FROM public.profiles WHERE id = auth.uid();
+    RETURN v_role;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
 
 ALTER TABLE public.stores ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;

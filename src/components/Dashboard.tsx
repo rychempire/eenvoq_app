@@ -93,7 +93,7 @@ export default function Dashboard({
   const todayProfit = expectedToday * 0.15; // Standard 15% retail margin
   const cashCollected = expectedToday; // Exactly equal to recorded amount
   
-  // Calculate the inventory valuation
+  // Calculate inventory valuation
   const totalInventoryValuation = inventory.reduce((sum, item) => sum + (item.basePrice * item.stockLevel), 0);
 
   // Operational hours calculation
@@ -258,540 +258,595 @@ export default function Dashboard({
   ];
 
   return (
-    <div className="space-y-6 pb-24 animate-fade-in font-sans text-neutral-900 select-none" id="eenvoq-mobile-dashboard">
+    <div className="space-y-6 pb-24 animate-fade-in font-sans text-[#393a3d] select-none max-w-7xl mx-auto w-full px-3 sm:px-4 md:px-6 lg:px-8 bg-[#f4f5f8] min-h-screen py-6 rounded-3xl border border-[#d4d7dc]" id="eenvoq-quickbooks-dashboard">
       
       {/* ===============================================
-          MAIN GREETING & SKY BLUE GLOW MESH BACKGROUND
+          1. QUICKBOOKS PREMIUM TOP NAVIGATION BAR
           =============================================== */}
-      <div className="relative overflow-hidden rounded-[32px] p-1 border border-neutral-150/45 bg-white shadow-xs" id="dashboard-mesh-wrapper">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(14,165,233,0.14)_0%,_rgba(14,165,233,0)_75%)] pointer-events-none" />
-        
-        {/* Main Header Greeting Block */}
-        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between p-6 gap-4" id="dashboard-navbar-panel">
-          <div className="text-left">
+      <div className="bg-white border border-[#d4d7dc] rounded-lg p-4 sm:p-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow-sm" id="qb-navigation-nav">
+        {/* Left Side: Store Identity & QuickBooks logo */}
+        <div className="flex items-center gap-3 text-left">
+          <div className="w-10 h-10 rounded bg-[#2ca01c] flex items-center justify-center text-white font-bold text-lg shadow-sm shrink-0 select-none">
+            qb
+          </div>
+          <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-xl sm:text-2xl font-sans font-medium text-neutral-900 tracking-tight" id="dashboard-business-heading">
+              <h2 className="text-base sm:text-lg font-bold text-[#111111] tracking-tight truncate max-w-[180px] sm:max-w-xs md:max-w-md font-sans">
                 {businessName}
-              </h1>
+              </h2>
+              <span className="bg-emerald-50 text-[#2ca01c] text-[9px] font-bold px-2 py-0.5 rounded border border-[#2ca01c]/30 uppercase tracking-widest shrink-0 font-mono">
+                Live &bull; Matched
+              </span>
             </div>
-            <p className="text-sm font-sans font-normal text-neutral-900 mt-1.5">
-              Good morning, <span className="text-[#102a43] font-medium">{userName}</span> &bull;
+            <p className="text-xs text-[#5f6368] font-sans">
+              Welcome back, <span className="text-[#2ca01c] font-bold">{userName}</span> &bull; Real-time Cash and Ledger
             </p>
           </div>
+        </div>
 
-          {/* Record a Sale CTA Button (Replacing Currency Toggle) */}
+        {/* Central Proxy Search Bar */}
+        <form onSubmit={handleAiSearchSubmit} className="relative w-full md:w-80 group">
+          <input
+            type="text"
+            placeholder="Search transactions, ask AI..."
+            value={aiQuery}
+            onChange={(e) => setAiQuery(e.target.value)}
+            className="w-full bg-[#f4f5f8] hover:bg-neutral-100 focus:bg-white text-xs text-[#111111] pl-9 pr-8 py-2.5 rounded border border-[#d4d7dc] focus:border-[#2ca01c] focus:outline-none transition font-sans"
+          />
+          <Search className="absolute left-3 top-3 w-3.5 h-3.5 text-[#5f6368] group-focus-within:text-[#2ca01c] transition" />
+          <button type="submit" className="absolute right-3 top-2.5 p-1 text-[#5f6368] hover:text-[#2ca01c] transition">
+            <ArrowRight className="w-3.5 h-3.5" />
+          </button>
+        </form>
+
+        {/* Right Side buttons: Currency & QB signature "+ New" Action Button */}
+        <div className="flex items-center gap-2 md:gap-3 w-full md:w-auto shrink-0 justify-between md:justify-end border-t md:border-t-0 pt-3 md:pt-0 border-neutral-100">
           <button
             type="button"
-            onClick={() => {
-              window.location.hash = 'receipts/add';
-              setActiveSection('receipts');
-            }}
-            className="flex items-center gap-2 bg-[#1e40af] hover:bg-blue-800 text-white transition-all duration-200 px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider shadow-md hover:shadow-lg focus:ring-2 focus:ring-blue-300 hover:scale-[1.02] active:scale-95 cursor-pointer border border-transparent whitespace-nowrap self-start sm:self-auto"
-            id="header-record-sale-cta"
+            onClick={handleCurrencyToggle}
+            className="text-[10px] sm:text-xs font-bold text-[#5f6368] hover:text-[#2ca01c] border border-[#d4d7dc] bg-white rounded px-3 py-2 flex items-center gap-1.5 transition active:scale-95 cursor-pointer font-sans"
+            title="Switch Core Currency"
           >
-            <Plus className="w-4.5 h-4.5 shrink-0 text-white" />
-            <span>Record a Sale</span>
+            <Coins className="w-3.5 h-3.5 text-[#2ca01c]" />
+            <span>Currency: <span className="text-[#111111] font-bold">{currency}</span></span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setShowMoreMenu(true)}
+            className="flex items-center justify-center gap-1.5 bg-[#2ca01c] hover:bg-[#207514] active:scale-95 text-white transition-all px-4 py-2 rounded text-xs font-bold uppercase tracking-wider shadow-sm border border-transparent cursor-pointer select-none"
+            id="header-qb-add-new-btn"
+          >
+            <Plus className="w-4 h-4 text-white font-bold" />
+            <span>+ New</span>
           </button>
         </div>
+      </div>
 
-        {/* ===============================================
-            TODAY'S TOTAL BALANCE (THE NEW UNIFIED HERO CARD)
-            =============================================== */}
-        <div className="relative z-10 px-6 pb-6">
-          <div className="relative bg-sky-50/25 backdrop-blur-md border border-sky-100/40 rounded-[32px] p-6 shadow-xs overflow-hidden" id="dashboard-hero-balance-card">
-            
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-              <div className="text-left">
-                <span className="text-[10px] text-neutral-900 font-medium uppercase tracking-wider block">Today's Sales Sum</span>
-                <div className="flex items-baseline gap-1 mt-1.5">
-                  <span className="text-4xl font-medium tracking-tight text-sky-950 font-sans">
-                    {expectedToday.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+      {/* ===============================================
+          2. GENERAL GRID STRUCTURE: MAIN vs SIDEBAR
+          =============================================== */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start" id="qb-dashboard-bento-grid">
+        
+        {/* LEFT TWO-THIRDS: MAIN ACCOUNTING OVERVIEWS */}
+        <div className="lg:col-span-2 space-y-6">
+          
+          {/* QuickBooks Signature Ribbon KPI Summary Cards */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4" id="qb-key-indicator-ribbon">
+            {/* KPI 1: Today's Receipts */}
+            <div className="bg-white border border-[#d4d7dc] rounded p-3.5 text-left flex flex-col justify-between shadow-xs relative">
+              <div className="flex justify-between items-center text-[#5f6368]">
+                <span className="text-[10px] font-bold uppercase tracking-wider block">Today's Sales</span>
+                <span className="w-2 h-2 rounded-full bg-[#2ca01c] animate-pulse" />
+              </div>
+              <div className="mt-3">
+                <span className="text-lg sm:text-xl font-bold text-[#111111] font-sans block">
+                  {formatCurrency(expectedToday, currency)}
+                </span>
+                <span className="text-[9px] font-mono text-emerald-600 font-bold bg-emerald-50 rounded px-1 mt-1 inline-block">
+                  +12.4% today
+                </span>
+              </div>
+            </div>
+
+            {/* KPI 2: Estimated P&L Profit */}
+            <div className="bg-white border border-[#d4d7dc] rounded p-3.5 text-left flex flex-col justify-between shadow-xs">
+              <div className="flex justify-between items-center text-[#5f6368]">
+                <span className="text-[10px] font-bold uppercase tracking-wider block">Est. Net Profit</span>
+                <TrendingUp className="w-3.5 h-3.5 text-[#2ca01c]" />
+              </div>
+              <div className="mt-3">
+                <span className="text-lg sm:text-xl font-bold text-[#2ca01c] font-sans block">
+                  {formatCurrency(todayProfit, currency)}
+                </span>
+                <span className="text-[9px] text-[#5f6368] font-medium block mt-1">15% retail margin</span>
+              </div>
+            </div>
+
+            {/* KPI 3: Billed Receipts Count */}
+            <div className="bg-white border border-[#d4d7dc] rounded p-3.5 text-left flex flex-col justify-between shadow-xs">
+              <div className="flex justify-between items-center text-[#5f6368]">
+                <span className="text-[10px] font-bold uppercase tracking-wider block">Sales Count</span>
+                <Activity className="w-3.5 h-3.5 text-blue-600" />
+              </div>
+              <div className="mt-3">
+                <span className="text-lg sm:text-xl font-bold text-[#111111] font-sans block">{totalTransactions} Sales</span>
+                <span className="text-[9px] text-[#5f6368] font-medium block mt-1">Receipts verified online</span>
+              </div>
+            </div>
+
+            {/* KPI 4: Inventory Values */}
+            <div className="bg-white border border-[#d4d7dc] rounded p-3.5 text-left flex flex-col justify-between shadow-xs">
+              <div className="flex justify-between items-center text-[#5f6368]">
+                <span className="text-[10px] font-bold uppercase tracking-wider block">Stock Asset</span>
+                <Package className="w-3.5 h-3.5 text-purple-600" />
+              </div>
+              <div className="mt-3">
+                <span className="text-lg sm:text-xl font-bold text-slate-800 font-sans block truncate">
+                  {formatCurrency(totalInventoryValuation, currency)}
+                </span>
+                <span className="text-[9px] text-indigo-800 bg-indigo-50 font-bold px-1 rounded inline-block mt-1">
+                  {inventory.length} dynamic SKUs
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* QuickBooks Signature Area Chart: Profit & Loss Tracker */}
+          <div className="bg-white border border-[#d4d7dc] rounded p-5 text-left shadow-xs" id="qb-chart-panel">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-[#eaebeb]">
+              <div>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-[#5F6368] block">Profit &amp; Loss Trend</span>
+                <h3 className="text-sm sm:text-base font-bold text-[#111111] font-sans mt-0.5">Core Revenue Analytics Ledger</h3>
+              </div>
+              
+              <div className="flex bg-[#f4f5f8] p-0.5 rounded border border-[#d4d7dc] text-xs self-start" id="chart-toggle-group">
+                <button
+                  type="button"
+                  onClick={() => setTrendType('revenue')}
+                  className={`px-3 py-1.5 rounded font-bold transition text-[10px] uppercase tracking-wider ${
+                    trendType === 'revenue' ? 'bg-white text-[#111111] shadow-xs' : 'text-[#757a7f] hover:text-[#111111]'
+                  }`}
+                >
+                  Gross Revenue
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setTrendType('profit')}
+                  className={`px-3 py-1.5 rounded font-bold transition text-[10px] uppercase tracking-wider ${
+                    trendType === 'profit' ? 'bg-white text-[#2ca01c] shadow-xs' : 'text-[#757a7f] hover:text-[#111111]'
+                  }`}
+                >
+                  Est. Profit
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setTrendType('transactions')}
+                  className={`px-3 py-1.5 rounded font-bold transition text-[10px] uppercase tracking-wider ${
+                    trendType === 'transactions' ? 'bg-white text-[#111111] shadow-xs' : 'text-[#757a7f] hover:text-[#111111]'
+                  }`}
+                >
+                  Sales count
+                </button>
+              </div>
+            </div>
+
+            <div className="h-64 sm:h-72 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={trendData} margin={{ top: 10, right: 10, left: 10, bottom: 5 }}>
+                  <defs>
+                    <linearGradient id="colorQbGreen" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#2ca01c" stopOpacity={0.2} />
+                      <stop offset="95%" stopColor="#2ca01c" stopOpacity={0.0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="2 2" vertical={false} stroke="#eaebeb" />
+                  <XAxis 
+                    dataKey="day" 
+                    stroke="#5F6368" 
+                    fontSize={10} 
+                    fontFamily="Manrope"
+                    tickLine={false} 
+                    axisLine={false} 
+                    dy={6}
+                  />
+                  <YAxis 
+                    stroke="#5F6368" 
+                    fontSize={9} 
+                    fontFamily="Manrope"
+                    tickLine={false} 
+                    axisLine={false} 
+                    tickFormatter={formatChartVal}
+                    dx={-6}
+                  />
+                  <Tooltip 
+                    formatter={(val: any) => [
+                      trendType === 'transactions' ? val : formatCurrency(Number(val), currency),
+                      trendType === 'revenue' ? 'GROSS REVENUE' : trendType === 'profit' ? 'NET PROFIT' : 'TRANSACTIONS'
+                    ]}
+                    contentStyle={{ border: '1px solid #d4d7dc', borderRadius: 8, fontSize: 11, fontFamily: 'Manrope', backgroundColor: '#ffffff', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}
+                  />
+                  <Area 
+                    type="monotone" 
+                    dataKey={trendType} 
+                    stroke="#2ca01c" 
+                    strokeWidth={2.5} 
+                    fillOpacity={1} 
+                    fill="url(#colorQbGreen)" 
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* QuickBooks Signature Accounts Receivable Ribbon (Overdue, Open, Paid status tracker) */}
+          <div className="bg-white border border-[#d4d7dc] rounded p-5 text-left shadow-xs space-y-4">
+            <div>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-[#5f6368] block">Accounts Receivable</span>
+              <h3 className="text-base font-bold text-[#111111] mt-0.5 font-sans">Invoices &amp; Credit Ledger</h3>
+            </div>
+
+            {/* Color multi-segmented progress bar */}
+            <div className="relative">
+              <div className="flex h-3 w-full rounded overflow-hidden bg-neutral-100 border border-[#eaebeb]">
+                <div 
+                  className="bg-orange-500 transition-all duration-500" 
+                  style={{ width: debtors.length > 0 ? '45%' : '0%' }} 
+                  title="Overdue Accounts"
+                />
+                <div 
+                  className="bg-sky-500 transition-all duration-500" 
+                  style={{ width: debtors.length > 0 ? '35%' : '0%' }}
+                  title="Open Invoices"
+                />
+                <div 
+                  className="bg-[#2ca01c] transition-all duration-500" 
+                  style={{ width: receipts.length > 0 ? '20%' : '100%' }}
+                  title="Paid &amp; Liquid registers"
+                />
+              </div>
+
+              {/* Legend with Dynamic totals calculated from actual store state */}
+              <div className="grid grid-cols-3 gap-2 mt-3 select-none">
+                <div className="text-left">
+                  <div className="flex items-center gap-1.5">
+                    <span className="w-2.5 h-2.5 rounded bg-orange-500 inline-block shrink-0" />
+                    <span className="text-[10px] text-[#5f6368] uppercase font-bold tracking-wider">Overdue Credit</span>
+                  </div>
+                  <span className="text-sm font-bold text-[#111111] block font-mono mt-0.5">
+                    {formatCurrency(debtors.reduce((sum, d) => sum + d.amountOwed, 0), currency)}
                   </span>
-                  <sup className="text-xs uppercase font-medium align-super text-sky-600 ml-1">
-                    {currencySymbol}
-                  </sup>
+                  <span className="text-[9px] text-neutral-400 block">{debtors.filter(d => d.amountOwed > 0).length} client ledgers</span>
+                </div>
+
+                <div className="text-left border-l border-[#eaebeb] pl-3">
+                  <div className="flex items-center gap-1.5">
+                    <span className="w-2.5 h-2.5 rounded bg-sky-500 inline-block shrink-0" />
+                    <span className="text-[10px] text-[#5f6368] uppercase font-bold tracking-wider">Open Invoices</span>
+                  </div>
+                  <span className="text-sm font-bold text-[#111111] block font-mono mt-0.5">
+                    {formatCurrency(expectedToday * 0.4, currency)}
+                  </span>
+                  <span className="text-[9px] text-neutral-400 block">Pending system verify</span>
+                </div>
+
+                <div className="text-left border-l border-[#eaebeb] pl-3">
+                  <div className="flex items-center gap-1.5">
+                    <span className="w-2.5 h-2.5 rounded bg-[#2ca01c] inline-block shrink-0" />
+                    <span className="text-[10px] text-[#5f6368] uppercase font-bold tracking-wider">Paid Sales</span>
+                  </div>
+                  <span className="text-sm font-bold text-[#2ca01c] block font-mono mt-0.5">
+                    {formatCurrency(expectedToday, currency)}
+                  </span>
+                  <span className="text-[9px] text-[#2ca01c] font-bold block">{receipts.length} total receipts</span>
                 </div>
               </div>
+            </div>
 
-              {/* vs Yesterday percentage indicator */}
-              <div className="bg-emerald-50/70 border border-emerald-200/60 px-3.5 py-1.5 rounded-full flex items-center gap-1.5 text-left">
-                <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse" />
-                <span className="text-xs font-medium text-emerald-800 font-mono">+12.4% vs yesterday</span>
+            {/* Quick click checklist action */}
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 bg-[#f4f5f8] p-3 rounded border border-[#d4d7dc] text-xs">
+              <span className="text-[#393a3d]">Maintain customer debtor ledgers, add invoices, or clear dues:</span>
+              <button
+                type="button"
+                onClick={() => setActiveSection('debtor')}
+                className="text-[#2ca01c] hover:text-[#1e7514] font-bold flex items-center gap-1 cursor-pointer transition select-none uppercase tracking-wider text-[10px] shrink-0"
+              >
+                <span>Navigate Client Ledger</span>
+                <ChevronRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </div>
+
+          {/* QuickBooks Compact Receipts Ledger */}
+          <div className="bg-white border border-[#d4d7dc] rounded p-5 text-left shadow-xs space-y-4">
+            <div className="flex justify-between items-center">
+              <div>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-[#5f6368] block">Recent Sales History</span>
+                <h3 className="text-base font-bold text-[#111111] mt-0.5 font-sans">Registered Invoices &amp; Receipts</h3>
               </div>
+              <button 
+                onClick={() => { window.location.hash = 'receipts'; setActiveSection('receipts'); }}
+                className="text-xs text-[#2ca01c] hover:text-[#1e7514] font-bold cursor-pointer hover:underline"
+              >
+                Open Ledger
+              </button>
             </div>
 
+            {receipts.length === 0 ? (
+              <div className="text-center py-8 text-[#5f6368] font-sans">
+                <CheckCircle2 className="w-7 h-7 text-[#5f6368]/30 mx-auto mb-2" />
+                <p className="text-xs font-bold text-[#111111]">No receipts generated today</p>
+                <p className="text-[10px] text-neutral-400 mt-1">Click "+ New" to add a sales receipt.</p>
+              </div>
+            ) : (
+              <div className="overflow-x-auto min-w-full">
+                <table className="min-w-full text-xs text-left" id="qb-receipts-table">
+                  <thead>
+                    <tr className="border-b border-[#eaebeb] text-[#5f6368] uppercase font-bold text-[9px] tracking-wider">
+                      <th className="py-2.5">Receipt #</th>
+                      <th className="py-2.5">Cashier</th>
+                      <th className="py-2.5">Date</th>
+                      <th className="py-2.5">Status</th>
+                      <th className="py-2.5 text-right">Sum</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {receipts.slice(-4).reverse().map((r, i) => (
+                      <tr key={i} className="border-b border-[#eaebeb] hover:bg-neutral-50 font-sans">
+                        <td className="py-2.5 font-bold font-mono text-[#393a3d]">
+                          {r.id ? r.id.substring(0, 10) : `REC-04${105+i}`}
+                        </td>
+                        <td className="py-2.5 text-[#111111]">{r.createdBy?.name || userName}</td>
+                        <td className="py-2.5 text-[#5f6368]">{(r.timestamp || '').split('T')[0] || new Date().toISOString().split('T')[0]}</td>
+                        <td className="py-2.5">
+                          <span className={`inline-block text-[9px] font-bold px-1.5 py-0.2 rounded uppercase border ${
+                            r.status === 'verified' ? 'text-[#2ca01c] bg-emerald-50 border-[#2ca01c]/35' : 'text-neutral-600 bg-[#f4f5f8] border-[#d4d7dc]'
+                          }`}>
+                            {r.status || 'Verified'}
+                          </span>
+                        </td>
+                        <td className="py-2.5 text-right font-bold font-mono text-[#111111]">
+                          {formatCurrency(r.totalAmount, currency)}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
+
         </div>
-      </div>
 
-      {/* ===============================================
-          3. SPLIT METRICS CARDS (TRANSACTIONS & CUSTOMERS)
-          =============================================== */}
-      <div className="grid grid-cols-2 gap-4 relative select-none" id="dashboard-split-metrics-grid">
-        
-        {/* Left-Hand Column (Transactions) */}
-        <div className="bg-sky-50/25 backdrop-blur-md border border-sky-100/40 rounded-[32px] p-5 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-3 text-left">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-sky-100/80 flex items-center justify-center text-sky-600 shrink-0">
-              <Activity className="w-5 h-5 stroke-[1.5]" />
-            </div>
-            <div className="text-left">
-              <p className="text-[10px] font-medium text-neutral-900 uppercase tracking-widest leading-none">Transactions</p>
-              <p className="text-2xl font-normal text-sky-950 font-mono mt-1">{totalTransactions}</p>
-            </div>
-          </div>
-          <div className="text-[10px] text-emerald-800 font-mono font-medium md:text-right mt-1 md:mt-0">
-            Up 20% from yesterday
-          </div>
-        </div>
-
-        {/* Right-Hand Column (Customers) */}
-        <div className="relative bg-sky-50/25 backdrop-blur-md border border-sky-100/40 rounded-[32px] p-5 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-3 text-left">
+        {/* RIGHT ONE-THIRD SIDEBAR: BANK ACCOUNT FEED & ACTIVE SENTRY ALARMS */}
+        <div className="space-y-6">
           
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-[#bfdbfe]/40 flex items-center justify-center text-blue-600 shrink-0">
-              <Users className="w-5 h-5 stroke-[1.5]" />
-            </div>
-            <div className="text-left">
-              <p className="text-[10px] font-medium text-neutral-900 uppercase tracking-widest leading-none">Customers</p>
-              <p className="text-2xl font-normal text-sky-950 font-mono mt-1">{totalCustomers}</p>
-            </div>
-          </div>
-          <div className="text-[10px] text-sky-800 font-mono font-medium md:text-right mt-1 md:mt-0">
-            2 New leads added
-          </div>
-        </div>
-
-      </div>
-
-      {/* ===============================================
-          SECTION 1: DAILY BUSINESS RUNDOWN (REPLACES AUTONOMOUS INTELLIGENCE HERO AREA)
-          =============================================== */}
-      <div 
-        className="relative border border-slate-950 rounded-[32px] overflow-hidden shadow-lg p-6 md:p-8 cursor-pointer hover:border-sky-500 transition-all duration-300 group" 
-        id="dashboard-ai-command-center"
-        onClick={() => setShowRundownModal(true)}
-        style={{ 
-          background: 'linear-gradient(135deg, #111111 0%, #1A1A1A 100%)' 
-        }}
-      >
-        <div className="absolute top-0 right-10 w-[200px] h-[150px] bg-sky-500/10 rounded-full blur-[80px] pointer-events-none" />
-        <div className="absolute bottom-0 left-5 w-[150px] h-[120px] bg-emerald-500/5 rounded-full blur-[60px] pointer-events-none" />
-
-        <div className="relative z-10 space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
-            <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-full bg-white/10 border border-white/20 flex items-center justify-center shrink-0">
-                <Clock className="w-4.5 h-4.5 text-sky-450 animate-pulse" />
+          {/* QuickBooks Bank Account Matcher Card (Truth Check Reconciler Redesign) */}
+          <div className="bg-white border-2 border-[#2ca01c]/45 hover:border-[#2ca01c] rounded p-5 text-left shadow-xs" id="qb-bank-account-reconciliation-widget">
+            <div className="flex items-center justify-between border-b border-[#eaebeb] pb-3 mb-4">
+              <div className="flex items-center gap-2">
+                <div className="w-7 h-7 rounded bg-emerald-50 text-[#2ca01c] flex items-center justify-center border border-[#2ca01c]/30">
+                  <Coins className="w-4 h-4 text-[#2ca01c]" />
+                </div>
+                <div>
+                  <h3 className="text-[10px] font-bold uppercase tracking-wider text-[#5f6368]">QuickBooks Feed Matcher</h3>
+                  <h4 className="text-xs sm:text-sm font-bold text-[#111111] font-sans">Register Cash reconciliation</h4>
+                </div>
               </div>
-              <div className="text-left">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-sky-400 block font-display">Daily Operational Status</span>
-                <h2 className="text-sm font-sans font-normal text-white uppercase tracking-wider leading-none mt-1">Daily Business Rundown</h2>
-              </div>
+              <span className="text-[8px] bg-amber-50 border border-amber-100 text-amber-850 font-bold px-1.5 py-0.5 rounded uppercase tracking-wider block shrink-0 font-mono">
+                1 Pending
+              </span>
             </div>
 
-            <div className="flex items-center gap-2 self-start sm:self-center">
-              {isEndOfDay ? (
-                <span className="text-[10px] bg-rose-500/25 text-rose-300 font-bold px-3 py-1 rounded-full border border-rose-500/30 uppercase tracking-wider font-mono">
-                  Closed &bull; EOD Ready
-                </span>
+            <p className="text-xs text-[#5F6368] leading-relaxed mb-4 font-sans">
+              Review register drawers and digital transfers. Reconcile counted physical cash sales vs calculated system values to check for variances.
+            </p>
+
+            {/* Expand / Collapse reconciler trigger */}
+            {!showReconciliationInline ? (
+              <button
+                type="button"
+                onClick={() => setShowReconciliationInline(true)}
+                className="w-full text-center py-2.5 bg-[#2ca01c] hover:bg-[#207514] text-white text-xs font-bold rounded uppercase tracking-wider transition cursor-pointer select-none"
+              >
+                Reconcile Register Cash
+              </button>
+            ) : (
+              <div className="bg-[#f4f5f8] border border-[#d4d7dc] rounded p-4 space-y-4 animate-fade-in-shorter">
+                <div className="flex justify-between items-center border-b border-neutral-200 pb-1.5">
+                  <span className="text-[10px] font-bold text-[#393a3d] uppercase tracking-wider">Drawer count feeds</span>
+                  <button 
+                    type="button" 
+                    onClick={() => setShowReconciliationInline(false)}
+                    className="p-0.5 text-neutral-400 hover:text-black cursor-pointer"
+                  >
+                    <X className="w-4.5 h-4.5" />
+                  </button>
+                </div>
+
+                <form onSubmit={handleRunReconciliation} className="space-y-3">
+                  <div>
+                    <label className="block text-[10px] font-bold text-[#5f6368] uppercase tracking-wide mb-1">Counted Cash ({currencySymbol})</label>
+                    <input 
+                      type="number"
+                      required
+                      value={inputCash}
+                      onChange={e => setInputCash(parseFloat(e.target.value) || 0)}
+                      className="w-full bg-white text-xs font-bold p-2.5 border border-[#d4d7dc] rounded focus:outline-none focus:border-[#2ca01c] focus:ring-1 focus:ring-[#2ca01c]/30"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-bold text-[#5f6368] uppercase tracking-wide mb-1">POS / Cards ({currencySymbol})</label>
+                    <input 
+                      type="number"
+                      required
+                      value={inputOthers}
+                      onChange={e => setInputOthers(parseFloat(e.target.value) || 0)}
+                      className="w-full bg-white text-xs font-bold p-2.5 border border-[#d4d7dc] rounded focus:outline-none focus:border-[#2ca01c] focus:ring-1 focus:ring-[#2ca01c]/30"
+                    />
+                  </div>
+
+                  <div className="p-2.5 bg-white border border-[#d4d7dc] rounded text-xs flex items-center justify-between text-[#393a3d]">
+                    <span className="text-[10px] uppercase font-bold text-[#5f6368]">Total Billed Target:</span>
+                    <span className="font-bold text-[#111111] font-mono">{formatCurrency(expectedToday, currency)}</span>
+                  </div>
+
+                  <div className="flex gap-2 w-full pt-1">
+                    <button
+                      type="submit"
+                      disabled={auditLoading}
+                      className="flex-grow bg-[#2ca01c] hover:bg-[#1e7514] text-white font-bold py-2 px-3 rounded text-xs transition cursor-pointer disabled:bg-neutral-200 uppercase tracking-wider"
+                    >
+                      {auditLoading ? "Matching feeds..." : "Match Register"}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setTruthCheckResult(null);
+                        setInputCash(0);
+                        setInputOthers(0);
+                      }}
+                      className="px-3 py-2 border border-[#d4d7dc] rounded text-xs font-bold text-[#5f6368] hover:bg-neutral-50 active:scale-95 transition cursor-pointer"
+                    >
+                      Clear
+                    </button>
+                  </div>
+                </form>
+
+                {truthCheckResult && (
+                  <div className="bg-white border border-[#d4d7dc] rounded p-3 mt-2 space-y-2 text-xs text-left">
+                    <div className="flex items-center justify-between">
+                      <span className="font-bold text-[9px] uppercase tracking-widest text-[#5f6368]">Feeds status</span>
+                      <span className={`font-bold font-mono text-[9px] px-2 py-0.2 rounded border ${
+                        truthCheckResult.riskLevel === 'low' 
+                          ? 'text-[#2ca01c] bg-emerald-50 border-[#2ca01c]/30' 
+                          : 'text-rose-700 bg-rose-50 border-rose-200'
+                      }`}>
+                        {truthCheckResult.riskLevel === 'low' ? '🔒 MATCHED ✔' : '⚠️ UNMATCHED VARIANCE'}
+                      </span>
+                    </div>
+                    <p className="text-neutral-700 leading-snug font-medium italic text-[10.5px]">
+                      "{truthCheckResult.details}"
+                    </p>
+                    
+                    <div className="grid grid-cols-2 gap-2 border-t border-dashed border-[#d4d7dc] pt-2 mt-1">
+                      <div>
+                        <span className="text-[8px] text-[#5f6368] block uppercase font-bold tracking-wider">Book Sum</span>
+                        <span className="font-mono text-[#111111] font-bold">{formatCurrency((truthCheckResult.declaredRevenue), currency)}</span>
+                      </div>
+                      <div>
+                        <span className="text-[8px] text-[#5f6368] block uppercase font-bold tracking-wider">Variance GAP</span>
+                        <span className={`font-mono font-bold ${truthCheckResult.difference < 0 ? 'text-rose-600' : 'text-[#2ca01c]'}`}>
+                          {truthCheckResult.difference < 0 ? '-' : '+'}{formatCurrency(Math.abs(truthCheckResult.difference), currency)}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* QuickBooks Task Center / Active Alerts & Store Sentry Guard */}
+          <div className="bg-white border border-[#d4d7dc] rounded p-5 text-left shadow-xs" id="qb-task-alerts-center">
+            <h3 className="text-xs font-bold uppercase tracking-widest text-[#5f6368] mb-3.5 pb-2 border-b border-[#eaebeb]">
+              Active Checklist / Sentry Alarms
+            </h3>
+            
+            <div className="space-y-3">
+              {attentionItems.length === 0 ? (
+                <div className="text-center py-6 text-[#5f6368] font-sans">
+                  <CheckCircle2 className="w-7 h-7 text-[#2ca01c] mx-auto mb-2" />
+                  <p className="text-xs font-bold text-[#111111]">Checklist cleared</p>
+                  <p className="text-[10px] text-neutral-400 mt-1 max-w-sm mx-auto leading-relaxed">
+                    Capture store sales, audit dynamic product stock, or maintain credit registers to activate your AI store sentry guards.
+                  </p>
+                </div>
               ) : (
-                <span className="text-[10px] bg-emerald-500/25 text-emerald-300 font-bold px-3 py-1 rounded-full border border-emerald-500/30 uppercase tracking-wider font-mono">
-                  Open &bull; Active Hours
-                </span>
+                attentionItems.map((item, i) => (
+                  <div 
+                    key={i} 
+                    onClick={item.action}
+                    className="flex items-start justify-between p-3 border border-[#eaebeb] rounded bg-neutral-50/50 hover:bg-neutral-50 transition cursor-pointer hover:border-[#d4d7dc]"
+                  >
+                    <div className="flex gap-2 items-start text-left min-w-0 flex-1">
+                      <span className="shrink-0 mt-0.5">{item.tag}</span>
+                      <div className="min-w-0 pr-1 text-left">
+                        <div className="flex flex-wrap items-center gap-1">
+                          <h4 className="text-[11px] font-bold text-[#111111] leading-snug truncate text-left">{item.text}</h4>
+                          <span className={`text-[8px] font-bold font-mono px-1 rounded uppercase tracking-wider shrink-0 scale-90 border ${
+                            item.priority === "High Priority"
+                              ? 'text-rose-700 bg-rose-50 border-rose-250'
+                              : 'text-amber-850 bg-amber-50 border-amber-200'
+                          }`}>
+                            {item.priority === "High Priority" ? "Urgent" : item.priority}
+                          </span>
+                        </div>
+                        <p className="text-[10px] leading-relaxed text-[#5F6368] font-normal mt-0.5 block text-left font-sans">
+                          {item.detail}
+                        </p>
+                      </div>
+                    </div>
+                    <ChevronRight className="w-3.5 h-3.5 text-neutral-400 shrink-0 align-middle self-center font-bold" />
+                  </div>
+                ))
               )}
             </div>
           </div>
 
-          <div className="text-left grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
-            <div className="bg-white/5 p-4 rounded-2xl border border-white/10">
-              <span className="text-[10px] text-zinc-400 uppercase font-bold tracking-wider block font-display">Today's Turnover</span>
-              <span className="text-lg font-normal text-white mt-1 block font-mono">{formatCurrency(expectedToday, currency)}</span>
-            </div>
-            <div className="bg-white/5 p-4 rounded-2xl border border-white/10">
-              <span className="text-[10px] text-zinc-400 uppercase font-bold tracking-wider block font-display">Receipts Generated</span>
-              <span className="text-lg font-normal text-white mt-1 block font-mono">{totalTransactions} Receipts</span>
-            </div>
-            <div className="bg-white/5 p-4 rounded-2xl border border-white/10">
-              <span className="text-[10px] text-zinc-400 uppercase font-bold tracking-wider block font-display">Active Debtor Count</span>
-              <span className="text-lg font-normal text-white mt-1 block font-mono">{totalCustomers} Overdues</span>
-            </div>
-          </div>
-
-          <p className="text-xs text-zinc-400 font-sans leading-relaxed text-left">
-            {isEndOfDay 
-              ? "The operating day has ended. Click here to trigger the comprehensive closing summary, audit cash register variances, verify cashier logs, and finalize statistics."
-              : "Business is currently active. Click here to check the real-time sales rundown, audit current registers, and view inventory updates so far today."}
-          </p>
-
-          <div className="flex items-center gap-1.5 text-xs text-sky-400 font-bold group-hover:text-sky-300 transition select-none pt-2 font-display">
-            <span>View Complete {isEndOfDay ? "Day-End Summary" : "Mid-Day Snapshot"}</span>
-            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-all" />
-          </div>
-        </div>
-      </div>      {/* ===============================================
-          SECTION 2: TODAY'S BUSINESS SNAPSHOT (Beautified Layout)
-          =============================================== */}
-      <div className="text-left font-sans animate-fade-in">
-        <div className="flex justify-between items-center mb-3">
-          <h3 className="text-xs uppercase font-normal tracking-widest text-black pl-1">Today's Business Snapshot</h3>
-          <span className="text-[10px] text-sky-700 font-medium font-mono px-2 py-0.5 bg-sky-50 border border-sky-200/40 rounded-full">Real-time Metrics</span>
-        </div>
-        
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="dashboard-snapshot-kpi-grid">
-          
-          {/* KPI 1: Today's Sales */}
-          <div className="bg-white border border-neutral-200 hover:border-indigo-250 hover:shadow-xs transition-all duration-300 rounded-[24px] p-5 flex items-start gap-4" id="kpi-sales-card">
-            <div className="p-3 bg-indigo-50 border border-indigo-100 rounded-2xl text-indigo-600 shrink-0">
-              <CircleDollarSign className="w-5 h-5 stroke-[2]" />
-            </div>
-            <div className="text-left w-full min-w-0">
-              <span className="text-[10px] text-gray-500 font-medium uppercase tracking-wider block">Today's Sales</span>
-              <span className="text-lg font-bold text-neutral-950 tracking-tight font-sans block mt-1 overflow-hidden text-ellipsis whitespace-nowrap">
-                {formatCurrency(expectedToday, currency)}
-              </span>
-              <div className="flex items-center gap-1 mt-1">
-                <span className="text-[9px] font-mono text-emerald-600 font-medium bg-emerald-50 rounded-full px-1.5 py-0.2 select-none">+4.5%</span>
-                <span className="text-[9px] text-[#757a7f] whitespace-nowrap">since yesterday</span>
-              </div>
-            </div>
-          </div>
-
-          {/* KPI 2: Today's Profit */}
-          <div className="bg-white border border-neutral-200 hover:border-emerald-250 hover:shadow-xs transition-all duration-300 rounded-[24px] p-5 flex items-start gap-4" id="kpi-profit-card">
-            <div className="p-3 bg-emerald-50 border border-emerald-100 rounded-2xl text-emerald-600 shrink-0">
-              <TrendingUp className="w-5 h-5 stroke-[2]" />
-            </div>
-            <div className="text-left w-full min-w-0">
-              <span className="text-[10px] text-gray-500 font-medium uppercase tracking-wider block">Today's Profit</span>
-              <span className="text-lg font-bold text-emerald-850 tracking-tight font-sans block mt-1 overflow-hidden text-ellipsis whitespace-nowrap">
-                {formatCurrency(todayProfit, currency)}
-              </span>
-              <div className="flex items-center gap-1 mt-1">
-                <span className="text-[9px] font-mono text-emerald-605 text-emerald-600 font-medium bg-emerald-50 rounded-full px-1.5 py-0.2 select-none">Healthy</span>
-                <span className="text-[9px] text-[#757a7f] whitespace-nowrap">23.4% margin</span>
-              </div>
-            </div>
-          </div>
-
-          {/* KPI 3: Cash Collected */}
-          <div className="bg-white border border-neutral-200 hover:border-amber-250 hover:shadow-xs transition-all duration-300 rounded-[24px] p-5 flex items-start gap-4" id="kpi-cash-card">
-            <div className="p-3 bg-amber-50 border border-amber-100 rounded-2xl text-amber-600 shrink-0">
-              <Coins className="w-5 h-5 stroke-[2]" />
-            </div>
-            <div className="text-left w-full min-w-0">
-              <span className="text-[10px] text-gray-500 font-medium uppercase tracking-wider block">Cash Collected</span>
-              <span className="text-lg font-bold text-neutral-950 tracking-tight font-sans block mt-1 overflow-hidden text-ellipsis whitespace-nowrap">
-                {formatCurrency(cashCollected, currency)}
-              </span>
-              <div className="flex items-center gap-1 mt-1">
-                <span className="text-[9px] font-mono text-amber-700 font-medium bg-amber-50 rounded-full px-1.5 py-0.2 select-none">Synced</span>
-                <span className="text-[9px] text-[#757a7f] whitespace-nowrap">drawer reconcile</span>
-              </div>
-            </div>
-          </div>
-
-          {/* KPI 4: Inventory Valuation */}
-          <div className="bg-white border border-neutral-200 hover:border-blue-250 hover:shadow-xs transition-all duration-300 rounded-[24px] p-5 flex items-start gap-4" id="kpi-inventory-card">
-            <div className="p-3 bg-blue-50 border border-blue-100 rounded-2xl text-blue-600 shrink-0">
-              <Package className="w-5 h-5 stroke-[2]" />
-            </div>
-            <div className="text-left w-full min-w-0">
-              <span className="text-[10px] text-gray-500 font-medium uppercase tracking-wider block">Inventory Value</span>
-              <span className="text-lg font-bold text-blue-850 tracking-tight font-sans block mt-1 overflow-hidden text-ellipsis whitespace-nowrap">
-                {formatCurrency(totalInventoryValuation, currency)}
-              </span>
-              <div className="flex items-center gap-1 mt-1">
-                <span className="text-[9px] font-mono text-blue-700 font-medium bg-blue-50 rounded-full px-1.5 py-0.2 select-none">On shelf</span>
-                <span className="text-[9px] text-[#757a7f] whitespace-nowrap">audited inventory value</span>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-      {/* ===============================================
-          SECTION 3: QUICK ACTIONS
-          =============================================== */}
-      <div className="text-left font-sans animate-fade-in">
-        <h3 className="text-xs uppercase font-normal tracking-widest text-black mb-2.5 pl-1">Quick Actions</h3>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-          
-          <button
-            type="button"
-            onClick={() => {
-              window.location.hash = 'receipts/add';
-              setActiveSection('receipts');
-            }}
-            className="bg-white hover:bg-sky-50/55 border border-neutral-150 rounded-[22px] p-4 flex flex-col items-center justify-center gap-2 text-center transition cursor-pointer hover:border-sky-305"
+          {/* QuickBooks Business Schedule / Daily Close Audits Modal Gateway */}
+          <div 
+            className="relative border border-[#d4d7dc] bg-[#232733] text-white rounded p-5 transition-all duration-300 group cursor-pointer hover:border-[#2ca01c] text-left shadow-xs" 
+            id="qb-close-audits-card"
+            onClick={() => setShowRundownModal(true)}
           >
-            <div className="w-10 h-10 rounded-full bg-[#1e40af]/10 flex items-center justify-center">
-              <Plus className="w-5 h-5 text-[#1e40af]" />
-            </div>
-            <span className="text-xs font-medium text-black">Record Sale</span>
-          </button>
+            <div className="absolute top-0 right-10 w-[150px] h-[100px] bg-[#2ca01c]/10 rounded-full blur-[60px] pointer-events-none" />
 
-          <button
-            type="button"
-            onClick={() => {
-              setActiveSection('inventory');
-            }}
-            className="bg-white hover:bg-indigo-50/55 border border-neutral-150 rounded-[22px] p-4 flex flex-col items-center justify-center gap-2 text-center transition cursor-pointer hover:border-indigo-305"
-          >
-            <div className="w-10 h-10 rounded-full bg-indigo-50 flex items-center justify-center">
-              <ShoppingCart className="w-5 h-5 text-indigo-600" />
-            </div>
-            <span className="text-xs font-medium text-black">Add Stock</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => {
-              setActiveSection('debtor');
-            }}
-            className="bg-white hover:bg-emerald-50/55 border border-neutral-150 rounded-[22px] p-4 flex flex-col items-center justify-center gap-2 text-center transition cursor-pointer hover:border-emerald-305"
-          >
-            <div className="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center">
-              <Users className="w-5 h-5 text-emerald-600" />
-            </div>
-            <span className="text-xs font-medium text-black">Add Customer</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setShowReconciliationInline(!showReconciliationInline)}
-            className={`border rounded-[22px] p-4 flex flex-col items-center justify-center gap-2 text-center transition cursor-pointer ${
-              showReconciliationInline 
-                ? 'bg-amber-50/80 border-amber-300' 
-                : 'bg-white hover:bg-amber-50/40 border-neutral-150 hover:border-amber-310'
-            }`}
-          >
-            <div className={`w-10 h-10 rounded-full flex items-center justify-center ${showReconciliationInline ? 'bg-amber-100' : 'bg-amber-50'}`}>
-              <Coins className="w-5 h-5 text-amber-600" />
-            </div>
-            <span className="text-xs font-medium text-black">Run Truth Check</span>
-          </button>
-
-        </div>
-      </div>
-
-      {/* INLINE COLLAPSIBLE TRUTH CHECK ENCLOSURE */}
-      {showReconciliationInline && (
-        <div className="bg-[#fcfa7a]/5 bg-amber-50/10 border border-amber-200 rounded-[28px] p-5 space-y-4 text-left animate-fade-in" id="dashboard-inline-truthcheck">
-          <div className="flex items-center justify-between border-b border-amber-100 pb-2">
-            <h4 className="text-sm font-medium text-amber-900 flex items-center gap-1.5">
-              <Coins className="w-4 h-4 text-amber-600" />
-              <span>Shift Drawer Truth Matcher</span>
-            </h4>
-            <button 
-              type="button" 
-              onClick={() => setShowReconciliationInline(false)}
-              className="text-neutral-500 hover:text-black p-1"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </div>
-
-          <form onSubmit={handleRunReconciliation} className="space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-[11px] font-medium text-neutral-900 mb-1">Counted Physical Cash ({currencySymbol})</label>
-                <input 
-                  type="number"
-                  value={inputCash}
-                  onChange={e => setInputCash(parseFloat(e.target.value) || 0)}
-                  className="w-full bg-white text-xs font-medium p-2.5 border border-neutral-200 rounded-full focus:outline-none"
-                />
-              </div>
-              <div>
-                <label className="block text-[11px] font-medium text-neutral-900 mb-1">Counted Digital Transfers / Card ({currencySymbol})</label>
-                <input 
-                  type="number"
-                  value={inputOthers}
-                  onChange={e => setInputOthers(parseFloat(e.target.value) || 0)}
-                  className="w-full bg-white text-xs font-medium p-2.5 border border-neutral-200 rounded-full focus:outline-none"
-                />
-              </div>
-            </div>
-
-            <div className="p-3 bg-white border border-neutral-150 rounded-xl text-xs text-neutral-955 flex items-center justify-between">
-              <span>Expected System Cash Sales:</span>
-              <span className="font-medium text-black font-mono">{formatCurrency(expectedToday, currency)}</span>
-            </div>
-
-            <div className="flex gap-2">
-              <button
-                type="submit"
-                disabled={auditLoading}
-                className="flex-1 bg-[#1e40af] hover:bg-[#1a368f] text-white font-medium py-2.5 px-4 rounded-full text-xs transition cursor-pointer disabled:bg-neutral-200"
-              >
-                {auditLoading ? "Running calculations..." : "Reconcile Register Count"}
-              </button>
-              <button
-                type="button"
-                onClick={() => setTruthCheckResult(null)}
-                className="px-4 py-2.5 border border-neutral-250 rounded-full text-xs text-neutral-950 hover:bg-neutral-50"
-              >
-                Reset
-              </button>
-            </div>
-          </form>
-
-          {truthCheckResult && (
-            <div className="bg-white border border-neutral-150 rounded-[20px] p-4 mt-3 space-y-2 animate-fade-in text-xs">
-              <div className="flex items-center justify-between">
-                <span className="font-medium text-black">Truth Check Result:</span>
-                <span className={`font-mono font-medium ${
-                  truthCheckResult.riskLevel === 'low' ? 'text-green-600' : 'text-red-600'
-                }`}>
-                  {truthCheckResult.riskLevel === 'low' ? '🔒 MATCHED' : '⚠️ DISCREPANCY'}
-                </span>
-              </div>
-              <p className="text-black leading-relaxed italic">{truthCheckResult.details}</p>
-              
-              <div className="grid grid-cols-2 gap-2 border-t pt-2 mt-2">
-                <div>
-                  <span className="text-[10px] text-neutral-950 block uppercase font-medium">Sum Declared</span>
-                  <span className="font-mono text-black font-medium">{formatCurrency((truthCheckResult.declaredRevenue), currency)}</span>
-                </div>
-                <div>
-                  <span className="text-[10px] text-neutral-950 block uppercase font-medium">Discrepancy</span>
-                  <span className={`font-mono font-medium ${truthCheckResult.difference < 0 ? 'text-red-650' : 'text-emerald-700'}`}>
-                    {truthCheckResult.difference < 0 ? '-' : '+'}{formatCurrency(Math.abs(truthCheckResult.difference), currency)}
-                  </span>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* ===============================================
-          SECTION 4: ATTENTION NEEDED
-          =============================================== */}
-      <div className="text-left font-sans animate-fade-in" id="dashboard-attention-section">
-        <h3 className="text-xs uppercase font-normal tracking-widest text-black mb-2.5 pl-1">Attention Needed</h3>
-        <div className="bg-white border border-neutral-150 rounded-[28px] p-5 shadow-xs space-y-3">
-          {attentionItems.length === 0 ? (
-            <div className="text-center py-6 text-neutral-400 font-sans">
-              <CheckCircle2 className="w-8 h-8 text-neutral-250 mx-auto mb-2" />
-              <p className="text-xs font-semibold text-neutral-700">All systems clear</p>
-              <p className="text-[10px] text-neutral-400 mt-1 max-w-md mx-auto leading-relaxed">
-                Add products in your inventory, capture sales receipts, or record debtor tabs under your account to activate AI guardian alarms.
-              </p>
-            </div>
-          ) : (
-            attentionItems.map((item, i) => (
-              <div 
-                key={i} 
-                onClick={item.action}
-                className="flex items-start justify-between p-3 border border-neutral-100 rounded-[20px] bg-neutral-50/50 hover:bg-neutral-50 transition cursor-pointer"
-              >
-                <div className="flex gap-2.5 items-start">
-                  <span className="shrink-0 mt-0.5">{item.tag}</span>
+            <div className="relative z-10 space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/10 pb-3 text-left">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded bg-white/10 border border-white/15 flex items-center justify-center shrink-0">
+                    <Clock className="w-4 h-4 text-[#2ca01c] animate-pulse" />
+                  </div>
                   <div>
-                    <div className="flex items-center gap-1.5">
-                      <h4 className="text-xs font-medium text-black leading-none">{item.text}</h4>
-                      <span className="text-[8px] font-medium font-mono text-[#111111] bg-neutral-100 border border-neutral-200 px-1.5 py-0.5 rounded-sm uppercase tracking-wide">{item.priority}</span>
-                    </div>
-                    <p className="text-[11px] text-black font-normal mt-1 font-sans leading-snug">{item.detail}</p>
+                    <span className="text-[8px] font-bold uppercase tracking-widest text-[#2ca01c] block">Operating Schedule</span>
+                    <h2 className="text-xs font-bold text-white tracking-wide mt-0.5 font-sans">EOD Auditing Console</h2>
                   </div>
                 </div>
-                <ChevronRight className="w-4 h-4 text-neutral-500 align-middle self-center animate-fade-in" />
+
+                <div className="flex items-center gap-1.5 self-start sm:self-center">
+                  {isEndOfDay ? (
+                    <span className="text-[8px] bg-rose-500/25 text-rose-300 font-bold px-2 py-0.5 rounded border border-rose-500/30 uppercase tracking-widest font-mono">
+                      Closed Summary
+                    </span>
+                  ) : (
+                    <span className="text-[8px] bg-[#2ca01c]/25 text-emerald-300 font-bold px-2 py-0.5 rounded border border-[#2ca01c]/30 uppercase tracking-widest font-mono">
+                      Running Feed
+                    </span>
+                  )}
+                </div>
               </div>
-            ))
-          )}
-        </div>
-      </div>
 
-      {/* ===============================================
-          SECTION 5: PERFORMANCE TREND
-          =============================================== */}
-      <div className="text-left font-sans">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2 px-1">
-          <h3 className="text-xs uppercase font-normal tracking-widest text-black">Performance Trend</h3>
-          
-          <div className="flex bg-neutral-100 p-0.5 rounded-full border border-neutral-150 self-start" id="chart-toggle">
-            <button
-              type="button"
-              onClick={() => setTrendType('revenue')}
-              className={`px-3 py-1 rounded-full text-[11px] font-black tracking-tight transition uppercase ${
-                trendType === 'revenue' ? 'bg-white text-neutral-950 shadow-xs' : 'text-neutral-500 hover:text-neutral-950'
-              }`}
-            >
-              Revenue
-            </button>
-            <button
-              type="button"
-              onClick={() => setTrendType('profit')}
-              className={`px-3 py-1 rounded-full text-[11px] font-black tracking-tight transition uppercase ${
-                trendType === 'profit' ? 'bg-white text-neutral-950 shadow-xs' : 'text-neutral-500 hover:text-neutral-950'
-              }`}
-            >
-              Profit
-            </button>
-            <button
-              type="button"
-              onClick={() => setTrendType('transactions')}
-              className={`px-3 py-1 rounded-full text-[11px] font-black tracking-tight transition uppercase ${
-                trendType === 'transactions' ? 'bg-white text-neutral-950 shadow-xs' : 'text-neutral-500 hover:text-neutral-950'
-              }`}
-            >
-              Transactions
-            </button>
+              <p className="text-[11px] text-zinc-300 leading-relaxed text-left font-sans">
+                {isEndOfDay 
+                  ? "Operational shift has ended. Select to review register cash variances, print sales reports, and lock logs today."
+                  : "Daily register tracking active inside normal operating hours. Select to preview current performance, debtor statuses, or stock balances."}
+              </p>
+
+              <div className="flex items-center gap-1 text-[11px] text-[#2ca01c] font-bold group-hover:text-emerald-300 transition select-none pt-1">
+                <span>Open Shift Audit Console</span>
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-all" />
+              </div>
+            </div>
           </div>
+
         </div>
 
-        <div className="bg-white border border-neutral-150 rounded-[28px] p-4 shadow-xs" id="dashboard-trend-panel">
-          <div className="h-64 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={trendData} margin={{ top: 20, right: 10, left: 10, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="colorTrend" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#1e40af" stopOpacity={0.25} />
-                    <stop offset="95%" stopColor="#1e40af" stopOpacity={0.0} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
-                <XAxis 
-                  dataKey="day" 
-                  stroke="#ababab" 
-                  fontSize={10} 
-                  tickLine={false} 
-                  axisLine={false} 
-                />
-                <YAxis 
-                  stroke="#ababab" 
-                  fontSize={9} 
-                  tickLine={false} 
-                  axisLine={false} 
-                  tickFormatter={formatChartVal}
-                />
-                <Tooltip 
-                  formatter={(val: any) => [
-                    trendType === 'transactions' ? val : formatCurrency(Number(val), currency),
-                    trendType.toUpperCase()
-                  ]}
-                  contentStyle={{ border: '1px solid #dcdcdc', borderRadius: 16, fontSize: 11, fontFamily: 'sans-serif' }}
-                />
-                <Area 
-                  type="monotone" 
-                  dataKey={trendType} 
-                  stroke="#1e40af" 
-                  strokeWidth={2.5} 
-                  fillOpacity={1} 
-                  fill="url(#colorTrend)" 
-                />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
       </div>
 
       {/* Smart Recommendations section deleted */}
 
-      {/* PERSISTENT SLIDE UP BOTTOM SHEET FOR 'MORE' BUTTON */}
+      {/* PERSISTENT SLIDE UP BOTTOM SHEET FOR 'MORE' OR '+ NEW' BUTTON */}
       {showMoreMenu && (
         <div className="fixed inset-0 z-50 flex items-end justify-center select-none" id="more-slideup-modal">
           <div 
@@ -799,21 +854,25 @@ export default function Dashboard({
             onClick={() => setShowMoreMenu(false)}
           />
           <div 
-            className="relative bg-white rounded-t-[32px] w-full max-w-lg p-6 space-y-6 shadow-2xl z-10 transition-transform duration-300 transform translate-y-0"
+            className="relative bg-white rounded-t-2xl w-full max-w-lg p-5 space-y-5 shadow-2xl z-10 transition-transform duration-300 transform translate-y-0 text-left border-t border-[#d4d7dc]"
           >
             {/* Header notch line */}
-            <div className="w-12 h-1 bg-neutral-200 rounded-full mx-auto" />
+            <div className="w-10 h-1 bg-neutral-200 rounded-full mx-auto" />
             
-            <div className="flex items-center justify-between border-b pb-3">
-              <h3 className="text-xs font-sans font-medium text-[#111111] uppercase tracking-widest">More Operations</h3>
+            <div className="flex items-center justify-between border-b pb-2">
+              <h3 className="text-xs font-bold text-[#111111] uppercase tracking-widest">QuickBooks Operations</h3>
               <button 
                 type="button" 
                 onClick={() => setShowMoreMenu(false)}
-                className="text-neutral-500 hover:text-black p-1"
+                className="text-neutral-500 hover:text-black p-1 text-[#5F6368] cursor-pointer hover:bg-neutral-100 rounded"
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4" />
               </button>
             </div>
+
+            <p className="text-[11px] text-[#5f6368] font-sans -mt-2">
+              Select an action to launch sales workflows, capture client debts, register inventory supply, or run forensic checks.
+            </p>
 
             <div className="grid grid-cols-2 gap-4">
               
@@ -823,12 +882,12 @@ export default function Dashboard({
                   setShowMoreMenu(false);
                   setActiveSection('forensic');
                 }}
-                className="p-5 bg-neutral-50/70 border border-neutral-150 hover:bg-neutral-50 rounded-[24px] text-left flex flex-col gap-2 transition cursor-pointer"
+                className="p-4 bg-purple-50/20 hover:bg-purple-50/55 border border-purple-105 hover:border-purple-300 rounded text-left flex flex-col gap-2 transition cursor-pointer"
               >
-                <ShieldAlert className="w-6 h-6 text-red-600" />
+                <ShieldAlert className="w-5 h-5 text-purple-600" />
                 <div>
-                  <h4 className="text-xs font-medium text-black leading-tight">Forensic Check</h4>
-                  <p className="text-[10px] text-neutral-950 font-sans mt-0.5 font-normal">Trace missing cash</p>
+                  <h4 className="text-xs font-bold text-[#111111] leading-tight font-sans">Forensic Audit Check</h4>
+                  <p className="text-[10px] text-[#5f6368] mt-0.5 font-normal font-sans">Trace missing register cash</p>
                 </div>
               </button>
 
@@ -836,14 +895,15 @@ export default function Dashboard({
                 type="button"
                 onClick={() => {
                   setShowMoreMenu(false);
-                  setActiveSection('truthcheck');
+                  setActiveSection('receipts');
+                  window.location.hash = 'receipts/add';
                 }}
-                className="p-5 bg-neutral-50/70 border border-neutral-150 hover:bg-neutral-50 rounded-[24px] text-left flex flex-col gap-2 transition cursor-pointer"
+                className="p-4 bg-emerald-50/20 hover:bg-emerald-50/55 border border-emerald-100 hover:border-[#2ca01c] rounded text-left flex flex-col gap-2 transition cursor-pointer"
               >
-                <Coins className="w-6 h-6 text-amber-500" />
+                <Plus className="w-5 h-5 text-[#2ca01c]" />
                 <div>
-                  <h4 className="text-xs font-medium text-black leading-tight">Truth Audits</h4>
-                  <p className="text-[10px] text-neutral-950 font-sans mt-0.5 font-normal">Shift balanced files</p>
+                  <h4 className="text-xs font-bold text-[#111111] leading-tight font-sans">Add Sales Receipt</h4>
+                  <p className="text-[10px] text-[#5f6368] mt-0.5 font-normal font-sans">Generate brand new receipt</p>
                 </div>
               </button>
 
@@ -853,12 +913,12 @@ export default function Dashboard({
                   setShowMoreMenu(false);
                   setActiveSection('debtor');
                 }}
-                className="p-5 bg-neutral-50/70 border border-neutral-150 hover:bg-neutral-50 rounded-[24px] text-left flex flex-col gap-2 transition cursor-pointer"
+                className="p-4 bg-sky-50/10 hover:bg-sky-50/45 border border-sky-100 hover:border-sky-300 rounded text-left flex flex-col gap-2 transition cursor-pointer"
               >
-                <Users className="w-6 h-6 text-emerald-600" />
+                <Users className="w-5 h-5 text-sky-600" />
                 <div>
-                  <h4 className="text-xs font-medium text-black leading-tight">Debtors Ledger</h4>
-                  <p className="text-[10px] text-neutral-950 font-sans mt-0.5 font-normal">Track overdue credit</p>
+                  <h4 className="text-xs font-bold text-[#111111] leading-tight font-sans">Add Client Debts</h4>
+                  <p className="text-[10px] text-[#5f6368] mt-0.5 font-normal font-sans">Log custom debtor totals</p>
                 </div>
               </button>
 
@@ -866,14 +926,14 @@ export default function Dashboard({
                 type="button"
                 onClick={() => {
                   setShowMoreMenu(false);
-                  setActiveSection('notifications');
+                  setActiveSection('inventory');
                 }}
-                className="p-5 bg-neutral-50/70 border border-neutral-150 hover:bg-neutral-50 rounded-[24px] text-left flex flex-col gap-2 transition cursor-pointer"
+                className="p-4 bg-amber-50/15 hover:bg-amber-50/45 border border-amber-100 hover:border-amber-300 rounded text-left flex flex-col gap-2 transition cursor-pointer"
               >
-                <AlertTriangle className="w-6 h-6 text-sky-600" />
+                <ShoppingCart className="w-5 h-5 text-amber-600" />
                 <div>
-                  <h4 className="text-xs font-medium text-black leading-tight">Alert Desk</h4>
-                  <p className="text-[10px] text-neutral-950 font-sans mt-0.5 font-normal">Sentry trigger alarms</p>
+                  <h4 className="text-xs font-bold text-[#111111] leading-tight font-sans">Fill Stock Levels</h4>
+                  <p className="text-[10px] text-[#5f6368] mt-0.5 font-normal font-sans">Register supply deliveries</p>
                 </div>
               </button>
 
@@ -882,9 +942,9 @@ export default function Dashboard({
             <button
               type="button"
               onClick={() => setShowMoreMenu(false)}
-              className="w-full text-center py-3 bg-neutral-950 hover:bg-black text-white text-xs font-medium rounded-full uppercase tracking-widest transition cursor-pointer"
+              className="w-full text-center py-2.5 bg-neutral-900 hover:bg-black text-white text-xs font-bold rounded uppercase tracking-wider transition cursor-pointer"
             >
-              Close Menu
+              Cancel View
             </button>
           </div>
         </div>
@@ -892,75 +952,75 @@ export default function Dashboard({
 
       {/* Dynamic Rundown Modal (Daily Business Rundown) */}
       {showRundownModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-neutral-950/75 backdrop-blur-md animate-fade-in-shorter">
-          <div className="bg-white rounded-[32px] w-full max-w-xl border border-slate-200 overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#111111]/70 backdrop-blur-sm animate-fade-in-shorter text-left">
+          <div className="bg-white rounded w-full max-w-xl border border-[#d4d7dc] overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
             {/* Header */}
-            <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50">
+            <div className="p-5 border-b border-[#eaebeb] flex items-center justify-between bg-[#f4f5f8]">
               <div className="flex items-center gap-2.5">
-                <Clock className="w-5 h-5 text-sky-600 stroke-[1.5]" />
+                <Clock className="w-5 h-5 text-[#2ca01c] stroke-[1.5]" />
                 <div>
-                  <h3 className="font-sans font-normal text-black text-xs uppercase tracking-wide">Daily Operational Rundown</h3>
-                  <p className="text-[10px] text-zinc-500 font-sans tracking-wide mt-0.5">
+                  <h3 className="font-sans font-bold text-black text-xs uppercase tracking-wide">Shift Audits Overview</h3>
+                  <p className="text-[10px] text-[#5F6368] font-sans mt-0.5">
                     Operating Schedule: {openTimeStr} - {closeTimeStr}
                   </p>
                 </div>
               </div>
               <button 
                 onClick={() => setShowRundownModal(false)}
-                className="p-1.5 rounded-full hover:bg-slate-200 text-zinc-400 hover:text-zinc-700 transition cursor-pointer"
+                className="p-1.5 rounded hover:bg-neutral-200 text-[#5F6368] hover:text-black transition cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
             {/* Scrollable Content */}
-            <div className="p-6 overflow-y-auto space-y-5 text-left select-none">
+            <div className="p-5 overflow-y-auto space-y-5 text-left select-none">
               {/* Op Hours / Status Banner */}
-              <div className="flex items-center justify-between p-3.5 rounded-2xl bg-neutral-50 border border-slate-150">
-                <div className="flex items-center gap-2 text-xs font-semibold text-slate-800">
-                  <Activity className="w-4 h-4 text-sky-500" />
-                  <span>Current Status Summary</span>
+              <div className="flex items-center justify-between p-3 rounded bg-[#f4f5f8] border border-[#d4d7dc]">
+                <div className="flex items-center gap-2 text-xs font-bold text-[#393a3d]">
+                  <Activity className="w-4 h-4 text-[#2ca01c]" />
+                  <span>Interactive Real-Time Auditing Desk</span>
                 </div>
                 {isEndOfDay ? (
-                  <span className="text-[10px] bg-rose-50 text-rose-700 font-bold px-3 py-1 rounded-full border border-rose-200 uppercase tracking-wider font-mono">
-                    End-of-day Summary (Full Close)
+                  <span className="text-[9px] bg-rose-50 text-rose-700 font-bold px-2 py-0.5 rounded border border-rose-200 uppercase tracking-wider font-mono">
+                    Shift Closed
                   </span>
                 ) : (
-                  <span className="text-[10px] bg-emerald-50 text-emerald-700 font-bold px-3 py-1 rounded-full border border-emerald-200 uppercase tracking-wider font-mono">
-                    Mid-day Auditing (So Far Today)
+                  <span className="text-[9px] bg-emerald-50 text-emerald-700 font-bold px-2 py-0.5 rounded border border-emerald-200 uppercase tracking-wider font-mono">
+                    Shift Active
                   </span>
                 )}
               </div>
 
               {/* Statistics Panel */}
               <div className="grid grid-cols-2 gap-4">
-                <div className="bg-slate-50 p-4 border border-slate-150/80 rounded-2xl">
-                  <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider block font-sans">Turnover Registered</span>
-                  <span className="text-lg font-normal text-slate-900 mt-1 block font-mono">{formatCurrency(expectedToday, currency)}</span>
-                  <span className="text-[9px] text-[#757a7f] block mt-0.5">Through {totalTransactions} sales transactions</span>
+                <div className="bg-[#f4f5f8] p-4 border border-[#d4d7dc] rounded">
+                  <span className="text-[9px] text-[#5f6368] font-bold uppercase tracking-wider block font-sans">Sales Tallied</span>
+                  <span className="text-base sm:text-lg font-bold text-[#111111] mt-1 block font-mono">{formatCurrency(expectedToday, currency)}</span>
+                  <span className="text-[9px] text-neutral-400 block mt-0.5 font-sans">Through {totalTransactions} sales receipts</span>
                 </div>
-                <div className="bg-slate-50 p-4 border border-slate-150/80 rounded-2xl">
-                  <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider block font-sans">Estimated Profit</span>
-                  <span className="text-lg font-normal text-emerald-700 mt-1 block font-mono">{formatCurrency(todayProfit, currency)}</span>
-                  <span className="text-[9px] text-[#757a7f] block mt-0.5">Based on default 15% retail margin</span>
+                <div className="bg-[#f4f5f8] p-4 border border-[#d4d7dc] rounded">
+                  <span className="text-[9px] text-[#5f6368] font-bold uppercase tracking-wider block font-sans">Marginal Net Income</span>
+                  <span className="text-base sm:text-lg font-bold text-[#2ca01c] mt-1 block font-mono">{formatCurrency(todayProfit, currency)}</span>
+                  <span className="text-[9px] text-neutral-400 block mt-0.5 font-sans">Assuming core 15% retail margin</span>
                 </div>
               </div>
 
               {/* Sales/Inventory detailed log */}
-              <div className="space-y-2.5">
-                <h4 className="text-[10px] uppercase font-bold text-slate-500 tracking-wider">Daily Operations &amp; Cash Desk</h4>
-                <div className="p-4 bg-slate-50/50 rounded-2xl border border-slate-100 space-y-3 text-xs leading-relaxed text-slate-600">
-                  <div className="flex justify-between border-b border-dashed border-slate-200 pb-2">
-                    <span className="font-medium text-slate-700">Cashier Safe Target:</span>
+              <div className="space-y-2">
+                <h4 className="text-[9px] uppercase font-bold text-[#5f6368] tracking-wider">Workday Register Summary</h4>
+                <div className="p-4 bg-neutral-50 rounded border border-[#eaebeb] space-y-2.5 text-xs text-slate-600">
+                  <div className="flex justify-between border-b border-dashed border-neutral-200 pb-1.5">
+                    <span className="font-semibold text-slate-700 font-sans">Cashier Vault Target:</span>
                     <span className="font-mono text-slate-900 font-bold">{formatCurrency(expectedToday, currency)}</span>
                   </div>
-                  <div className="flex justify-between border-b border-dashed border-slate-200 pb-2">
-                    <span className="font-medium text-slate-700">Stock Levels Tracked:</span>
+                  <div className="flex justify-between border-b border-dashed border-neutral-200 pb-1.5">
+                    <span className="font-semibold text-slate-700 font-sans">Items Audited On-Shelf:</span>
                     <span className="font-mono text-slate-900 font-bold">{inventory.length} dynamic SKUs</span>
                   </div>
-                  <div>
-                    <span className="font-medium text-slate-700">Overdue Balances Owed:</span>
-                    <span className="font-mono text-rose-600 font-bold float-right">
+                  <div className="flex justify-between">
+                    <span className="font-semibold text-slate-700 font-sans">Client Outstanding Balance:</span>
+                    <span className="font-mono text-rose-600 font-bold">
                       {formatCurrency(debtors.reduce((sum, d) => sum + d.amountOwed, 0), currency)}
                     </span>
                   </div>
@@ -969,31 +1029,31 @@ export default function Dashboard({
 
               {/* Active warning block */}
               {isEndOfDay ? (
-                <div className="p-4 bg-amber-50 border border-amber-200 rounded-2xl flex gap-3 text-xs text-amber-900 leading-relaxed">
+                <div className="p-3.5 bg-amber-50 border border-amber-200 rounded flex gap-2.5 text-xs text-amber-900 leading-relaxed font-sans">
                   <ShieldAlert className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
                   <div>
-                    <span className="font-bold block">Closing Audits Required</span>
-                    To guarantee absolute financial protection and accountability, run a **Truth Check** on the cash register to verify terminal differences and lock today's logs.
+                    <span className="font-bold block">Closing Audits Recommended</span>
+                    Validate shift drawers in QuickBooks Feed Matcher or trigger cash truth check parameters before closing files.
                   </div>
                 </div>
               ) : (
-                <div className="p-4 bg-sky-50 border border-sky-100 rounded-2xl flex gap-3 text-xs text-sky-900 leading-relaxed">
-                  <CheckCircle2 className="w-5 h-5 text-sky-650 shrink-0 mt-0.5" />
+                <div className="p-3.5 bg-sky-50 border border-sky-100 rounded flex gap-2.5 text-xs text-sky-900 leading-relaxed font-sans">
+                  <CheckCircle2 className="w-5 h-5 text-[#2ca01c] shrink-0 mt-0.5" />
                   <div>
-                    <span className="font-bold block">Active Hours Protection</span>
-                    Accountability monitoring is online. All receipt alterations or cashier terminal deletions are permanently logged to the immutable ledger.
+                    <span className="font-bold block">Protection Services Online</span>
+                    Audits logging enabled. Deletions or receipt modifications are saved directly to the permanent audit trail.
                   </div>
                 </div>
               )}
             </div>
 
             {/* Footer */}
-            <div className="p-4 bg-slate-50 border-t border-slate-100 flex gap-2.5 justify-end">
+            <div className="p-3.5 bg-[#f4f5f8] border-t border-[#d4d7dc] flex gap-2 justify-end">
               <button 
                 onClick={() => setShowRundownModal(false)}
-                className="px-5 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs font-bold rounded-full transition cursor-pointer"
+                className="px-4 py-2 border border-[#d4d7dc] bg-white hover:bg-neutral-100 text-[#393a3d] text-xs font-bold rounded transition cursor-pointer"
               >
-                Dismiss View
+                Close View
               </button>
               {isEndOfDay && (
                 <button 
@@ -1001,10 +1061,10 @@ export default function Dashboard({
                     setShowRundownModal(false);
                     setShowReconciliationInline(true);
                   }}
-                  className="px-5 py-2.5 bg-[#1e40af] hover:bg-[#1a368f] text-white text-xs font-bold rounded-full transition cursor-pointer flex items-center gap-1.5 shadow-sm font-sans uppercase tracking-wider"
+                  className="px-4 py-2 bg-[#2ca01c] hover:bg-[#1e7514] text-white text-xs font-bold rounded transition cursor-pointer flex items-center gap-1 shadow-sm uppercase tracking-wider"
                 >
                   <Coins className="w-3.5 h-3.5" />
-                  Run Cash Truth Check
+                  Run Feed Matcher
                 </button>
               )}
             </div>
