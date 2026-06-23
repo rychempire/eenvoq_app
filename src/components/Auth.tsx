@@ -514,13 +514,6 @@ export default function Auth({ onLogin, onBackToLanding }: AuthProps) {
               className="w-14 h-full object-contain [filter:drop-shadow(1px_0_0_#000)_drop-shadow(-1px_0_0_#000)_drop-shadow(0_1px_0_0_#000)_drop-shadow(0_-1px_0_0_#000)]" 
             />
           </div>
-          <div>
-            {isSupabaseConfigured ? (
-              <span className="text-[9px] bg-emerald-100 text-emerald-800 font-mono font-bold uppercase rounded-full px-2.5 py-1 select-none">Live DB</span>
-            ) : (
-              <span className="text-[9px] bg-amber-100 text-amber-800 font-mono font-bold uppercase rounded-full px-2.5 py-1 select-none">Sandbox Mode</span>
-            )}
-          </div>
         </div>
 
         {/* Database Status Info Banners */}
@@ -532,28 +525,6 @@ export default function Auth({ onLogin, onBackToLanding }: AuthProps) {
           )}
         </div>
 
-        {error && (
-          <div className="p-4 bg-red-50 text-red-700 text-xs rounded-2xl border border-red-100 font-sans mb-4 text-center space-y-2.5" id="login-error-toast">
-            <div>{error}</div>
-            {(error.toLowerCase().includes('permission') || error.toLowerCase().includes('recursion') || error.toLowerCase().includes('onboarding') || error.toLowerCase().includes('fail') || error.toLowerCase().includes('database') || error.toLowerCase().includes('query')) && (
-              <div className="pt-2 border-t border-red-200/40">
-                <p className="text-[10px] text-red-600 mb-2 font-normal leading-relaxed">
-                  Experiencing remote cloud permissions or schema locks? You can run locally:
-                </p>
-                <button
-                  type="button"
-                  onClick={() => {
-                    localStorage.setItem('eenvoq_force_simulation_db', 'true');
-                    window.location.reload();
-                  }}
-                  className="px-3.5 py-1.5 bg-red-650 hover:bg-red-700 text-white rounded-full text-[10px] uppercase tracking-wide font-semibold cursor-pointer transition shadow-xs inline-block"
-                >
-                  Switch to Offline Simulated Demo
-                </button>
-              </div>
-            )}
-          </div>
-        )}
 
         {/* MODE: LOGIN */}
         {mode === 'login' && (
@@ -646,7 +617,7 @@ export default function Auth({ onLogin, onBackToLanding }: AuthProps) {
             <div>
               <label className="block text-xs font-semibold text-[#757575] mb-2 pl-1 flex items-center gap-1.5">
                 <Users className="w-3.5 h-3.5 text-slate-500" />
-                <span>Choose Operator / Owner Profile</span>
+                <span>Choose Operator / Owner Login</span>
               </label>
               <div className="relative">
                 <select
