@@ -193,6 +193,7 @@ export default function App() {
   
   // Suggested context prompt trigger from elsewhere
   const [prefilledPrompt, setPrefilledPrompt] = useState<string>('');
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   // Loaded state tracking
   const [dataLoaded, setDataLoaded] = useState(false);
@@ -713,13 +714,7 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
 
   const handleNavigateToAssistant = (promptText: string) => {
     setPrefilledPrompt(promptText);
-    setActiveSection('dashboard');
-    setTimeout(() => {
-      const element = document.getElementById('embedded-ai-assistant-container');
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-      }
-    }, 100);
+    setIsChatOpen(true);
   };
 
   // Full-screen website landing page view
@@ -737,41 +732,21 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
     switch (activeSection) {
       case 'dashboard':
         return (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-            <div className="lg:col-span-2">
-              <Dashboard 
-                receipts={receipts}
-                inventory={inventory}
-                debtors={debtors}
-                audits={audits}
-                alerts={alerts}
-                aiInsights={aiInsights}
-                setActiveSection={setActiveSection}
-                onNavigateToAssistant={handleNavigateToAssistant}
-                onAddAudit={handleAddAudit}
-                showConfirm={showConfirm}
-                user={userSession || undefined}
-                currency={currency}
-                setCurrency={setCurrency}
-              />
-            </div>
-            {/* Embedded AI Assistant Column (Extreme Right downwards on desktop, and Full Mobile view on last section of home page) */}
-            <div className="lg:col-span-1 lg:sticky lg:top-4 mt-2 lg:mt-0 flex flex-col" id="embedded-ai-assistant-container">
-              <AIAssistant 
-                chatLogs={chatLogs}
-                onSendMessage={handleSendMessage}
-                receipts={receipts}
-                inventory={inventory}
-                debtors={debtors}
-                audits={audits}
-                alerts={alerts}
-                clearChat={() => setChatLogs([])}
-                prefilledPrompt={prefilledPrompt}
-                clearPrefilledPrompt={() => setPrefilledPrompt('')}
-                currency={currency}
-              />
-            </div>
-          </div>
+          <Dashboard 
+            receipts={receipts}
+            inventory={inventory}
+            debtors={debtors}
+            audits={audits}
+            alerts={alerts}
+            aiInsights={aiInsights}
+            setActiveSection={setActiveSection}
+            onNavigateToAssistant={handleNavigateToAssistant}
+            onAddAudit={handleAddAudit}
+            showConfirm={showConfirm}
+            user={userSession || undefined}
+            currency={currency}
+            setCurrency={setCurrency}
+          />
         );
       case 'receipts':
         return (
@@ -988,13 +963,7 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
             <button 
               type="button" 
               onClick={() => {
-                setActiveSection('dashboard');
-                setTimeout(() => {
-                  const element = document.getElementById('embedded-ai-assistant-container');
-                  if (element) {
-                    element.scrollIntoView({ behavior: 'smooth' });
-                  }
-                }, 100);
+                setIsChatOpen(true);
               }}
               className="flex flex-col items-center gap-1 bg-transparent border-0 cursor-pointer text-slate-500 hover:text-slate-800 font-medium transition"
             >
@@ -1014,6 +983,45 @@ Ask me to investigate any anomaly, compute restock velocities, or write collecti
           </div>
         </div>
       </div>
+
+      {/* Floating Chat Trigger Button on the right of all devices */}
+      {userSession && (
+        <button
+          type="button"
+          onClick={() => setIsChatOpen(!isChatOpen)}
+          className="fixed right-4 bottom-20 md:bottom-6 z-40 bg-[#2ca01c] hover:bg-[#207a14] text-white p-3.5 rounded-full shadow-lg flex items-center justify-center cursor-pointer transition-transform duration-150 active:scale-95 group"
+          title="Ollama AI Sentry Advisor"
+          id="floating-sentry-chat-trigger"
+        >
+          <Bot className="w-5 h-5 animate-pulse-once group-hover:scale-110 transition-transform" />
+          <span className="absolute right-14 bg-[#1e2a38] text-white text-[10px] py-1 px-2.5 rounded font-bold uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-all duration-150 shadow-md whitespace-nowrap pointer-events-none">
+            AI Assistant
+          </span>
+        </button>
+      )}
+
+      {/* Floating AI Assistant Popup Dialog */}
+      {userSession && isChatOpen && (
+        <div 
+          className="fixed inset-0 sm:inset-auto sm:right-4 sm:bottom-20 md:bottom-22 w-full h-full sm:w-[420px] sm:h-[600px] bg-white sm:rounded-lg border border-[#d4d7dc] shadow-2xl z-50 flex flex-col overflow-hidden animate-fade-in animate-slide-up"
+          id="floating-ai-assistant-popup"
+        >
+          <AIAssistant 
+            chatLogs={chatLogs}
+            onSendMessage={handleSendMessage}
+            receipts={receipts}
+            inventory={inventory}
+            debtors={debtors}
+            audits={audits}
+            alerts={alerts}
+            clearChat={() => setChatLogs([])}
+            prefilledPrompt={prefilledPrompt}
+            clearPrefilledPrompt={() => setPrefilledPrompt('')}
+            currency={currency}
+            onClose={() => setIsChatOpen(false)}
+          />
+        </div>
+      )}
 
       {/* Global custom Confirmation/Alert Modal */}
       {confirmModal && confirmModal.isOpen && (

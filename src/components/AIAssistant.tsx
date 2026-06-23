@@ -32,6 +32,7 @@ interface AIAssistantProps {
   prefilledPrompt?: string;
   clearPrefilledPrompt?: () => void;
   currency: string;
+  onClose?: () => void;
 }
 
 // Interactive custom task definition for the Tasks tab
@@ -56,7 +57,8 @@ export default function AIAssistant({
   clearChat,
   prefilledPrompt,
   clearPrefilledPrompt,
-  currency
+  currency,
+  onClose
 }: AIAssistantProps) {
   const [activeTab, setActiveTab] = useState<'chat' | 'insights' | 'tasks' | 'history'>('chat');
   const [inputText, setInputText] = useState('');
@@ -799,18 +801,22 @@ Hello! I am your sales and stock advisor. I am online and ready to help you anal
   }, [historySearch, historyFilter]);
 
   return (
-    <div className="flex flex-col h-[calc(100vh-6.5rem)] bg-[#FCFAF7] rounded border border-[#d4d7dc] shadow-none overflow-hidden" id="ai-intelligence-canvas">
+    <div className="flex flex-col h-full w-full bg-[#FCFAF7] rounded border border-[#d4d7dc] shadow-none overflow-hidden" id="ai-intelligence-canvas">
       
       {/* OPERATIONS HEADER WITH MESH GRADIENT */}
       <div className="relative overflow-hidden border-b border-[#d4d7dc] bg-[#f4f5f8] select-none shrink-0" id="ai-top-navigation">
         <div className="relative z-10 h-12 px-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <button 
-              onClick={() => window.location.hash = 'dashboard'}
+              onClick={onClose || (() => window.location.hash = 'dashboard')}
               className="p-1 hover:bg-[#d4d7dc] rounded transition text-[#2c3e50] cursor-pointer flex items-center justify-center shrink-0"
-              title="Return to home dashboard"
+              title={onClose ? "Close AI Assistant" : "Return to home dashboard"}
             >
-              <ArrowLeft className="w-4 h-4 stroke-[2]" />
+              {onClose ? (
+                <X className="w-4 h-4 stroke-[2]" />
+              ) : (
+                <ArrowLeft className="w-4 h-4 stroke-[2]" />
+              )}
             </button>
             <div className="flex items-center gap-2">
               <div className="w-5 h-5 rounded-sm bg-[#2ca01c] flex items-center justify-center font-bold text-white text-[10px]">

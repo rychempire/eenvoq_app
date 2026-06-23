@@ -525,9 +525,7 @@ export default function Auth({ onLogin, onBackToLanding }: AuthProps) {
 
         {/* Database Status Info Banners */}
         <div className="mb-4">
-          {isSupabaseConfigured ? (
-
-          ) : (
+          {isSupabaseConfigured ? null : (
             <div className="py-2 px-3 bg-[#FCFBF9] text-amber-800 text-[10px] rounded-2xl border border-amber-100 flex items-center gap-1.5 font-sans justify-center">
               <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
             </div>
