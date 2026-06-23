@@ -528,7 +528,6 @@ export default function Auth({ onLogin, onBackToLanding }: AuthProps) {
           {isSupabaseConfigured ? (
             <div className="py-2 px-3 bg-emerald-50 text-emerald-800 text-[10px] rounded-2xl border border-emerald-100 flex items-center gap-1.5 font-sans justify-center">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              <strong>Production Live:</strong> Linked against your cloud tables securely!
             </div>
           ) : (
             <div className="py-2 px-3 bg-[#FCFBF9] text-amber-800 text-[10px] rounded-2xl border border-amber-100 flex items-center gap-1.5 font-sans justify-center">
